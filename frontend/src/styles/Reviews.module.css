@@ -1,0 +1,91 @@
+.reviewsContainer {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reviewsSummary {
+  margin-bottom: 20px;
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.reviewItem {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.productSection {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.productImage {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.productDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.userLogo {
+  width: 40px;
+  height: 40px;
+  background-color: #537482;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+p {
+  margin: 5px 0;
+}
+
+.productSection {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.productImage {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.productDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+}
+
+.stars {
+  color: #ffd700; /* Gold color */
+  font-size: 1.5rem; 
+}
