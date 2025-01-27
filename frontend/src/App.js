@@ -1,26 +1,42 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
-
-import SalesOverview from './admin/components/SalesOverview.js';
-
-
-
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./auth/AuthContext";
+import ProtectedRoute from "./auth/ProtectedRoute";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import AdminDashboard from "./admin/Dashboard";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import Dashboard from "./user/Dashboard";
 
 const App = () => {
   return (
-    
-    
-    //  <Provider store={store}>
-      <div>
-        
-        <SalesOverview/>
+    <AuthProvider>
+      <Router>
+        {/* <Navbar /> */}
+        <div className="content">
+          <Routes>
+            <Route path="/" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+          <Routes>
+        <Route path="/" element={<h1>Welcome to Mobile Store</h1>} />
+        <Route path="/user/dashboard" element={<Dashboard />} />
+      </Routes>
+          
         </div>
-        // </Provider>
-        
-  
+        <Footer />
+      </Router>
+    </AuthProvider>
   );
 };
 
 export default App;
-
-
