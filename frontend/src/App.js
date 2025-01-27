@@ -9,6 +9,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./user/Dashboard";
 import Sales from "./admin/Sales";
+import ViewOrders from "./admin/Orders";
 
 // Import components for sidebar items
 // import Sales from "./admin/Sales";
@@ -47,14 +48,14 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-            {/* <Route
+            <Route
               path="/admin/orders"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
-                  <Orders />
+                <ViewOrders/>
                 </ProtectedRoute>
               }
-            /> */}
+            />
             {/* <Route
               path="/admin/reviews"
               element={
