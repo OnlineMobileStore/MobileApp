@@ -16,7 +16,7 @@ const SignIn = () => {
       if (auth.user.role === "admin") {
         navigate("/admin/dashboard");
       } else {
-        navigate("/user/dashboard");
+        navigate("/customer/home");
       }
     }
   };
