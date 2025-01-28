@@ -46,7 +46,7 @@ const TopBar = () => {
           </div>
 
           {/* Profile */}
-          <div className="d-flex align-items-center">
+          {/* <div className="d-flex align-items-center">
             <img
               src="https://via.placeholder.com/40"
               alt="Profile"
@@ -63,7 +63,7 @@ const TopBar = () => {
                 border: "2px solid #fff",
               }}
             ></span>
-          </div>
+          </div> */}
         </div>
       </div>
     </nav>

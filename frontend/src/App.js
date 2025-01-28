@@ -14,6 +14,7 @@ import Reviews from "./admin/Reviews";
 // Import components for sidebar items
 // import Sales from "./admin/Sales";
  import Orders from "./admin/Orders";
+import Customers from "./admin/Customers";
 // import Reviews from "./admin/Reviews";
 // import Products from "./admin/Products";
 
@@ -64,14 +65,14 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-            {/* <Route
-              path="/admin/products"
+            <Route
+              path="/admin/customers"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
-                  <Products />
+                  <Customers/>
                 </ProtectedRoute>
               }
-            /> */}
+            />
           </Routes>
         </div>
      
