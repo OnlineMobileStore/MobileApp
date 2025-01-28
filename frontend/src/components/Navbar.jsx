@@ -35,7 +35,7 @@ const NavbarComponent = () => {
             </Form>
 
             {/* Filter Dropdown */}
-            <Dropdown className="filter-dropdown ms-3">
+            {/* <Dropdown className="filter-dropdown ms-3">
               <Dropdown.Toggle variant="outline-secondary" id="filter-dropdown">
                 Filter
               </Dropdown.Toggle>
@@ -45,7 +45,7 @@ const NavbarComponent = () => {
                 <Dropdown.Item href="#rating">Rating</Dropdown.Item>
                 <Dropdown.Item href="#brand">Brand</Dropdown.Item>
               </Dropdown.Menu>
-            </Dropdown>
+            </Dropdown> */}
           </Nav>
 
           {/* Right section: Navigation Links */}
