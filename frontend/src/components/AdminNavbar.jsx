@@ -1,12 +1,21 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const AdminNavbar = () => {
-  const [activeItem, setActiveItem] = useState("/admin/dashboard");
+  const location = useLocation(); // Get current path to set the active state
+  const [activeItem, setActiveItem] = useState(location.pathname);
 
   const handleItemClick = (path) => {
     setActiveItem(path);
   };
+
+  const navItems = [
+    { name: "Dashboard", path: "/admin/dashboard" },
+    { name: "Sales", path: "/admin/sales" },
+    { name: "Orders", path: "/admin/orders" },
+    { name: "Reviews", path: "/admin/reviews" },
+    { name: "Customers", path: "/admin/customers" },
+  ];
 
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
@@ -17,49 +26,40 @@ const AdminNavbar = () => {
           backgroundColor: "#135474",
           color: "#fff",
           padding: "20px",
-          position: "fixed", // Fix sidebar to the left
+          position: "fixed",
           top: 0,
           left: 0,
-          height: "100vh", // Full height
-          overflowY: "auto", // Enable vertical scrolling for the sidebar
+          height: "100vh",
+          overflowY: "auto",
         }}
       >
         <h2 style={{ fontWeight: "bold", marginBottom: "20px" }}>Admin Panel</h2>
         <nav>
           <ul style={{ listStyle: "none", padding: "0" }}>
-            {["Dashboard", "Sales", "Orders", "Reviews", "Customers"].map(
-              (item, index) => (
-                <li
-                  key={index}
+            {navItems.map((item, index) => (
+              <li
+                key={index}
+                style={{
+                  padding: "10px 0",
+                  cursor: "pointer",
+                  borderRadius: "5px",
+                  backgroundColor:
+                    activeItem === item.path ? "#ffffff22" : "transparent",
+                }}
+                onClick={() => handleItemClick(item.path)}
+              >
+                <Link
+                  to={item.path}
                   style={{
-                    padding: "10px 0",
-                    cursor: "pointer",
-                    backgroundColor:
-                      activeItem === `/admin/${item.toLowerCase()}`
-                        ? "#ffffff22"
-                        : "transparent",
-                    borderRadius: "5px",
+                    color: activeItem === item.path ? "#ffd700" : "#fff", // Active item is gold, others are white
+                    textDecoration: "none",
+                    fontWeight: activeItem === item.path ? "bold" : "normal",
                   }}
-                  onClick={() =>
-                    handleItemClick(`/admin/${item.toLowerCase()}`)
-                  }
                 >
-                  <Link
-                    to={`/admin/${item.toLowerCase()}`}
-                    style={{
-                      color: "#fff",
-                      textDecoration: "none",
-                      fontWeight:
-                        activeItem === `/admin/${item.toLowerCase()}`
-                          ? "bold"
-                          : "normal",
-                    }}
-                  >
-                    {item}
-                  </Link>
-                </li>
-              )
-            )}
+                  {item.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
       </aside>
@@ -70,7 +70,7 @@ const AdminNavbar = () => {
           marginLeft: "250px", // Push content to the right of the sidebar
           flex: 1,
           backgroundColor: "#f5f5f5",
-          overflowY: "auto", // Enable scrolling for content
+          overflowY: "auto",
         }}
       >
         <header

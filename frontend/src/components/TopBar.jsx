@@ -31,8 +31,7 @@ const TopBar = () => {
           {/* Settings Icon */}
           <i className="bi bi-gear fs-5 text-secondary" role="button"></i>
 
-          {/* Grid Icon */}
-          <i className="bi bi-grid fs-5 text-secondary" role="button"></i>
+         
 
           {/* Notifications */}
           <div className="position-relative">
@@ -43,26 +42,7 @@ const TopBar = () => {
             >
               5
             </span>
-          </div>
-
-          {/* Profile */}
-          <div className="d-flex align-items-center">
-            <img
-              src="https://via.placeholder.com/40"
-              alt="Profile"
-              className="rounded-circle"
-              style={{ width: "40px", height: "40px", objectFit: "cover" }}
-            />
-            <span
-              className="position-absolute bg-success rounded-circle"
-              style={{
-                width: "10px",
-                height: "10px",
-                bottom: "0",
-                right: "0",
-                border: "2px solid #fff",
-              }}
-            ></span>
+         
           </div>
         </div>
       </div>
