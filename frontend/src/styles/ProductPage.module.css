@@ -1,0 +1,44 @@
+.productPageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.productDetailsContainer {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.imageContainer {
+  flex-shrink: 0;
+}
+
+.productImage {
+  max-width: 300px;
+  border-radius: 8px;
+}
+
+.productInfoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reviewGridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.reviewCard {
+  background: #f9f9f9;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.starFilled {
+  color: gold;
+}

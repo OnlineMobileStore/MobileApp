@@ -1,0 +1,161 @@
+/* Ensure the body and html elements take up full height */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow-y: auto;
+}
+
+/* Cart container settings */
+.cartContainer {
+  padding: 20px;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  height: 100%;
+}
+
+/* Cart title styling */
+.cartTitle {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Scrollable content inside the cart */
+.cartContent {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 500px;
+}
+
+/* Styling for the scrollable section */
+.scrollableContent {
+  overflow-y: auto;
+  max-height: 350px;  /* Set the height of the scrollable content */
+  position: relative;  /* Ensure proper flow of content */
+}
+
+/* Table styling */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+/* Table header styling */
+.table th {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+  background-color: #135474;
+  color: white;
+  position: sticky; /* Make header sticky */
+  top: 0; /* Stick to the top of the container */
+  z-index: 1; /* Ensure it stays on top of table rows */
+}
+
+/* Table body styling */
+.table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+/* Image styling inside the table */
+.table img {
+  width: 80px;
+  height: 90px;
+}
+
+/* Button styling inside the table */
+.table button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  background-color: #135474;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.table button:hover {
+  background-color: #135474; 
+}
+
+/* Summary container styling */
+.summaryContainer {
+  width: 40%;
+  background-color: #fff; 
+  border-radius: 8px; 
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-left: auto;
+  
+}
+
+
+
+.summaryContainer h3 {
+  font-size: 20px;
+  margin-bottom: 15px; 
+}
+
+/* Summary table styling */
+.summaryTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.summaryTable td {
+  padding: 8px;
+  text-align: right;
+  border: 1px solid #ddd;
+}
+
+.summaryTable td:first-child {
+  text-align: left;
+  font-weight: bold;
+}
+
+.subtotalLabel {
+  font-weight: bold;
+}
+
+.subtotal {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 15px; 
+}
+
+/* Checkout button styling */
+.checkoutButton {
+  padding: 12px;
+  background-color:  #135474; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px; 
+  width: 100%;
+}
+
+.checkoutButton:hover {
+  background-color: #d6e499; 
+}
+
+/* Custom scrollbar styling for tbody */
+.scrollableContent::-webkit-scrollbar {
+  width: 12px; /* Increase width of scrollbar */
+}
+
+.scrollableContent::-webkit-scrollbar-thumb {
+  background-color: #135474;  /* Thicker scrollbar color */
+  border-radius: 10px;
+}
+
+.scrollableContent::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Track color */
+}
