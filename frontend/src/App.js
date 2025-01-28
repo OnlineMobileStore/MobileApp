@@ -10,6 +10,10 @@ import ReviewsAdmin from "./pages/admin/ReviewsAdmin";
 import OrderChangeAdmin from "./pages/admin/OrderChangeAdmin";
 import HomeCustomer from "./pages/customer/HomeCustomer";
 import CustomersDetails from './pages/admin/CustomersDetails';
+import Wishlist from './pages/customer/Wishlist';
+import MyCart from './pages/customer/MyCart';
+import ProductPage from './pages/customer/ProductPage';
+import ProductReview from './pages/customer/ProductReview';
 
 
 const App = () => {
@@ -67,6 +71,10 @@ const App = () => {
             />
 
             <Route path='/Customer/home' element={<HomeCustomer />} />
+            <Route path='/wishlist' element={<Wishlist/>} />
+            <Route path='/mycart' element={<MyCart/>} />
+            <Route path='/productreviews' element={<ProductReview/>} />
+            <Route path='/productpage' element={<ProductPage/>} />
           </Routes>
         </div>
      

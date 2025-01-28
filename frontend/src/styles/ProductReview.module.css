@@ -1,0 +1,97 @@
+/* Container for the entire review section */
+
+  .titleSection { 
+    text-align: center;
+  }
+  .titleSection h2{
+    margin-top:50px;
+  }
+
+/* Section for adding a review */
+.addReviewSection {
+  margin-top: 1rem;
+  padding: 1rem;
+ 
+}
+
+.reviewForm {
+  margin: 20px auto;
+  max-width: 600px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Input fields */
+.input,
+.textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: #007bff;
+}
+
+/* Textarea */
+.textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Star ratings */
+.star {
+  font-size: 3rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  
+}
+
+.star:hover,
+.filled {
+  color: #ffd700; /* Gold color for filled stars */
+}
+
+/* Submit button */
+.submitButton {
+  background-color:#135474;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+  width: 100%;
+
+}
+
+.submitButton:hover {
+  background-color: #579bbd;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .reviewContainer {
+    padding: 1rem;
+  }
+
+  .submitButton {
+    width: 100%;
+  }
+}
