@@ -9,6 +9,7 @@ import SalesDetailsAdmin from "./pages/admin/SalesDetailsAdmin";
 import ReviewsAdmin from "./pages/admin/ReviewsAdmin";
 import OrderChangeAdmin from "./pages/admin/OrderChangeAdmin";
 import HomeCustomer from "./pages/customer/HomeCustomer";
+import CustomersDetails from './pages/admin/CustomersDetails';
 
 
 const App = () => {
@@ -41,7 +42,7 @@ const App = () => {
               }
             />
             <Route
-              path="/admin/changeorder"
+              path="/admin/orders"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
                   <OrderChangeAdmin/>
@@ -56,14 +57,14 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-            {/* <Route
-              path="/admin/products"
+            <Route
+              path="/admin/customers"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
-                  <Products />
+                 < CustomersDetails/>
                 </ProtectedRoute>
               }
-            /> */}
+            />
 
             <Route path='/Customer/home' element={<HomeCustomer />} />
           </Routes>
