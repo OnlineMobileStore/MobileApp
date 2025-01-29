@@ -50,10 +50,11 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- Lombok -->
+        <!-- Lombok (add version here) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.24</version> <!-- Add a valid version here -->
             <optional>true</optional>
         </dependency>
 
@@ -118,6 +119,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                            <version>1.18.24</version> <!-- Add version to annotationProcessorPath as well -->
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

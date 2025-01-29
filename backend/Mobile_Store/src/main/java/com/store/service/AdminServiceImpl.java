@@ -1,19 +1,26 @@
 package com.store.service;
 
 import com.store.pojo.Admin;
+import com.store.pojo.Customer;
 import com.store.dao.AdminDao;
+import com.store.dao.CustomerDao;
 import com.store.dto.ApiResponse;
+import com.store.dto.CustomerDTO;
 import com.store.dto.AdminDTO;
 import com.store.dto.SignInRequest;
 import com.store.exception.AuthenticationException;
+import com.store.exception.ResourceNotFoundException;
 import com.store.util.JwtUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,17 +29,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class AdminServiceImpl implements AdminService {
 
-    private final AdminDao adminDao;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
-    private final ModelMapper modelMapper;
-
-    public AdminServiceImpl(AdminDao adminDao, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, ModelMapper modelMapper) {
-        this.adminDao = adminDao;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-        this.modelMapper = modelMapper;
-    }
+	@Autowired
+    private AdminDao adminDao;
+    @Autowired
+    private CustomerDao customerDao;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public ApiResponse registerAdmin(AdminDTO registerRequest) {
@@ -76,4 +82,56 @@ public class AdminServiceImpl implements AdminService {
         return new ApiResponse(responseData);
     }
     
+    @Override
+    public ApiResponse updateAdminDetails(Long adminId, AdminDTO adminDTO) {
+        Admin admin = adminDao.findById(adminId)
+                .orElseThrow(() -> new ResourceNotFoundException("admin not found with ID: " + adminId));
+        modelMapper.map(adminDTO, admin);
+
+        if (adminDTO.getPassword() != null) {
+            admin.setPassword(passwordEncoder.encode(adminDTO.getPassword()));
+        }
+
+        admin.setUpdatedOn(LocalDateTime.now());
+
+        adminDao.save(admin);
+
+        return new ApiResponse("Admin details updated successfully.");
+    }
+    
+    @Override
+    public AdminDTO getDetailsById(Long adminId) {
+        Admin admin = adminDao.findById(adminId)
+                .orElseThrow(() -> new ResourceNotFoundException("Admin not found with ID: " + adminId));
+        return modelMapper.map(admin, AdminDTO.class);
+    }
+
+    @Override
+    public ApiResponse deActivateCustomer(Long customerId) {
+        Customer customer = customerDao.findById(customerId)
+                .orElseThrow(() -> new AuthenticationException("Customer not found"));
+
+        customer.setIsActive(false);
+        customerDao.save(customer);
+
+        return new ApiResponse("Customer soft deleted successfully.");
+    }
+    
+    @Override
+    public List<CustomerDTO> getAllCustomers() {
+        return customerDao.findByIsActiveTrue().stream().map(customer -> {
+            CustomerDTO customerDTO = modelMapper.map(customer, CustomerDTO.class);
+
+            if (customer.getAddress() != null) {
+                customerDTO.setAddressLine(customer.getAddress().getAddressLine());
+                customerDTO.setCity(customer.getAddress().getCity());
+                customerDTO.setState(customer.getAddress().getState());
+                customerDTO.setPostalCode(customer.getAddress().getPostalCode());
+                customerDTO.setCountry(customer.getAddress().getCountry());
+            }
+
+            return customerDTO;
+        }).collect(Collectors.toList());
+    }
+
 }
