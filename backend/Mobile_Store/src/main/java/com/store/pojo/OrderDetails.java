@@ -3,15 +3,14 @@ import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(callSuper = true, exclude = { "order","product" })
 @Entity
 @Table(name = "order_details")
-public class OrderDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class OrderDetails extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)

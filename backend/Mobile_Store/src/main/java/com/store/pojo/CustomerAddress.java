@@ -1,23 +1,21 @@
 package com.store.pojo;
-import lombok.*;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 
-@Data
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude= {"customer"})
 @Entity
-@Table(name = "customer_addresses")
-public class CustomerAddress {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Table(name = "customer_address")
+public class CustomerAddress extends BaseEntity {
 
-    @NotBlank(message = "Address1 is required")
+    @NotBlank(message = "Address line is required")
     @Column(nullable = false)
-    private String address1;
-
-    private String address2;
+    private String addressLine;
 
     @NotBlank(message = "City is required")
     @Column(nullable = false)
@@ -27,12 +25,13 @@ public class CustomerAddress {
     @Column(nullable = false)
     private String state;
 
-    @NotBlank(message = "Zipcode is required")
+    @NotBlank(message = "Postal code is required")
     @Column(nullable = false)
-    private String zipcode;
+    private String postalCode;
 
+    @NotBlank(message = "Country is required")
     @Column(nullable = false)
-    private Boolean isActive = true;
+    private String country;
 
     @OneToOne
     @JoinColumn(name = "customer_id", nullable = false)

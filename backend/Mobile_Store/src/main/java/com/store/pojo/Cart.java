@@ -3,16 +3,15 @@ import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "carts")
-public class Cart {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@ToString(callSuper = true)
+@Table(name = "cart")
+public class Cart extends BaseEntity {
+	
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
@@ -24,7 +23,4 @@ public class Cart {
     @Positive(message = "Quantity must be positive")
     @Column(nullable = false)
     private Integer quantity;
-
-    @Column(nullable = false)
-    private Boolean isActive = true;
 }

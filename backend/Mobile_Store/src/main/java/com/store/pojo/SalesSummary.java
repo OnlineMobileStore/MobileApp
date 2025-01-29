@@ -3,17 +3,15 @@ package com.store.pojo;
 import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "sales_summary")
-public class SalesSummary {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class SalesSummary extends BaseEntity{
 
     @NotBlank(message = "Month is required")
     @Column(nullable = false)
@@ -35,6 +33,4 @@ public class SalesSummary {
     @Column(nullable = false)
     private Integer totalOrders;
 
-    @Column(nullable = false)
-    private LocalDateTime createdOn = LocalDateTime.now();
 }

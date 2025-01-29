@@ -11,18 +11,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig {
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable() // Disable CSRF for simplicity; enable it in production
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/customer/register", "/customer/login","/v*/api-doc*/**","/swagger-ui/**").permitAll() // Allow public access
-                .anyRequest().authenticated() // Require authentication for all other endpoints
-            );
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                                .requestMatchers("/auth/register-customer", "/auth/login-customer", "/auth/register-admin", "/auth/login-admin", "/v*/api-doc*/**", "/swagger-ui/**").permitAll() // Allow public access
+                                .anyRequest().authenticated()
+                );
 
         return http.build();
     }

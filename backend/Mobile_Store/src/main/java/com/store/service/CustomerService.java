@@ -1,8 +1,10 @@
 package com.store.service;
 
-import com.store.dto.RegisterRequest;
 import com.store.dto.ApiResponse;
+import com.store.dto.CustomerDTO;
+import com.store.dto.SignInRequest;
 
 public interface CustomerService {
-    ApiResponse registerCustomer(RegisterRequest registerRequest);
+    ApiResponse registerCustomer(CustomerDTO registerRequest);
+    ApiResponse loginCustomer(SignInRequest signInRequest);
 }

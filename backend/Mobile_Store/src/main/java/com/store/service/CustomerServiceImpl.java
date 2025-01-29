@@ -1,49 +1,93 @@
 package com.store.service;
 
-import com.store.pojo.Customer;
-import com.store.dao.CustomerDao;
-import com.store.dto.RegisterRequest;
-import com.store.dto.ApiResponse;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import com.store.dao.CustomerDao;
+import com.store.dto.ApiResponse;
+import com.store.dto.CustomerDTO;
+import com.store.dto.SignInRequest;
+import com.store.exception.AuthenticationException;
+import com.store.pojo.Customer;
+import com.store.pojo.CustomerAddress;
+import com.store.util.JwtUtil;
 
 @Service
+@Transactional
 public class CustomerServiceImpl implements CustomerService {
 
-    private final CustomerDao customerDao;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private CustomerDao customerDao;
 
-    public CustomerServiceImpl(CustomerDao customerDao, PasswordEncoder passwordEncoder) {
-        this.customerDao = customerDao;
-        this.passwordEncoder = passwordEncoder;
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
-    public ApiResponse registerCustomer(RegisterRequest registerRequest) {
-        // Check if email or phone already exists
-        if (customerDao.existsByEmail(registerRequest.getEmail())) {
+    public ApiResponse registerCustomer(CustomerDTO dto) {
+        if (customerDao.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("Email already in use.");
         }
-        if (customerDao.existsByPhone(registerRequest.getPhone())) {
+        if (customerDao.existsByPhone(dto.getPhone())) {
             throw new IllegalArgumentException("Phone number already in use.");
         }
 
-        // Create a new Customer object
-        Customer customer = new Customer();
-        customer.setFirstName(registerRequest.getFirstName());
-        customer.setLastName(registerRequest.getLastName());
-        customer.setEmail(registerRequest.getEmail());
-        customer.setPhone(registerRequest.getPhone());
-        customer.setPassword(passwordEncoder.encode(registerRequest.getPassword())); // Encrypt password
-        customer.setCreatedOn(LocalDateTime.now());
+        // Convert DTO to Entity
+        Customer customer = modelMapper.map(dto, Customer.class);
+        customer.setPassword(passwordEncoder.encode(dto.getPassword()));
+        customer.setCreatedOn(LocalDate.now());
         customer.setUpdatedOn(LocalDateTime.now());
 
-        // Save the customer to the database
+        // Map Address
+        CustomerAddress address = modelMapper.map(dto, CustomerAddress.class);
+        address.setCustomer(customer);
+        customer.setAddress(address);
+
+        // Save customer
         customerDao.save(customer);
 
-        // Return success response
         return new ApiResponse("Customer registered successfully.");
+    }
+
+    @Override
+    public ApiResponse loginCustomer(SignInRequest signInRequest) {
+        Customer customer = customerDao.findByEmail(signInRequest.getEmail())
+                .orElseThrow(() -> new AuthenticationException("Invalid email or password"));
+
+        if (!passwordEncoder.matches(signInRequest.getPassword(), customer.getPassword())) {
+            throw new AuthenticationException("Invalid email or password");
+        }
+
+        String token = jwtUtil.generateToken(customer.getEmail());
+
+        // Convert Entity to Response DTO
+         CustomerDTO customerResp = modelMapper.map(customer, CustomerDTO.class);
+         if (customer.getAddress() != null) {
+             customerResp.setAddressLine(customer.getAddress().getAddressLine());
+             customerResp.setCity(customer.getAddress().getCity());
+             customerResp.setState(customer.getAddress().getState());
+             customerResp.setPostalCode(customer.getAddress().getPostalCode());
+             customerResp.setCountry(customer.getAddress().getCountry());
+         }
+        
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("message", "Sign-in successful");
+        responseData.put("token", token);
+        responseData.put("user", customerResp);
+
+        return new ApiResponse(responseData);
     }
 }
