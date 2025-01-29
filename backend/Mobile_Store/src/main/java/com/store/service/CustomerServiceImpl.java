@@ -16,6 +16,7 @@ import com.store.dto.ApiResponse;
 import com.store.dto.CustomerDTO;
 import com.store.dto.SignInRequest;
 import com.store.exception.AuthenticationException;
+import com.store.exception.ResourceNotFoundException;
 import com.store.pojo.Customer;
 import com.store.pojo.CustomerAddress;
 import com.store.util.JwtUtil;
@@ -90,4 +91,49 @@ public class CustomerServiceImpl implements CustomerService {
 
         return new ApiResponse(responseData);
     }
+
+	
+    @Override
+    public ApiResponse updateCustomerDetails(Long customerId, CustomerDTO customerDTO) {
+        Customer customer = customerDao.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + customerId));
+        modelMapper.map(customerDTO, customer);
+
+        if (customerDTO.getPassword() != null) {
+            customer.setPassword(passwordEncoder.encode(customerDTO.getPassword()));
+        }
+
+        customer.setUpdatedOn(LocalDateTime.now());
+
+        customerDao.save(customer);
+
+        return new ApiResponse("Customer details updated successfully.");
+    }
+
+    @Override
+//    public CustomerDTO getCustomerDetailsById(Long customerId) {
+//        Customer customer = customerDao.findById(customerId)
+//                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + customerId));
+//
+//        return modelMapper.map(customer, CustomerDTO.class);
+//    }
+    
+    public CustomerDTO getCustomerDetailsById(Long customerId) {
+        Customer customer = customerDao.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + customerId));
+
+        CustomerDTO customerDTO = modelMapper.map(customer, CustomerDTO.class);
+
+        if (customer.getAddress() != null) {
+            customerDTO.setAddressLine(customer.getAddress().getAddressLine());
+            customerDTO.setCity(customer.getAddress().getCity());
+            customerDTO.setState(customer.getAddress().getState());
+            customerDTO.setPostalCode(customer.getAddress().getPostalCode());
+            customerDTO.setCountry(customer.getAddress().getCountry());
+        }
+
+        return customerDTO;
+    }
+    
+  
 }
