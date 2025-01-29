@@ -29,4 +29,8 @@ public class ProductReview {
     @Max(5)
     @Column(nullable = false)
     private Integer rating;
+    
+    @NotBlank(message = "title is required")
+    @Column(nullable = false, length = 100)
+    private String title;
 }
