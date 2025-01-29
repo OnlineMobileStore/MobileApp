@@ -3,17 +3,15 @@ package com.store.pojo;
 import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "revenue_trend")
-public class RevenueTrend {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class RevenueTrend extends BaseEntity{
 
     @NotBlank(message = "Month is required")
     @Column(nullable = false)
@@ -25,8 +23,7 @@ public class RevenueTrend {
 
     @PositiveOrZero(message = "Growth percentage must be zero or positive")
     @Column(nullable = false)
-    private Double growthPercentage; // Compared to the previous month
+    private Double growthPercentage; 
 
-    @Column(nullable = false)
-    private LocalDateTime createdOn = LocalDateTime.now();
+
 }

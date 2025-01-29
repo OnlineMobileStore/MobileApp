@@ -3,16 +3,14 @@ import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "product_images")
-public class ProductImage {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class ProductImage extends BaseEntity{
+   
     @NotBlank(message = "Image path is required")
     @Column(nullable = false)
     private String imagePath;

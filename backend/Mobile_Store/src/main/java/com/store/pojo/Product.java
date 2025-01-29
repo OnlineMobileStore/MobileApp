@@ -2,18 +2,16 @@ package com.store.pojo;
 import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(callSuper = true, exclude = { "images","brand" })
 @Entity
 @Table(name = "products")
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Product extends BaseEntity{
 
     @NotBlank(message = "Title is required")
     @Column(nullable = false)
@@ -59,8 +57,4 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> images;
 
-    @Column(updatable = false)
-    private LocalDateTime createdOn = LocalDateTime.now();
-
-    private LocalDateTime updatedOn = LocalDateTime.now();
 }
