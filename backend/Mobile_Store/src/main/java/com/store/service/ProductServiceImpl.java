@@ -17,6 +17,9 @@ import com.store.exception.ResourceNotFoundException;
 import com.store.pojo.Product;
 import com.store.pojo.ProductBrand;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+
 @Service
 public class ProductServiceImpl implements ProductService{
 
@@ -29,7 +32,7 @@ public class ProductServiceImpl implements ProductService{
 	@Autowired
     private ModelMapper modelMapper;
 
-	
+    // add the product
 	@Override
 	public ApiResponse addNewProduct(ProductReqDTO dto) {
 		// 1. get Brand by it's id
@@ -45,13 +48,14 @@ public class ProductServiceImpl implements ProductService{
 		
 	}
 
-
+	//to get all product
 	@Override
 	public List<ProductRespDTO> getAllProduct() {
-	    return productDao.findAll()
+	    return productDao.findByIsActiveTrue() // Fetch only active products
 	            .stream()
 	            .map(product -> {
 	                ProductRespDTO dto = modelMapper.map(product, ProductRespDTO.class);
+	                // To avoid null value in brand_id
 	                if (product.getBrand() != null) {
 	                    dto.setBrand_id(product.getBrand().getId());
 	                }
@@ -61,6 +65,51 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 
+	//to get product by id
+	@Override
+	public ProductRespDTO getProductDetails(Long Id) {
+	    Product productEntity = productDao.findById(Id)
+	            .orElseThrow(() -> 
+	                    new ResourceNotFoundException("Invalid Product ID!!!"));
+
+	    ProductRespDTO productRespDTO = modelMapper.map(productEntity, ProductRespDTO.class);
+
+	    // Ensuring brand_id is set if available
+	    if (productEntity.getBrand() != null) {
+	        productRespDTO.setBrand_id(productEntity.getBrand().getId());
+	    }
+
+	    return productRespDTO;
+	}
+	
+	
+	//update product Details
+	@Override
+	public ApiResponse updateProductDetails(Long id, ProductReqDTO dto) {
+	    return productDao.findById(id).map(product -> {
+	        modelMapper.map(dto, product);
+	        if (dto.getBrand_id() != null) {
+	        	productBrandDao.findById(dto.getBrand_id()).ifPresent(product::setBrand);
+	        }
+	        productDao.save(product);
+	        return new ApiResponse("Product Updated");
+	    }).orElse(new ApiResponse("Invalid Product ID !!!!"));
+	}
+	
+	// soft delete product
+
+	    @Transactional
+	    @Override
+	    public ApiResponse deleteProduct(Long id) {
+	        Product product = productDao.findByIdAndIsActiveTrue(id)
+	                .orElseThrow(() -> new EntityNotFoundException("Product with ID " + id + " not found or already deactivated."));
+	        product.setIsActive(false);
+	        productDao.save(product);
+			return new ApiResponse("Product deleted");
+	    }
 
 
+
+
+	
 }
