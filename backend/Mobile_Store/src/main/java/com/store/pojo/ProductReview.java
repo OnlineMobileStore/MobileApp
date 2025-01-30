@@ -1,3 +1,4 @@
+
 package com.store.pojo;
 import lombok.*;
 import jakarta.persistence.*;
@@ -19,7 +20,6 @@ public class ProductReview extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
-
     @Column(nullable = false, length = 2000)
     private String title;
     
