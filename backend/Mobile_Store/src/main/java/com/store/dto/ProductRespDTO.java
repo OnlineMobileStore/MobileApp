@@ -33,8 +33,6 @@ public class ProductRespDTO extends BaseDTO{
     private String primaryImage;
     
     private Long brand_id ;
-
-
-
+    
 }
 
