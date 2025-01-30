@@ -1,5 +1,8 @@
 package com.store.pojo;
 import lombok.*;
+
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -23,4 +26,19 @@ public class Cart extends BaseEntity {
     @Positive(message = "Quantity must be positive")
     @Column(nullable = false)
     private Integer quantity;
+    
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> cartItems;
+    
+    public void addCartItem(CartItem cart) {
+		this.cartItems.add(cart);
+		cart.setCart(this);
+	}
+
+//	public void removeBlogPost(BlogPost post) {
+//		this.blogPosts.remove(post);
+//		post.setBlogCategory(null);
+//	}
+//    
+    
 }
