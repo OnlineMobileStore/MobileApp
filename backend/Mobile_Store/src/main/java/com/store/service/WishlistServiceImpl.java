@@ -1,7 +1,5 @@
 package com.store.service;
 
-import java.util.Optional;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +11,6 @@ import com.store.dao.WishlistDao;
 import com.store.dto.ApiResponse;
 import com.store.dto.WishlistDto;
 
-import com.store.pojo.Cart;
 import com.store.pojo.Customer;
 import com.store.pojo.Product;
 import com.store.pojo.Wishlist;
@@ -62,7 +59,7 @@ public class WishlistServiceImpl implements WishlistService {
 			
 			wishlistDao.deleteById(wishlistId);
 			
-			return new ApiResponse("removed from Wishlist");
+			return new ApiResponse("successs","removed from Wishlist");
 		}
 
  }

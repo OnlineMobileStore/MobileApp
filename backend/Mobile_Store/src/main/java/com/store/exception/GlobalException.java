@@ -28,27 +28,27 @@ public class GlobalException {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ApiResponse(e.getMessage()));
+                .body(new ApiResponse("error",e.getMessage()));
     }
 
     // Handle ResourceNotFoundException
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ApiResponse(e.getMessage()));
+                .body(new ApiResponse("error",e.getMessage()));
     }
 
     // Handle AuthenticationException
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<?> handleAuthenticationException(AuthenticationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ApiResponse(e.getMessage()));
+                .body(new ApiResponse("error",e.getMessage()));
     }
 
     // Catch all handler for any other exceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiResponse("An unexpected error occurred: " + e.getMessage()));
+                .body(new ApiResponse("error","An unexpected error occurred: " + e.getMessage()));
     }
 }

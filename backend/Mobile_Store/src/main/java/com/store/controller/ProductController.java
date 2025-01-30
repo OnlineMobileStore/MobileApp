@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.store.dto.ApiResponse;
-import com.store.dto.ProductReqDTO;
-import com.store.dto.ProductRespDTO;
+import com.store.dto.ProductDTO;
 import com.store.service.ProductService;
 
 @RestController
@@ -27,7 +26,7 @@ public class ProductController {
 	private ProductService productService;
 	
 	@PostMapping("/addProduct")
-	public ResponseEntity<?> addNewProduct(@RequestBody ProductReqDTO dto){
+	public ResponseEntity<?> addNewProduct(@RequestBody ProductDTO dto){
 		ApiResponse response = productService.addNewProduct(dto);
         return ResponseEntity.ok(response);	
         
@@ -35,7 +34,7 @@ public class ProductController {
 	
 	@GetMapping("/getAll")
 	public ResponseEntity<?> getAllProduct(){
-		List<ProductRespDTO> product=productService.getAllProduct();
+		List<ProductDTO> product=productService.getAllProduct();
 		if(product.isEmpty())
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     	return ResponseEntity.ok(product);
@@ -43,13 +42,13 @@ public class ProductController {
 	
 	@GetMapping("/getId/{Id}")
 	public ResponseEntity<?> getProductDetails(@PathVariable Long Id){
-		ProductRespDTO product=productService.getProductDetails(Id);
+		ProductDTO product=productService.getProductDetails(Id);
 		return ResponseEntity.ok(product);
 		
 	}
 	
 	@PutMapping("/update-product/{id}")
-	public ResponseEntity<?> updateProductDetails(@PathVariable Long id,@RequestBody ProductReqDTO dto){
+	public ResponseEntity<?> updateProductDetails(@PathVariable Long id,@RequestBody ProductDTO dto){
 		return ResponseEntity.ok(productService.updateProductDetails(id,dto));
 		
 	}

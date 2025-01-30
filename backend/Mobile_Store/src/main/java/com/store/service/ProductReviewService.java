@@ -1,13 +1,12 @@
 package com.store.service;
 
-import com.store.dto.ProductReviewReqDTO;
-import com.store.dto.ProductReviewRespDTO;
+import com.store.dto.ProductReviewDTO;
 import java.util.List;
 
 public interface ProductReviewService
 {
 	
-    ProductReviewRespDTO addReview(ProductReviewReqDTO dto);
-    List<ProductReviewRespDTO> getReviewsByProduct(Long productId);
+    ProductReviewDTO addReview(ProductReviewDTO dto);
+    List<ProductReviewDTO> getReviewsByProduct(Long productId);
     
 }

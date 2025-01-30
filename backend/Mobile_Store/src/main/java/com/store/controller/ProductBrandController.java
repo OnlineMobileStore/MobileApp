@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.store.dto.ApiResponse;
-import com.store.dto.ProductBrandReqDTO;
-import com.store.dto.ProductBrandRespDTO;
+import com.store.dto.ProductBrandDTO;
 import com.store.service.ProductBrandService;
 
 @RestController
@@ -24,14 +23,14 @@ public class ProductBrandController {
 	private ProductBrandService productBrandService;
 	
 	@PostMapping("/addBrand")
-	public ResponseEntity<?>  addNewProductBrand(@RequestBody ProductBrandReqDTO dto){
+	public ResponseEntity<?>  addNewProductBrand(@RequestBody ProductBrandDTO dto){
 		 ApiResponse response = productBrandService.addNewProductBrand(dto);
 	        return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping("/allBrand")
 	public ResponseEntity<?> getAllBrand(){
-		List<ProductBrandRespDTO> productBrand=productBrandService.getAllBrand();
+		List<ProductBrandDTO> productBrand=productBrandService.getAllBrand();
 		if (productBrand.isEmpty())
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		return ResponseEntity.ok(productBrand);

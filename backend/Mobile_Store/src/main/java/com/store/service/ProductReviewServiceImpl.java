@@ -1,6 +1,5 @@
 package com.store.service;
-import com.store.dto.ProductReviewReqDTO;
-import com.store.dto.ProductReviewRespDTO;
+import com.store.dto.ProductReviewDTO;
 import com.store.exception.ResourceNotFoundException;
 import com.store.pojo.Product;
 import com.store.pojo.Customer;
@@ -8,7 +7,6 @@ import com.store.pojo.ProductReview;
 import com.store.dao.ProductReviewDao;
 import com.store.dao.ProductDao;
 import com.store.dao.CustomerDao;
-import com.store.service.ProductReviewService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     private final CustomerDao customerDao;
 
     @Override
-    public ProductReviewRespDTO addReview(ProductReviewReqDTO dto) {
+    public ProductReviewDTO addReview(ProductReviewDTO dto) {
         Product product = productDao.findById(dto.getProductId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
         Customer customer = customerDao.findById(dto.getCustomerId())
@@ -45,18 +43,18 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         review.setRating(dto.getRating());
 
         review = productReviewDao.save(review);
-        return new ProductReviewRespDTO(
-                review.getId(), review.getProduct().getId(),
+        return new ProductReviewDTO(
+                review.getProduct().getId(),
                 review.getCustomer().getId(), review.getTitle(),
                 review.getComment(), review.getRating()
         );
     }
 
     @Override
-    public List<ProductReviewRespDTO> getReviewsByProduct(Long productId) {
+    public List<ProductReviewDTO> getReviewsByProduct(Long productId) {
         return productReviewDao.findByProductId(productId).stream()
-                .map(review -> new ProductReviewRespDTO(
-                        review.getId(), review.getProduct().getId(),
+                .map(review -> new ProductReviewDTO(
+                        review.getProduct().getId(),
                         review.getCustomer().getId(), review.getTitle(),
                         review.getComment(), review.getRating()))
                 .collect(Collectors.toList());

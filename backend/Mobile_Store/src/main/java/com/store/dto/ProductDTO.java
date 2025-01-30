@@ -5,9 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper=false)
 @Data
-public class ProductReqDTO extends BaseDTO{
+public class ProductDTO extends BaseDTO{
 	
     @NotBlank(message = "Title is required")
     @Column(nullable = false)
@@ -52,7 +54,5 @@ public class ProductReqDTO extends BaseDTO{
     private String primaryImage;
     
     private Long brand_id ;
-
-
 
 }

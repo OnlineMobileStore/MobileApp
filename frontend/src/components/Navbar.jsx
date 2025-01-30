@@ -1,22 +1,33 @@
 import React from "react";
-import { Navbar, Nav, Container, Form, FormControl, Button, Dropdown } from "react-bootstrap";
+import {
+  Navbar,
+  Nav,
+  Container,
+  Form,
+  FormControl,
+  Button,
+  Dropdown,
+} from "react-bootstrap";
 import { BiCart, BiUser } from "react-icons/bi"; // Icons for cart and user
+import { Link } from "react-router-dom";
 import "./Navbar.css";
+import { useNavigate } from 'react-router-dom';
 
 const NavbarComponent = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    sessionStorage.clear(); 
+    navigate('/'); 
+  };
+
   return (
-    <Navbar
-      expand="lg"
-      className="mobile-store-navbar"
-      sticky="top"
-      collapseOnSelect
-    >
+    <Navbar expand="lg" className="mobile-store-navbar" sticky="top" collapseOnSelect>
       <Container>
         {/* Logo */}
-        <Navbar.Brand href="/" className="navbar-brand" style={{ fontSize: "36px", display:"flex"}} >
-  Mobile Store
-</Navbar.Brand>
-
+        <Navbar.Brand href="/" className="navbar-brand">
+          Mobile Store
+        </Navbar.Brand>
 
         {/* Toggle for mobile view */}
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -31,38 +42,32 @@ const NavbarComponent = () => {
                 placeholder="Search for mobiles..."
                 className="me-2"
                 aria-label="Search"
-                
-                
               />
               <Button variant="outline-primary">Search</Button>
             </Form>
-
-            {/* Filter Dropdown */}
-            {/* <Dropdown className="filter-dropdown ms-3">
-              <Dropdown.Toggle variant="outline-secondary" id="filter-dropdown">
-                Filter
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item href="#price">Price: Low to High</Dropdown.Item>
-                <Dropdown.Item href="#price-desc">Price: High to Low</Dropdown.Item>
-                <Dropdown.Item href="#rating">Rating</Dropdown.Item>
-                <Dropdown.Item href="#brand">Brand</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown> */}
           </Nav>
-
           {/* Right section: Navigation Links */}
           <Nav className="ms-auto">
             <Nav.Link href="#home">Home</Nav.Link>
             <Nav.Link href="#shop">Shop</Nav.Link>
             <Nav.Link href="#about">About</Nav.Link>
             <Nav.Link href="#contact">Contact Us</Nav.Link>
-            <Nav.Link href="#cart">
+            <Nav.Link href="#cart" aria-label="Cart">
               <BiCart /> Cart
             </Nav.Link>
-            <Nav.Link href="#profile">
-              <BiUser /> Profile
-            </Nav.Link>
+            <Dropdown align="end">
+              <Dropdown.Toggle as={Nav.Link} aria-label="Profile">
+                <BiUser /> Profile
+                <Dropdown.Menu>
+                <Dropdown.Item as={Link} to="/customer/change-profile">
+                  Change Profile
+                </Dropdown.Item>
+                <Dropdown.Item onClick={handleLogout}>
+                  Logout
+                </Dropdown.Item>
+              </Dropdown.Menu>
+              </Dropdown.Toggle>             
+            </Dropdown>
           </Nav>
         </Navbar.Collapse>
       </Container>

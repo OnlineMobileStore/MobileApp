@@ -1,7 +1,6 @@
 package com.store.controller;
 
-import com.store.dto.ProductReviewReqDTO;
-import com.store.dto.ProductReviewRespDTO;
+import com.store.dto.ProductReviewDTO;
 import com.store.service.ProductReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +15,14 @@ public class ProductReviewController {
     private final ProductReviewService productReviewService;
 
     @PostMapping
-    public ResponseEntity<ProductReviewRespDTO> addReview(@Valid @RequestBody ProductReviewReqDTO dto) {
+    public ResponseEntity<ProductReviewDTO> addReview(@Valid @RequestBody ProductReviewDTO dto) {
         return ResponseEntity.ok(productReviewService.addReview(dto));
     }
     
     @GetMapping("/product/{productId}")
-    public ResponseEntity<List<ProductReviewRespDTO>> getReviews(@PathVariable Long productId) {
+    public ResponseEntity<List<ProductReviewDTO>> getReviews(@PathVariable Long productId) {
     	
         return ResponseEntity.ok(productReviewService.getReviewsByProduct(productId));
         
     }
-      
 }
