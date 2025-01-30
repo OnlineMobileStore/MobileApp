@@ -1,0 +1,139 @@
+/* Container */
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+/* Section Titles */
+.sectionTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Delivery Address */
+.addressContainer {
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.address p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+/* Order Details */
+.orderContainer {
+  margin-top: 15px;
+}
+
+.productInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.productImage {
+  width: 80px;
+  height: 80px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #111;
+}
+
+.offers {
+  font-size: 14px;
+  color: green;
+  display: flex;
+  align-items: center;
+}
+
+.tooltip {
+  font-size: 12px;
+  font-weight: bold;
+  background-color: #ddd;
+  border-radius: 50%;
+  padding: 2px 6px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+/* Progress Bar */
+.progressWrapper {
+  margin-top: 20px;
+  padding-top: 15px;
+}
+
+.progressBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 15px 0;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #ccc;
+  border: 3px solid #ccc;
+  transition: background-color 0.3s;
+}
+
+.active .circle {
+  background-color: #2ba23a;
+  border: 3px solid #2ba23a;
+}
+
+.stepLabel {
+  font-size: 14px;
+  font-weight: bold;
+  color: #666;
+  margin-top: 5px;
+}
+
+.stepDate {
+  font-size: 12px;
+  color: #777;
+}
+
+.line {
+  flex: 1;
+  height: 3px;
+  background-color: #ccc;
+}
+
+.active + .line {
+  background-color: #2ba23a;
+}
+
+/* Status Message */
+.statusMessage {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
