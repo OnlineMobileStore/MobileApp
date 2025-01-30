@@ -60,7 +60,7 @@ const CheckOut = () => {
   return (
     <div className={styles.container}>
       <Navbar/>
-      <div className={styles.modal}>
+      <div className={styles.modal} >
         <h2>Make Payment</h2>
         <div className={styles.progress}>
           <span className={step >= 1 ? styles.active : ""}>1</span>
