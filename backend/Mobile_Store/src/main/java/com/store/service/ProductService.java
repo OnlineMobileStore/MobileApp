@@ -10,5 +10,8 @@ public interface ProductService {
 	
 	ApiResponse addNewProduct(ProductReqDTO dto);
 	List<ProductRespDTO> getAllProduct();
+	ProductRespDTO getProductDetails(Long Id);
+	ApiResponse updateProductDetails(Long id, ProductReqDTO dto);
+	ApiResponse deleteProduct(Long id);
 
 }
