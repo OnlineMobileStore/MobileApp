@@ -3,15 +3,14 @@ package com.store.service;
 import java.util.List;
 
 import com.store.dto.ApiResponse;
-import com.store.dto.ProductReqDTO;
-import com.store.dto.ProductRespDTO;
+import com.store.dto.ProductDTO;
 
 public interface ProductService {
 	
-	ApiResponse addNewProduct(ProductReqDTO dto);
-	List<ProductRespDTO> getAllProduct();
-	ProductRespDTO getProductDetails(Long Id);
-	ApiResponse updateProductDetails(Long id, ProductReqDTO dto);
+	ApiResponse addNewProduct(ProductDTO dto);
+	List<ProductDTO> getAllProduct();
+	ProductDTO getProductDetails(Long Id);
+	ApiResponse updateProductDetails(Long id, ProductDTO dto);
 	ApiResponse deleteProduct(Long id);
 
 }

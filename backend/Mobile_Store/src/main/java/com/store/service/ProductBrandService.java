@@ -3,13 +3,12 @@ package com.store.service;
 import java.util.List;
 
 import com.store.dto.ApiResponse;
-import com.store.dto.ProductBrandReqDTO;
-import com.store.dto.ProductBrandRespDTO;
+import com.store.dto.ProductBrandDTO;
 
 public interface ProductBrandService {
 	
-	List<ProductBrandRespDTO> getAllBrand();
-	ApiResponse addNewProductBrand(ProductBrandReqDTO dto);
+	List<ProductBrandDTO> getAllBrand();
+	ApiResponse addNewProductBrand(ProductBrandDTO dto);
 	//ProductBrandRespDTO getProductBrandDetails(Long id);
 
 }

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.store.dto.ApiResponse;
 import com.store.dto.CartDto;
-import com.store.pojo.Cart;
 import com.store.service.CartService;
 
 import jakarta.validation.Valid;

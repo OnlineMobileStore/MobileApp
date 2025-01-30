@@ -57,7 +57,7 @@ public class AdminServiceImpl implements AdminService {
         admin.setUpdatedOn(LocalDateTime.now());
 
         adminDao.save(admin);
-        return new ApiResponse("Admin registered successfully.");
+        return new ApiResponse("success","Admin registered successfully.");
     }
 
     @Override
@@ -79,7 +79,7 @@ public class AdminServiceImpl implements AdminService {
         responseData.put("token", token);
         responseData.put("user", adminResponse);
 
-        return new ApiResponse(responseData);
+        return new ApiResponse("successs",responseData);
     }
     
     @Override
@@ -96,7 +96,7 @@ public class AdminServiceImpl implements AdminService {
 
         adminDao.save(admin);
 
-        return new ApiResponse("Admin details updated successfully.");
+        return new ApiResponse("success","Admin details updated successfully.");
     }
     
     @Override
@@ -114,7 +114,7 @@ public class AdminServiceImpl implements AdminService {
         customer.setIsActive(false);
         customerDao.save(customer);
 
-        return new ApiResponse("Customer soft deleted successfully.");
+        return new ApiResponse("success","Customer soft deleted successfully.");
     }
     
     @Override

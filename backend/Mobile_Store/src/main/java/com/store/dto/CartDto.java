@@ -1,7 +1,5 @@
 package com.store.dto;
 
-import java.util.List;
-
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

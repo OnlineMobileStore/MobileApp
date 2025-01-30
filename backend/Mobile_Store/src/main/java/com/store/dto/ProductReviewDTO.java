@@ -7,8 +7,9 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductReviewReqDTO {
-    @NotNull(message = "Product ID is required")
+public class ProductReviewDTO extends BaseDTO{
+
+	@NotNull(message = "Product ID is required")
     private Long productId;
     
     @NotNull(message = "Customer ID is required")

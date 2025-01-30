@@ -1,11 +1,8 @@
 package com.store.service;
 
 import java.util.Optional;
-
-import org.apache.catalina.connector.Response;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +12,6 @@ import com.store.dao.CustomerDao;
 import com.store.dao.ProductDao;
 import com.store.dto.ApiResponse;
 import com.store.dto.CartDto;
-import com.store.dto.CartItemDto;
 import com.store.pojo.Cart;
 import com.store.pojo.CartItem;
 import com.store.pojo.Customer;
@@ -40,8 +36,6 @@ public class CartServiceImpl implements CartService {
 	private ProductDao productDao;
 	@Autowired
 	private  ModelMapper modelMapper;
-	
-	private CartItem cartItem;
 	
 	
 	@Override
@@ -96,7 +90,7 @@ public class CartServiceImpl implements CartService {
 	    cartItemDao.save(cartItem);
 
 	    // Return the updated cart (with added product)
-	    return new ApiResponse("iteam saved in cart");
+	    return new ApiResponse("successs","iteam saved in cart");
 	}
 
 

@@ -60,7 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
         // Save customer
         customerDao.save(customer);
 
-        return new ApiResponse("Customer registered successfully.");
+        return new ApiResponse("success","Customer registered successfully.");
     }
 
     @Override
@@ -89,7 +89,7 @@ public class CustomerServiceImpl implements CustomerService {
         responseData.put("token", token);
         responseData.put("user", customerResp);
 
-        return new ApiResponse(responseData);
+        return new ApiResponse("success",responseData);
     }
 
 	
@@ -107,16 +107,8 @@ public class CustomerServiceImpl implements CustomerService {
 
         customerDao.save(customer);
 
-        return new ApiResponse("Customer details updated successfully.");
+        return new ApiResponse("success","Customer details updated successfully.");
     }
-
-    @Override
-//    public CustomerDTO getCustomerDetailsById(Long customerId) {
-//        Customer customer = customerDao.findById(customerId)
-//                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + customerId));
-//
-//        return modelMapper.map(customer, CustomerDTO.class);
-//    }
     
     public CustomerDTO getCustomerDetailsById(Long customerId) {
         Customer customer = customerDao.findById(customerId)

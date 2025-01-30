@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.store.dao.ProductBrandDao;
 import com.store.dto.ApiResponse;
-import com.store.dto.ProductBrandReqDTO;
-import com.store.dto.ProductBrandRespDTO;
+import com.store.dto.ProductBrandDTO;
 import com.store.pojo.ProductBrand;
 
 @Service
@@ -23,7 +22,7 @@ public class ProductBrandServiceImpl implements ProductBrandService {
     private ModelMapper modelMapper;
 
     @Override
-    public ApiResponse addNewProductBrand(ProductBrandReqDTO dto) {
+    public ApiResponse addNewProductBrand(ProductBrandDTO dto) {
         // Map DTO to entity
         ProductBrand prodBrandEntity = modelMapper.map(dto, ProductBrand.class);
 
@@ -31,15 +30,15 @@ public class ProductBrandServiceImpl implements ProductBrandService {
        productBrandDao.save(prodBrandEntity);
 
         // Return API response with the new product brand ID
-        return new ApiResponse("Product brand added successfully ");
+        return new ApiResponse("successs","Product brand added successfully ");
     }
 
 	@Override
-	public List<ProductBrandRespDTO> getAllBrand() {
+	public List<ProductBrandDTO> getAllBrand() {
 		
 		return productBrandDao.findAll()
 				.stream()
-				.map(brand->modelMapper.map(brand, ProductBrandRespDTO.class))
+				.map(brand->modelMapper.map(brand, ProductBrandDTO.class))
 				.collect(Collectors.toList());
 	}
     
