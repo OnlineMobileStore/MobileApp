@@ -17,8 +17,7 @@ const SignUp = () => {
   };
 
   return (
-    
-    <div className="d-flex align-items-center justify-content-center vh-100 bg-light">
+      <div className="d-flex align-items-center justify-content-center vh-100 bg-light">
       <div className="card p-4" style={{ width: "100%", maxWidth: "400px" }}>
         <h3 className="text-center mb-4">Sign Up</h3>
         <form>

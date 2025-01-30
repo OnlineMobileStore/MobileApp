@@ -14,7 +14,8 @@ import Wishlist from './pages/customer/Wishlist';
 import MyCart from './pages/customer/MyCart';
 import ProductPage from './pages/customer/ProductPage';
 import ProductReview from './pages/customer/ProductReview';
-
+import CheckOut from "./pages/customer/CheckOut";
+import OrderTracking from "./pages/customer/OrderTracking";
 
 const App = () => {
   return (
@@ -73,8 +74,11 @@ const App = () => {
             <Route path='/Customer/home' element={<HomeCustomer />} />
             <Route path='/wishlist' element={<Wishlist/>} />
             <Route path='/mycart' element={<MyCart/>} />
+            <Route path='/checkout' element={<CheckOut/>}/>
+            <Route path="/ordertracking" element={<OrderTracking />} />
             <Route path='/productreviews' element={<ProductReview/>} />
             <Route path='/productpage' element={<ProductPage/>} />
+          
           </Routes>
         </div>
      
