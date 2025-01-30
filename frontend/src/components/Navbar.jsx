@@ -13,9 +13,10 @@ const NavbarComponent = () => {
     >
       <Container>
         {/* Logo */}
-        <Navbar.Brand href="/" className="navbar-brand">
-          Mobile Store
-        </Navbar.Brand>
+        <Navbar.Brand href="/" className="navbar-brand" style={{ fontSize: "36px", display:"flex"}} >
+  Mobile Store
+</Navbar.Brand>
+
 
         {/* Toggle for mobile view */}
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -30,6 +31,8 @@ const NavbarComponent = () => {
                 placeholder="Search for mobiles..."
                 className="me-2"
                 aria-label="Search"
+                
+                
               />
               <Button variant="outline-primary">Search</Button>
             </Form>

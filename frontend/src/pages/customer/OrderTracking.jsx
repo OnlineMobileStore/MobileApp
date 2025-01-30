@@ -31,8 +31,10 @@ const OrderTracking = () => {
   const { deliveryAddress, orderDetails, progress } = orderData;
 
   return (
+
     <div className={styles.container}>
       {/* Delivery Address */}
+      <Navbar/>
       <div className={styles.addressContainer}>
         <h3 className={styles.sectionTitle}>Delivery Address</h3>
         <div className={styles.address}>

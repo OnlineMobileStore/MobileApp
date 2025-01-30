@@ -1,59 +1,16 @@
-/* Navbar Styles */
 .mobile-store-navbar {
+  width: 100%; /* Ensures full width */
+  max-width: 100%; /* Prevents unnecessary constraints */
   background-color: rgba(255, 255, 255, 0.9); /* Transparent white */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  /* padding: 10px 0; */
-  font-family: "Arial", sans-serif;
-}
-
-.navbar-brand {
-  font-size: 24px;
-  font-weight: bold;
-  color: #000;
-}
-
-.navbar-brand:hover {
-  color: #007bff;
-}
-
-/* Nav Links */
-.nav-link {
-  color: #333;
-  font-size: 16px;
-  margin: 0 10px;
-  transition: color 0.3s ease;
-}
-
-.nav-link:hover {
-  color: #007bff;
-}
-
-.bi {
-  font-size: 20px;
-  vertical-align: middle;
-}
-
-/* Search Form */
-.search-form {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  font-family: "Arial", sans-serif ; font-size: 25px;
+  margin-bottom: 40%; /* This might cause unnecessary spacing, consider removing */
+  padding: 10px 20px; /* Adds spacing on the sides */
   display: flex;
+  justify-content: space-between; /* Ensures proper alignment */
   align-items: center;
-}
-
-.search-form .form-control {
-  width: 200px;
-  border-radius: 20px;
-}
-
-.search-form .btn {
-  border-radius: 20px;
-}
-
-/* Filter Dropdown */
-.filter-dropdown .dropdown-toggle {
-  border-radius: 20px;
-}
-
-.filter-dropdown .dropdown-menu {
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: fixed; /* Fixes navbar at the top */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Ensures it's above other content */
 }
