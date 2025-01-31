@@ -1,89 +1,34 @@
-// import React, { useState } from "react";
-// import AdminNavbar from "./../components/AdminNavbar";
-
-// const AdminDashboard = () => {
-//   const [products, setProducts] = useState([
-//     { id: 1, name: "Samsung", price: 11000, quantity: 200 },
-//     { id: 2, name: "Readme", price: 25000, quantity: 500 },
-//     { id: 3, name: "Oppo", price: 7000, quantity: 700 },
-//     { id: 4, name: "Realme", price: 15000, quantity: 100 },
-//   ]);
-
-//   const handleDelete = (id) => {
-//     const updatedProducts = products.filter((product) => product.id !== id);
-//     setProducts(updatedProducts);
-//   };
-
-//   const handleEdit = (id) => {
-//     alert(`Edit product with ID: ${id}`);
-//   };
-
-//   const handleAdd = () => {
-//     alert("Add new product");
-//   };
-
-//   const handleView = (id) => {
-//     alert(`View details of product with ID: ${id}`);
-//   };
-
-//   return (
-//     <div>
-//       <AdminNavbar />
-//       <div style={{
-//           marginLeft: "250px", // Offset the content to the right of the sidebar
-//           padding: "20px",
-//           height: "calc(100vh)", // Adjust height to account for the top bar
-//           overflowY: "auto", // Enable scrolling for the content area
-//           backgroundColor: "#f5f5f5",
-//   }}>
-//         <h1>Welcome to the Admin Panel</h1>
-//         <button onClick={handleAdd}>Add New Product</button>
-//         <table>
-//           <thead>
-//             <tr>
-//               <th>Name</th>
-//               <th>Price</th>
-//               <th>Quantity</th>
-//               <th>Actions</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {products.map((product) => (
-//               <tr key={product.id}>
-//                 <td>{product.name}</td>
-//                 <td>{product.price}</td>
-//                 <td>{product.quantity}</td>
-//                 <td>
-//                   <button onClick={() => handleView(product.id)}>View</button>
-//                   <button onClick={() => handleEdit(product.id)}>Edit</button>
-//                   <button onClick={() => handleDelete(product.id)}>Delete</button>
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AdminDashboard;
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AdminNavbar from "../../components/AdminNavbar";
 import TopBar from "../../components/TopBar";
+import { getAllProducts } from "../../services/product";
 
 const AdminDashboard = () => {
-  const [products, setProducts] = useState([
-    { id: 1, name: "Samsung", price: 11000, quantity: 200 },
-    { id: 2, name: "Readme", price: 25000, quantity: 500 },
-    { id: 3, name: "Oppo", price: 7000, quantity: 700 },
-    { id: 4, name: "Realme", price: 15000, quantity: 100 },
-  ]);
+  const [products, setProducts] = useState([]);
 
-  const handleDelete = (id) => {
-    const updatedProducts = products.filter((product) => product.id !== id);
-    setProducts(updatedProducts);
+  // Fetch products from backend when component mounts
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await getAllProducts();
+      console.log(response.data);
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    // try {
+    //   await axios.delete(`http://localhost:8080/products/delete/${id}`);
+    //   setProducts(products.filter((product) => product.id !== id)); // Remove from UI
+    // } catch (error) {
+    //   console.error("Error deleting product:", error);
+    // }
+    alert(`delete product with ID: ${id}`);
   };
 
   const handleEdit = (id) => {
@@ -118,7 +63,7 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <div
         style={{
-          marginLeft: "250px", // Offset for sidebar
+          marginLeft: "250px",
           width: "calc(100% - 250px)",
           display: "flex",
           flexDirection: "column",
@@ -140,20 +85,28 @@ const AdminDashboard = () => {
             padding: "0 20px",
           }}
         >
-          <h2 style={{ margin: "0", fontSize: "18px" }}><TopBar/></h2>
+          <h2 style={{ margin: "0", fontSize: "18px" }}>
+            <TopBar />
+          </h2>
         </div>
 
         {/* Scrollable Content */}
         <div
           style={{
-            marginTop: "50px", // Space for fixed top bar
+            marginTop: "50px",
             flex: 1,
             overflowY: "auto",
             padding: "20px",
             backgroundColor: "#f5f5f5",
           }}
         >
-          <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "20px" }}>
+          <h1
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              marginBottom: "20px",
+            }}
+          >
             Welcome to the Admin Panel
           </h1>
           <button
@@ -188,33 +141,48 @@ const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
-                <tr key={product.id} style={rowStyle}>
-                  <td style={cellStyle}>{product.name}</td>
-                  <td style={cellStyle}>{product.price}</td>
-                  <td style={cellStyle}>{product.quantity}</td>
-                  <td style={cellStyle}>
-                    <button
-                      onClick={() => handleView(product.id)}
-                      style={actionButtonStyle("view")}
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => handleEdit(product.id)}
-                      style={actionButtonStyle("edit")}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(product.id)}
-                      style={actionButtonStyle("delete")}
-                    >
-                      Delete
-                    </button>
+              {products.length > 0 ? (
+                products.map((product) => (
+                  <tr key={product.id} style={rowStyle}>
+                    <td style={cellStyle}>
+                      {product.title.length > 20
+                        ? product.title.slice(0, 20) + "..."
+                        : product.title}
+                    </td>
+                    <td style={cellStyle}>{product.price}</td>
+                    <td style={cellStyle}>{product.quantity}</td>
+                    <td style={cellStyle}>
+                      <button
+                        onClick={() => handleView(product.id)}
+                        style={actionButtonStyle("view")}
+                      >
+                        View
+                      </button>
+                      <button
+                        onClick={() => handleEdit(product.id)}
+                        style={actionButtonStyle("edit")}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(product.id)}
+                        style={actionButtonStyle("delete")}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="4"
+                    style={{ textAlign: "center", padding: "20px" }}
+                  >
+                    No products available
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

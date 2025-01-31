@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./BuyProducts.module.css";
 import { FaStar, FaRegStar } from "react-icons/fa";
+import { getAllProducts } from "../services/product";
 const BuyProducts = () => {
   // Static JSON data for filters and products
   const filters = {
@@ -12,178 +13,23 @@ const BuyProducts = () => {
     screenSize: ['5.5"', '6.0"', '6.5"'],
   };
   const maxStars = 5;
-
-  const products = [
-    {
-      id: 1,
-      name: "iPhone 14 Pro",
-      price: 30000,
-      discount: 25,
-      image:
-        "https://m.media-amazon.com/images/I/71yzJoE7WlL._AC_UF1000,1000_QL80_.jpg",
-      brand: "Apple",
-      camera: "48 MP",
-      ram: "6GB",
-      storage: "128GB",
-      screenSize: '6.1"',
-      rating: 4,
-    },
-    {
-      id: 2,
-      name: "Samsung Galaxy S22",
-      price: 10000,
-      discount: 25,
-      image:
-        "https://m.media-amazon.com/images/I/71HUnJvHsbL._AC_UF1000,1000_QL80_.jpg",
-      brand: "Samsung",
-      camera: "64 MP",
-      ram: "8GB",
-      storage: "256GB",
-      screenSize: '6.5"',
-      rating: 4.5,
-    },
-    {
-      id: 3,
-      name: "OnePlus 11",
-      price: 50000,
-      discount: 25,
-      image:
-        "https://m.media-amazon.com/images/I/71yzJoE7WlL._AC_UF1000,1000_QL80_.jpg",
-      brand: "OnePlus",
-      camera: "48 MP",
-      ram: "8GB",
-      storage: "128GB",
-      screenSize: '6.7"',
-      rating: 3,
-    },
-    {
-      id: 4,
-      name: "iPhone 14 Pro",
-      price: 20000,
-      discount: 25,
-      image:
-        "https://m.media-amazon.com/images/I/71yzJoE7WlL._AC_UF1000,1000_QL80_.jpg",
-      brand: "Apple",
-      camera: "48 MP",
-      ram: "6GB",
-      storage: "128GB",
-      screenSize: '6.1"',
-      rating: 5,
-    },
-    {
-      id: 5,
-      name: "Samsung Galaxy S22",
-      price: 60000,
-      discount: 25,
-      image:
-        "https://m.media-amazon.com/images/I/71HUnJvHsbL._AC_UF1000,1000_QL80_.jpg",
-      brand: "Samsung",
-      camera: "64 MP",
-      ram: "8GB",
-      storage: "256GB",
-      screenSize: '6.5"',
-      rating: 4,
-    },
-    {
-      id: 6,
-      name: "OnePlus 11",
-      price: 40000,
-      discount: 25,
-      image:
-        "https://m.media-amazon.com/images/I/71yzJoE7WlL._AC_UF1000,1000_QL80_.jpg",
-      brand: "OnePlus",
-      camera: "48 MP",
-      ram: "8GB",
-      storage: "128GB",
-      screenSize: '6.7"',
-      rating: 5,
-    },
-    {
-      id: 7,
-      name: "iPhone 14 Pro",
-      price: 80000,
-      discount: 25,
-      image:
-        "https://m.media-amazon.com/images/I/71yzJoE7WlL._AC_UF1000,1000_QL80_.jpg",
-      brand: "Apple",
-      camera: "48 MP",
-      ram: "6GB",
-      storage: "128GB",
-      screenSize: '6.1"',
-      rating: 3.5,
-    },
-    {
-      id: 8,
-      name: "Samsung Galaxy S22",
-      price: 70000,
-      discount: 25,
-      image:
-        "https://m.media-amazon.com/images/I/71HUnJvHsbL._AC_UF1000,1000_QL80_.jpg",
-      brand: "Samsung",
-      camera: "64 MP",
-      ram: "8GB",
-      storage: "256GB",
-      screenSize: '6.5"',
-      rating: 5,
-    },
-    {
-      id: 9,
-      name: "OnePlus 11",
-      price: 60000,
-      discount: 25,
-      image:
-        "https://m.media-amazon.com/images/I/71HUnJvHsbL._AC_UF1000,1000_QL80_.jpg",
-      brand: "OnePlus",
-      camera: "48 MP",
-      ram: "8GB",
-      storage: "128GB",
-      screenSize: '6.7"',
-      rating: 4.5,
-    },
-    {
-      id: 10,
-      name: "iPhone 14 Pro",
-      price: 90000,
-      discount: 25,
-      image:
-        "https://m.media-amazon.com/images/I/71yzJoE7WlL._AC_UF1000,1000_QL80_.jpg",
-      brand: "Apple",
-      camera: "48 MP",
-      ram: "6GB",
-      storage: "128GB",
-      screenSize: '6.1"',
-      rating: 5,
-    },
-    {
-      id: 11,
-      name: "Samsung Galaxy S22",
-      price: 79999,
-      discount: 25,
-      image:
-        "https://m.media-amazon.com/images/I/71HUnJvHsbL._AC_UF1000,1000_QL80_.jpg",
-      brand: "Samsung",
-      camera: "64 MP",
-      ram: "8GB",
-      storage: "256GB",
-      screenSize: '6.5"',
-      rating: 2.5,
-    },
-    {
-      id: 12,
-      name: "OnePlus 11",
-      price: 61999,
-      discount: 25,
-      image:
-        "https://m.media-amazon.com/images/I/71HUnJvHsbL._AC_UF1000,1000_QL80_.jpg",
-      brand: "OnePlus",
-      camera: "48 MP",
-      ram: "8GB",
-      storage: "128GB",
-      screenSize: '6.7"',
-      rating: 2,
-    },
-    // Add more products as needed
-  ];
+  
+  const [products, setProducts] = useState([]);
+    
+      // Fetch products from backend when component mounts
+      useEffect(() => {
+        fetchProducts();
+      }, []);
+    
+      const fetchProducts = async () => {
+        try {
+          const response = await getAllProducts();
+          console.log(response.data);
+          setProducts(response.data);
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      };
 
   const [selectedFilters, setSelectedFilters] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -300,16 +146,16 @@ const BuyProducts = () => {
                   <div className={`card ${styles.customCard}`}>
                     <div>
                       <img
-                        src={product.image}
+                        src={product.primaryImage}
                         className={`card-img-top img-fluid ${styles.customImage}`}
-                        alt={product.name}
+                        alt={product.title}
                       />
                     </div>
                     <div className="card-body">
                       <h6 className="card-title">
-                        {product.name.length > 18
-                          ? `${product.name.substring(0, 18)}...`
-                          : product.name}
+                        {product.title.length > 18
+                          ? `${product.title.substring(0, 18)}...`
+                          : product.title}
                       </h6>
                       <div>
                         <span className="text-success">
