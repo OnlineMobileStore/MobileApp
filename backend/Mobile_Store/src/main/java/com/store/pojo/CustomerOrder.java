@@ -29,7 +29,7 @@ public class CustomerOrder extends BaseEntity{
     @Column(nullable = false)
     private String status = "Placed";
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<OrderDetails> orderDetails;
 
 }

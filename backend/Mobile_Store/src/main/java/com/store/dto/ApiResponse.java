@@ -25,4 +25,11 @@ public class ApiResponse {
         this.data = responseData.get("user");  
         this.timeStamp = LocalDateTime.now();
     }
+    
+    public ApiResponse(String status, String message, Object data) {
+        this.status = status;
+        this.message = message;
+        this.data = data;
+        this.timeStamp = LocalDateTime.now();
+    }
 }
