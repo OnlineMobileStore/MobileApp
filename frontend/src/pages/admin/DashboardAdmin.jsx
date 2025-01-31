@@ -14,7 +14,7 @@ const AdminDashboard = () => {
   const fetchProducts = async () => {
     try {
       const response = await getAllProducts();
-      console.log(response.data);
+      console.log(response);
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
