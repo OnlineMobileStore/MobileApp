@@ -20,3 +20,23 @@ export async function editProfile(customerId,customerDetails) {
     return { status: 'error', error: ex }
   }
 }
+
+export async function getAllCustomers() {
+  try {
+    const url = createUrl(`admin/getAllcustomers`)
+    const response = await axios.get(url)
+    return response
+  } catch (ex) {
+    return { status: 'error', error: ex }
+  }
+}
+
+export async function toggleCustomer(customerId,updatedStatus) {
+  try {
+    const url = createUrl(`admin/toggleCustomer/${customerId}`)
+    const response = await axios.put(url, {isActive:updatedStatus})
+    return response;
+  } catch (ex) {
+    return { status: 'error', error: ex }
+  }
+}

@@ -1,23 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AdminNavbar from "../../components/AdminNavbar";
 import TopBar from "../../components/TopBar";
+import { getAllCustomers } from "../../services/customer";
+import { toggleCustomer } from "../../services/customer";
 
 const CustomersDetails = () => {
-  const [customers, setCustomers] = useState([
-    { id: 1, name: "John Doe", email: "john@example.com", totalSpent: "₹15,000", isBlocked: false },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", totalSpent: "₹22,500", isBlocked: false },
-    { id: 3, name: "Bob Johnson", email: "bob@example.com", totalSpent: "₹10,750", isBlocked: true },
-    { id: 4, name: "Alice Davis", email: "alice@example.com", totalSpent: "₹30,000", isBlocked: false },
-  ]);
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleBlockUnblock = (id) => {
-    setCustomers((prevCustomers) =>
-      prevCustomers.map((customer) =>
-        customer.id === id ? { ...customer, isBlocked: !customer.isBlocked } : customer
-      )
-    );
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const response = await getAllCustomers();
+        if (!response.ok) {
+          throw new Error("Failed to fetch customers");
+        }
+        const data = await response.json();
+        setCustomers(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCustomers();
+  }, []);
+
+  const handleBlockUnblock = async (id) => {
+    try {
+      const customer = customers.find((c) => c.id === id);
+      if (!customer) return;
+  
+      const updatedStatus = !customer.isActive; 
+      setCustomers(customers.map((c) => 
+        c.id === id ? { ...c, isActive: updatedStatus } : c
+      ));
+  
+      await toggleCustomer(id,updatedStatus);
+    } catch (error) {
+      console.error("Failed to update block status:", error);
+    }
   };
-
+  
   return (
     <div style={{ display: "flex", height: "100vh", overflowY: "auto" }}>
       {/* Sidebar */}
@@ -38,7 +64,7 @@ const CustomersDetails = () => {
       {/* Main Content */}
       <div
         style={{
-          marginLeft: "250px", // Offset for sidebar
+          marginLeft: "250px",
           width: "calc(100% - 250px)",
           display: "flex",
           flexDirection: "column",
@@ -66,7 +92,7 @@ const CustomersDetails = () => {
         {/* Scrollable Content */}
         <div
           style={{
-            marginTop: "50px", // Space for fixed top bar
+            marginTop: "50px",
             flex: 1,
             overflowY: "auto",
             padding: "20px",
@@ -76,47 +102,54 @@ const CustomersDetails = () => {
           <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "20px" }}>
             Customer List
           </h1>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              backgroundColor: "#fff",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <thead>
-              <tr>
-                <th style={tableHeaderStyle}>Name</th>
-                <th style={tableHeaderStyle}>Email</th>
-                <th style={tableHeaderStyle}>Total Amount Spent</th>
-                <th style={tableHeaderStyle}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {customers.map((customer) => (
-                <tr key={customer.id} style={rowStyle}>
-                  <td style={cellStyle}>{customer.name}</td>
-                  <td style={cellStyle}>{customer.email}</td>
-                  <td style={cellStyle}>{customer.totalSpent}</td>
-                  <td style={cellStyle}>
-                    <button
-                      onClick={() => handleBlockUnblock(customer.id)}
-                      style={{
-                        padding: "5px 10px",
-                        backgroundColor: customer.isBlocked ? "#dc3545" : "#28a745",
-                        color: "#fff",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {customer.isBlocked ? "Unblock" : "Block"}
-                    </button>
-                  </td>
+
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p style={{ color: "red" }}>{error}</p>
+          ) : (
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                backgroundColor: "#fff",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <thead>
+                <tr>
+                  <th style={tableHeaderStyle}>Name</th>
+                  <th style={tableHeaderStyle}>Email</th>
+                  <th style={tableHeaderStyle}>Total Amount Spent</th>
+                  <th style={tableHeaderStyle}>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {customers.map((customer) => (
+                  <tr key={customer.id} style={rowStyle}>
+                    <td style={cellStyle}>{customer.firstName} {customer.lastName}</td>
+                    <td style={cellStyle}>{customer.email}</td>
+                    <td style={cellStyle}>{customer.totalSpent}</td>
+                    <td style={cellStyle}>
+                      <button
+                        onClick={() => handleBlockUnblock(customer.id)}
+                        style={{
+                          padding: "5px 10px",
+                          backgroundColor: customer.isActive ? "#28a745" : "#dc3545",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "5px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {customer.isActive ? "Block" : "UnBlock"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>
