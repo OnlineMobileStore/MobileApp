@@ -18,6 +18,7 @@ import LoginAdmin from "./pages/admin/LoginAdmin";
 import { ToastContainer } from "react-toastify";
 import ChangeProfile from "./pages/customer/ChangeProfile";
 import ChangeAdminProfile from "./pages/admin/ChangeAdminProfile";
+import ProductAverage from "./components/ProductAverage";
 
 
 const App = () => {
@@ -41,6 +42,8 @@ const App = () => {
             <Route path='/mycart' element={<MyCart />} />
             <Route path='/productreviews' element={<ProductReview />} />
             <Route path='/productpage' element={<ProductPage />} />
+            <Route path='/productAverage' element={<ProductAverage />} />
+
           </Routes>
         </div>
 

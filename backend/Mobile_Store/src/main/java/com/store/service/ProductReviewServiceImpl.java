@@ -1,4 +1,5 @@
 package com.store.service;
+import com.store.dto.ProductRatingStatsDTO;
 import com.store.dto.ProductReviewDTO;
 import com.store.exception.ResourceNotFoundException;
 import com.store.pojo.Product;
@@ -11,7 +12,10 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,4 +63,45 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                         review.getComment(), review.getRating()))
                 .collect(Collectors.toList());
     }
+    
+    public Double getAverageRating(Long productId) {
+    	productReviewDao.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        return productReviewDao.findAverageRatingByProductId(productId);
+    }
+    
+
+    public ProductRatingStatsDTO getRatingStats(Long productId) {
+        // Ensure the product exists
+        productDao.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        List<Object[]> resultList = productReviewDao.findRatingDistributionByProductId(productId);
+
+        // Debugging output
+        System.out.println("Query Result: " + resultList);
+
+        // Ensure we have a result
+        if (resultList == null || resultList.isEmpty()) {
+            System.out.println("No results found, returning default values.");
+            return new ProductRatingStatsDTO(0, 0, 0, 0, 0, 0, 0.0);
+        }
+
+        // Extract first row (should be a single row result)
+        Object[] result = resultList.get(0);
+
+        return new ProductRatingStatsDTO(
+                ((Number) (result[0] != null ? result[0] : 0)).intValue(),
+                ((Number) (result[1] != null ? result[1] : 0)).intValue(),
+                ((Number) (result[2] != null ? result[2] : 0)).intValue(),
+                ((Number) (result[3] != null ? result[3] : 0)).intValue(),
+                ((Number) (result[4] != null ? result[4] : 0)).intValue(),
+                ((Number) (result[5] != null ? result[5] : 0)).longValue(),
+                ((Number) (result[6] != null ? result[6] : 0.0)).doubleValue()
+        );
+    }
+
+
+
 }
