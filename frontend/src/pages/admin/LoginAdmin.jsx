@@ -27,6 +27,7 @@ const LoginAdmin = () => {
       setError(true);
     } else {
       const result = await signinAdmin(email, password);
+      console.log(result)
       if (result["status"] === "success") {
         toast.success("Welcome to Mobile Store");
 

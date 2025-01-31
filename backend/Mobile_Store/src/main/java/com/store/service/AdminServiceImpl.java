@@ -79,7 +79,7 @@ public class AdminServiceImpl implements AdminService {
         responseData.put("token", token);
         responseData.put("user", adminResponse);
 
-        return new ApiResponse("successs",responseData);
+        return new ApiResponse("success",responseData);
     }
     
     @Override
