@@ -12,7 +12,7 @@ public interface AdminService {
     ApiResponse loginAdmin(SignInRequest signInRequest);
 	ApiResponse updateAdminDetails(Long adminId,AdminDTO dto);
 	List<CustomerDTO> getAllCustomers();
-	ApiResponse deActivateCustomer(Long customerId);
+	ApiResponse toggleCustomer(Long customerId);
 	AdminDTO getDetailsById(Long adminId);
 	
 }

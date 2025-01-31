@@ -37,9 +37,9 @@ public class AdminController {
         return ResponseEntity.ok(adminService.updateAdminDetails(adminId,dto));
     }
 	
-	@DeleteMapping("/deleteCustomer/{customerId}")
-    public ResponseEntity<ApiResponse> softDeleteCustomer( @PathVariable Long customerId) {
-        return ResponseEntity.ok(adminService.deActivateCustomer(customerId));
+	@PutMapping("/toggleCustomer/{customerId}")
+    public ResponseEntity<ApiResponse> softSetCustomer( @PathVariable Long customerId) {
+        return ResponseEntity.ok(adminService.toggleCustomer(customerId));
     }
 	
 	@GetMapping("/getAllcustomers")

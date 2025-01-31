@@ -79,7 +79,7 @@ public class AdminServiceImpl implements AdminService {
         responseData.put("token", token);
         responseData.put("user", adminResponse);
 
-        return new ApiResponse("successs",responseData);
+        return new ApiResponse("success",responseData);
     }
     
     @Override
@@ -107,11 +107,15 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ApiResponse deActivateCustomer(Long customerId) {
+    public ApiResponse toggleCustomer(Long customerId) {
         Customer customer = customerDao.findById(customerId)
                 .orElseThrow(() -> new AuthenticationException("Customer not found"));
-
-        customer.setIsActive(false);
+        if(customer.getIsActive())
+        {	
+        	customer.setIsActive(false);
+        }else {
+        	customer.setIsActive(true);
+        }
         customerDao.save(customer);
 
         return new ApiResponse("success","Customer soft deleted successfully.");
