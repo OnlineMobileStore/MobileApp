@@ -10,7 +10,7 @@ import jakarta.validation.constraints.*;
 @AllArgsConstructor
 @ToString(callSuper = true, exclude = { "product","customer" })
 @Entity
-@Table(name = "product_reviews")
+@Table(name = "product_review")
 public class ProductReview extends BaseEntity{
 
     @ManyToOne
