@@ -1,12 +1,10 @@
 package com.store.service;
 
-import com.store.dto.FAQReqDTO;
-import com.store.dto.FAQRespDTO;
+import com.store.dto.FAQDTO;
 import java.util.List;
 
 public interface FAQService {
-    List<FAQRespDTO> getAllFAQs();
-    FAQRespDTO getFAQById(Long id);
-    FAQRespDTO addFAQ(FAQReqDTO faqReqDTO);
+    FAQDTO addFAQ(FAQDTO faqDTO);
+    FAQDTO updateFAQ(Long id, FAQDTO faqDTO);
+    List<FAQDTO> getAllFAQs();
 }
-

@@ -1,10 +1,9 @@
 package com.store.controller;
 
-import com.store.dto.FAQReqDTO;
-import com.store.dto.FAQRespDTO;
+import com.store.dto.FAQDTO;
 import com.store.service.FAQService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,25 +11,22 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/faqs")
-@RequiredArgsConstructor
-public class FAQController
-{
-	
-    private final FAQService faqService;
+public class FAQController {
+    @Autowired
+    private FAQService faqService;
+
+    @PostMapping
+    public ResponseEntity<FAQDTO> addFAQ(@Valid @RequestBody FAQDTO faqDTO) {
+        return ResponseEntity.ok(faqService.addFAQ(faqDTO));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<FAQDTO> updateFAQ(@PathVariable Long id, @Valid @RequestBody FAQDTO faqDTO) {
+        return ResponseEntity.ok(faqService.updateFAQ(id, faqDTO));
+    }
 
     @GetMapping
-    public ResponseEntity<List<FAQRespDTO>> getAllFAQs() {
+    public ResponseEntity<List<FAQDTO>> getAllFAQs() {
         return ResponseEntity.ok(faqService.getAllFAQs());
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<FAQRespDTO> getFAQById(@PathVariable Long id) {
-        return ResponseEntity.ok(faqService.getFAQById(id));
-    }
-    
-    @PostMapping
-    public ResponseEntity<FAQRespDTO> addFAQ(@Valid @RequestBody FAQReqDTO faqReqDTO) {
-        return ResponseEntity.ok(faqService.addFAQ(faqReqDTO));
-    }
-    
 }
