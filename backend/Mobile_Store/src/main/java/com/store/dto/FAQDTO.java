@@ -1,13 +1,12 @@
 package com.store.dto;
+
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-public class FAQReqDTO {
+public class FAQDTO extends BaseDTO {
     @NotBlank(message = "Question is required")
     private String question;
     private String answer;
