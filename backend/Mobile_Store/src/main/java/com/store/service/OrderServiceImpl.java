@@ -4,11 +4,15 @@ import com.store.dto.CustomerOrdersResponseDTO;
 import com.store.dto.OrderItemDTO;
 import com.store.dto.OrderRequestDTO;
 import com.store.dto.OrderResponseCustDTO;
+import com.store.dto.OrderStatusUpdateDTO;
 import com.store.exception.ResourceNotFoundException;
 import com.store.pojo.Customer;
 import com.store.pojo.CustomerOrder;
 import com.store.pojo.OrderDetails;
 import com.store.pojo.Product;
+
+import jakarta.transaction.Transactional;
+
 import com.store.dao.CustomerDao;
 import com.store.dao.CustomerOrderDao;
 import com.store.dao.ProductDao;
@@ -113,43 +117,7 @@ public class OrderServiceImpl implements OrderService {
         return new ApiResponse("success", "Customer orders fetched successfully", orderDetails);
     }
 
-      
-//       @Override
-//    	public ApiResponse getCustomerOrderDetails(Long customerId) {
-//    	   Customer customer = customerDao.findById(customerId)
-//    	            .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-//
-//    	    List<CustomerOrder> orders = customerOrderDao.findByCustomer(customer);
-//
-//    	    if (orders.isEmpty()) {
-//    	        return new ApiResponse("success", "No orders found for customer ID: " + customerId);
-//    	    }
-//
-//    	    // Configure ModelMapper for explicit property mappings
-//    	    modelMapper.typeMap(CustomerOrder.class, OrderResponseCustDTO.class)
-//    	            .addMapping(CustomerOrder::getId, OrderResponseCustDTO::setOrderId);
-//
-//    	    List<OrderResponseCustDTO> orderDetails = orders.stream()
-//    	            .map(order -> {
-//    	                OrderResponseCustDTO response = modelMapper.map(order, OrderResponseCustDTO.class);
-//
-//    	                // Mapping order items explicitly
-//    	                List<OrderItemDTO> itemList = order.getOrderDetails().stream()
-//    	                        .map(item -> {
-//    	                            OrderItemDTO itemDto = new OrderItemDTO();
-//    	                            itemDto.setProductId(item.getProduct().getId());
-//    	                            itemDto.setQuantity(item.getQuantity());
-//    	                            return itemDto;
-//    	                        })
-//    	                        .collect(Collectors.toList());
-//
-//    	                response.setItems(itemList);
-//    	                return response;
-//    	            }).collect(Collectors.toList());
-//
-//    	    return new ApiResponse("success", "Customer orders fetched successfully", orderDetails);
-//    }
-//    
+    
     @Override
     public ApiResponse getAllCustomersWithOrders() {
     	 List<Customer> customers = customerDao.findAll();
@@ -180,5 +148,21 @@ public class OrderServiceImpl implements OrderService {
                  }).collect(Collectors.toList());
 
          return new ApiResponse("success", "Customer orders fetched successfully", customerOrdersList);
+    }
+
+     @Transactional
+    public boolean updateOrderStatus(OrderStatusUpdateDTO statusUpdateDTO) {
+        // Fetch the order by its ID from the repository
+    	CustomerOrder order = customerOrderDao.findById(statusUpdateDTO.getOrderId())
+                                     .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // Update the order's status
+        order.setStatus(statusUpdateDTO.getStatus());
+
+        // Save the updated order back to the database
+        customerOrderDao.save(order);
+
+        // Return true indicating successful update
+        return true;
     }
 }
