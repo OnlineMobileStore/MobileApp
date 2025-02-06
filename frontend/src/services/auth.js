@@ -1,19 +1,10 @@
 import axios from 'axios'
 import { createUrl } from '../util'
 
-export async function signup(firstName, lastName, email, password, phone, address,city,state,zip,country) {
+export async function signup(UserData) {
   try {
-    const body = {
-      firstName,
-      lastName,
-      email,
-      password,
-      phone,
-      address,city,state,zip,country
-    }
-
     const url = createUrl('auth/register-customer')
-    const response = await axios.post(url, body)
+    const response = await axios.post(url, UserData)
     return response.data
   } catch (ex) {
     return { status: 'error', error: ex }

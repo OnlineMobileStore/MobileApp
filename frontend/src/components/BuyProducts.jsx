@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./BuyProducts.module.css";
 import { FaStar, FaRegStar } from "react-icons/fa";
-import { getAllProducts } from "../services/product";
-const BuyProducts = () => {
-  // Static JSON data for filters and products
+import { giveAvgRating } from "../services/product";
+const BuyProducts = ({ products = [] }) => {
   const filters = {
     brands: ["Samsung", "Apple", "OnePlus"],
     camera: ["12 MP", "48 MP", "64 MP"],
@@ -13,23 +12,27 @@ const BuyProducts = () => {
     screenSize: ['5.5"', '6.0"', '6.5"'],
   };
   const maxStars = 5;
-  
-  const [products, setProducts] = useState([]);
-    
-      // Fetch products from backend when component mounts
-      useEffect(() => {
-        fetchProducts();
-      }, []);
-    
-      const fetchProducts = async () => {
-        try {
-          const response = await getAllProducts();
-          console.log(response.data);
-          setProducts(response.data);
-        } catch (error) {
-          console.error("Error fetching products:", error);
+
+  const [avgRating, setAvgRating] = useState([]);
+
+  useEffect(() => {
+    const fetchRatings = async () => {
+      try {
+        const ratingsMap = {};
+        for (const product of products) {
+          const ratingData = await giveAvgRating(product.id);
+          ratingsMap[product.id] = ratingData.averageRating;
         }
-      };
+        setAvgRating(ratingsMap);
+      } catch (err) {
+        console.error("Failed to fetch rating stats", err);
+      }
+    };
+
+    if (products.length > 0) {
+      fetchRatings();
+    }
+  }, [products]);
 
   const [selectedFilters, setSelectedFilters] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -161,8 +164,10 @@ const BuyProducts = () => {
                         <span className="text-success">
                           <b>
                             ₹
-                            {Math.round(product.price -
-                              (product.price * product.discount) / 100)}
+                            {Math.round(
+                              product.price -
+                                (product.price * product.discount) / 100
+                            )}
                           </b>
                         </span>{" "}
                         <span className="text-muted text-decoration-line-through">
@@ -181,17 +186,18 @@ const BuyProducts = () => {
                           justifyContent: "center",
                         }}
                       >
-                        ({product.rating})
+                        ({avgRating[product.id] ?? "N/A"})
                         {Array.from({ length: maxStars }, (_, index) => (
                           <span key={index}>
-                            {index < Math.floor(product.rating) ? (
-                              <FaStar style={{ color: "#FFD700" }} /> // Filled star
+                            {index < Math.floor(avgRating[product.id] || 0) ? (
+                              <FaStar style={{ color: "#FFD700" }} />
                             ) : (
-                              <FaRegStar style={{ color: "#FFD700" }} /> // Empty star
+                              <FaRegStar style={{ color: "#FFD700" }} />
                             )}
                           </span>
                         ))}
                       </div>
+
                       <button className="btn btn-sm btn-outline-success mt-2">
                         Add to Cart
                       </button>

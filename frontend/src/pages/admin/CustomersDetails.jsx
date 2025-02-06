@@ -135,7 +135,7 @@ const CustomersDetails = () => {
                         onClick={() => handleBlockUnblock(customer.id)}
                         style={{
                           padding: "5px 10px",
-                          backgroundColor: customer.isActive ? "#28a745" : "#dc3545",
+                          backgroundColor: customer.isActive ? "#dc3545" : "#28a745",
                           color: "#fff",
                           border: "none",
                           borderRadius: "5px",

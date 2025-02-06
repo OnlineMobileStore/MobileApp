@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import AdminNavbar from "../../components/AdminNavbar";
 import TopBar from "../../components/TopBar";
 import { getAllProducts } from "../../services/product";
@@ -6,6 +7,7 @@ import { getAllProducts } from "../../services/product";
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
 
+  const navigate = useNavigate();
   // Fetch products from backend when component mounts
   useEffect(() => {
     fetchProducts();
@@ -14,33 +16,31 @@ const AdminDashboard = () => {
   const fetchProducts = async () => {
     try {
       const response = await getAllProducts();
-      console.log(response);
+      console.log(response.data);
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
   };
-
-  const handleDelete = async (id) => {
-    // try {
-    //   await axios.delete(`http://localhost:8080/products/delete/${id}`);
-    //   setProducts(products.filter((product) => product.id !== id)); // Remove from UI
-    // } catch (error) {
-    //   console.error("Error deleting product:", error);
-    // }
-    alert(`delete product with ID: ${id}`);
-  };
-
+  
   const handleEdit = (id) => {
-    alert(`Edit product with ID: ${id}`);
+    navigate("/edit-product", { state: { id } });
   };
 
-  const handleAdd = () => {
-    alert("Add new product");
+  const handleDelete = (id) => {
+    navigate("/delete-product", { state: { id } });
+  };
+
+  const handleAddProduct = () => {
+    navigate("/add-product");
+  };
+
+  const handleAddBrand = () => {
+    navigate("/add-brand");
   };
 
   const handleView = (id) => {
-    alert(`View details of product with ID: ${id}`);
+    navigate("/product-details", { state: { id } });
   };
 
   return (
@@ -110,7 +110,7 @@ const AdminDashboard = () => {
             Welcome to the Admin Panel
           </h1>
           <button
-            onClick={handleAdd}
+            onClick={handleAddProduct}
             style={{
               padding: "10px 15px",
               fontSize: "16px",
@@ -124,6 +124,24 @@ const AdminDashboard = () => {
           >
             Add New Product
           </button>
+
+          <button
+            onClick={handleAddBrand}
+            style={{
+              padding: "10px 15px",
+              fontSize: "16px",
+              backgroundColor: "#135474",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              marginBottom: "20px",
+              marginLeft:"50px"
+            }}
+          >
+            Add New Brand
+          </button>
+          
           <table
             style={{
               width: "100%",
