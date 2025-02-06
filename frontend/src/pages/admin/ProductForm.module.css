@@ -1,0 +1,30 @@
+.container {
+    width: 70vw;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 5px 5px 20px grey;
+    padding: 20px;
+    margin: 15px auto;
+  }
+  
+  .header {
+    color: #9f9f9f;
+    margin-bottom: 20px;
+  }
+  
+  .label {
+    font-weight: bold;
+  }
+  
+  .input {
+    border-radius: 5px;
+  }
+  
+  .button-group {
+    text-align: center;
+  }
+  
+  .text-muted {
+    font-size: 0.9em;
+  }
+  

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router-dom";
-import styles from "../../components/ProductForm.module.css";
+import styles from "./ProductForm.module.css";
 import {
   getBrandsList,
   getProductById,
