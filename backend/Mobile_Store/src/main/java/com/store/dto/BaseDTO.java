@@ -17,5 +17,8 @@ public class BaseDTO {
 	private LocalDate createdOn;
 	@JsonProperty(access=Access.READ_ONLY)
 	private LocalDateTime updatedOn;
+	
+	@JsonProperty(access=Access.READ_ONLY)
+    private Boolean isActive = true;
 }
 

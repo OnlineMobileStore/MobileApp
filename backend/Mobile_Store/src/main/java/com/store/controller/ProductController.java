@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.store.dto.ApiResponse;
 import com.store.dto.ProductDTO;
+import com.store.pojo.ProductImage;
 import com.store.service.ProductService;
 
 @RestController
@@ -42,6 +43,14 @@ public class ProductController {
     	return ResponseEntity.ok(product);
 	}
 	
+	@GetMapping("/getLatest")
+	public ResponseEntity<?> getNewProduct(){
+		List<ProductDTO> product=productService.getLatestProduct();
+		if(product.isEmpty())
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    	return ResponseEntity.ok(product);
+	}
+	
 	@GetMapping("/getId/{Id}")
 	public ResponseEntity<?> getProductDetails(@PathVariable Long Id){
 		ProductDTO product=productService.getProductDetails(Id);
@@ -62,5 +71,10 @@ public class ProductController {
         return ResponseEntity.ok("Product with ID " + id + " has been deactivated.");
     }
 	
+    
+    @GetMapping("/{id}/images")
+    public List<String> getImagePaths(@PathVariable Long id) {
+        return productService.getImagePathsByProductId(id);
+    }
 
 }

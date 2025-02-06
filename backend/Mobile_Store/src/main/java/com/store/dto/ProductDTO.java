@@ -1,5 +1,6 @@
 package com.store.dto;
 
+import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -9,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper=false)
 @Data
-public class ProductDTO extends BaseDTO{
+public class ProductDTO extends BaseDTO {
 	
     @NotBlank(message = "Title is required")
     @Column(nullable = false)
@@ -19,40 +20,33 @@ public class ProductDTO extends BaseDTO{
     @Column(nullable = false, length = 2000)
     private String description;
 
-    @Positive(message = "Price must be positive")
+    @Positive(message = "Price must be positive") 
     @Column(nullable = false)
     private Double price;
 
-    @NotBlank(message = "Discount is required")
-    private Double discount;
+    private Double discount; 
 
-    @NotBlank(message = "Color is required")
-    private String color;
+    private String color; 
 
-    @NotBlank(message = "Ram is required")
     private Integer ram;
 
-    @NotBlank(message = "camera is required")
-    private String camera;
+    private Integer camera; 
 
-    @NotBlank(message = "Color is required")
-    private Integer storage;
+    private Integer storage; 
 
-    @NotBlank(message = "OS is required")
-    private String os;
+    private String os; 
 
-    @NotBlank(message = "Battery is required")
-    private Integer battery;
+    private Integer battery; 
 
-    @NotBlank(message = "Screensize is required")
-    private Double screenSize;
+    private Double screenSize; 
 
-    @PositiveOrZero(message = "Quantity cannot be negative")
+    @PositiveOrZero(message = "Quantity cannot be negative") 
     private Integer quantity;
 
     @NotBlank(message = "Primary image is required")
     private String primaryImage;
-    
-    private Long brand_id ;
 
+    private String brand_name;
+
+    private List<String> images; 
 }

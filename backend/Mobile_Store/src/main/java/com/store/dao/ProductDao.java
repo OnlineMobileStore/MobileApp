@@ -9,11 +9,11 @@ import com.store.pojo.Product;
 
 public interface ProductDao extends JpaRepository<Product, Long> {
 	
-	// to get all active /available product
 	List<Product> findByIsActiveTrue();
 
-	//to soft deletion of product 
     Optional<Product> findByIdAndIsActiveTrue(Long id);
+
+    List<Product> findTop3ByOrderByCreatedOnDesc();
 	
 }
 

@@ -27,15 +27,19 @@ public class Product extends BaseEntity{
 
     private Double discount;
 
-    @NotBlank(message = "Color is required")
+    @Column(nullable = false, length = 20)
     private String color;
 
+    @Column(nullable = false)
     private Integer ram;
 
-    private String camera;
+    @Column(nullable = false, length = 20)
+    private Integer camera;
 
+    @Column(nullable = false)
     private Integer storage;
 
+    @Column(nullable = false, length = 20)
     private String os;
 
     private Integer battery;
@@ -50,11 +54,12 @@ public class Product extends BaseEntity{
     @Column(nullable = false)
     private Boolean isActive = true;
 
-    @ManyToOne
+    
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "brand_id", nullable = false)
     private ProductBrand brand;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<ProductImage> images;
 
 }
