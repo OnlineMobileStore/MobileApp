@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthContext";
-import ProtectedRoute from "./auth/ProtectedRoute";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import SalesDetailsAdmin from "./pages/admin/SalesDetailsAdmin";
 import ReviewsAdmin from "./pages/admin/ReviewsAdmin";
@@ -19,7 +18,11 @@ import { ToastContainer } from "react-toastify";
 import ChangeProfile from "./pages/customer/ChangeProfile";
 import ChangeAdminProfile from "./pages/admin/ChangeAdminProfile";
 import ProductAverage from "./components/ProductAverage";
-
+import AddProduct from "./pages/admin/AddProduct";
+import EditProduct from "./pages/admin/EditProduct";
+import DeleteProduct from "./pages/admin/DeleteProduct";
+import ProductDetails from "./pages/admin/ProductDetails";
+import AddBrand from "./pages/admin/AddBrand";
 
 const App = () => {
   return (
@@ -43,7 +46,11 @@ const App = () => {
             <Route path='/productreviews' element={<ProductReview />} />
             <Route path='/productpage' element={<ProductPage />} />
             <Route path='/productAverage' element={<ProductAverage />} />
-
+            <Route path='/add-brand' element={<AddBrand />} />
+            <Route path='/add-product' element={<AddProduct />} />
+            <Route path='/edit-product' element={<EditProduct />} />
+            <Route path='/delete-product' element={<DeleteProduct />} />
+            <Route path='/product-details' element={<ProductDetails />} />
           </Routes>
         </div>
 

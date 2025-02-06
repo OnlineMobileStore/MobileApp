@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-const ProductAverage = () => {
+const ProductAverage = ({id}) => {
     const [ratingStats, setRatingStats] = useState(null);
 
     useEffect(() => {
         const fetchRatingStats = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/reviews/rating-stats/2`);
+                const response = await axios.get(`http://localhost:8080/reviews/rating-stats/${id}`);
                 console.log(response.data);
                 setRatingStats(response.data);
             } catch (err) {
@@ -17,6 +17,13 @@ const ProductAverage = () => {
         fetchRatingStats();
     }, []);
 
+    // useEffect(() => {
+    //     fetch(`http://localhost:8080/reviews/rating-stats/1`)
+    //         .then(response => response.json())
+    //         .then(data => setRatingStats(data))
+    //         .catch(error => console.error("Error fetching rating stats:", error));
+    // }, []);
+
 
     if (!ratingStats) return <p>Loading...</p>;
 
@@ -25,11 +32,11 @@ const ProductAverage = () => {
             <h2>Average Rating: {ratingStats.averageRating} ⭐</h2>
             <p>Total Reviews: {ratingStats.totalReviews}</p>
             <ul>
-                <li>⭐⭐⭐⭐⭐ : {ratingStats.fiveStars}</li>
-                <li>⭐⭐⭐⭐ : {ratingStats.fourStars}</li>
-                <li>⭐⭐⭐ : {ratingStats.threeStars}</li>
-                <li>⭐⭐ : {ratingStats.twoStars}</li>
-                <li>⭐ : {ratingStats.oneStar}</li>
+                <li>⭐⭐⭐⭐⭐ - {ratingStats.fiveStars}</li>
+                <li>⭐⭐⭐⭐ - {ratingStats.fourStars}</li>
+                <li>⭐⭐⭐ - {ratingStats.threeStars}</li>
+                <li>⭐⭐ - {ratingStats.twoStars}</li>
+                <li>⭐ - {ratingStats.oneStar}</li>
             </ul>
         </div>
     );

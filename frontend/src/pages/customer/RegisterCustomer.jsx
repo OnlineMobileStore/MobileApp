@@ -61,18 +61,7 @@ const RegisterCustomer = () => {
       // toast.success("Registration Successful! Welcome to Mobile Store");
       // navigate("/CustomerHome");
 
-      const result = await signup(
-        firstName,
-        lastName,
-        email,
-        password,
-        phone,
-        addressLine,
-        city,
-        state,
-        postalCode,
-        country
-      );
+      const result = await signup(formData);
       if (result["status"] === "success") {
         toast.success("Successfully registered a new admin");
         navigate('/');

@@ -2,7 +2,9 @@ package com.store.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper=false)
 @Data
 public class ProductBrandDTO extends BaseDTO {
 	
