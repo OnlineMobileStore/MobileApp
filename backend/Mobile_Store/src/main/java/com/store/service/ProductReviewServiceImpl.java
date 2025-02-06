@@ -48,8 +48,8 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
         review = productReviewDao.save(review);
         return new ProductReviewDTO(
-                review.getProduct().getId(),
-                review.getCustomer().getId(), review.getTitle(),
+                review.getProduct().getId(),review.getCustomer().getId(),
+                review.getCustomer().getFirstName(), review.getTitle(),
                 review.getComment(), review.getRating()
         );
     }
@@ -58,14 +58,14 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     public List<ProductReviewDTO> getReviewsByProduct(Long productId) {
         return productReviewDao.findByProductId(productId).stream()
                 .map(review -> new ProductReviewDTO(
-                        review.getProduct().getId(),
-                        review.getCustomer().getId(), review.getTitle(),
+                        review.getProduct().getId(),review.getCustomer().getId(), 
+                        review.getCustomer().getFirstName(),review.getTitle(),
                         review.getComment(), review.getRating()))
                 .collect(Collectors.toList());
     }
     
     public Double getAverageRating(Long productId) {
-    	productReviewDao.findById(productId)
+    	productDao.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         return productReviewDao.findAverageRatingByProductId(productId);

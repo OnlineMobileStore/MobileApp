@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-const ProductAverage = ({id}) => {
+import { getAvgRating } from "../services/review";
+import axios from 'axios'
+
+const AverageReview = ({id}) => {
     const [ratingStats, setRatingStats] = useState(null);
 
     useEffect(() => {
         const fetchRatingStats = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/reviews/rating-stats/${id}`);
-                console.log(response.data);
+                const response = await getAvgRating(id);
                 setRatingStats(response.data);
             } catch (err) {
                 console.log("Failed to fetch rating stats");
@@ -16,14 +17,6 @@ const ProductAverage = ({id}) => {
 
         fetchRatingStats();
     }, []);
-
-    // useEffect(() => {
-    //     fetch(`http://localhost:8080/reviews/rating-stats/1`)
-    //         .then(response => response.json())
-    //         .then(data => setRatingStats(data))
-    //         .catch(error => console.error("Error fetching rating stats:", error));
-    // }, []);
-
 
     if (!ratingStats) return <p>Loading...</p>;
 
@@ -42,4 +35,4 @@ const ProductAverage = ({id}) => {
     );
 };
 
-export default ProductAverage;
+export default AverageReview;

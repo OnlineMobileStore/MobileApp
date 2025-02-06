@@ -155,7 +155,7 @@ const RegisterCustomer = () => {
             </div>
             <div className={styles.formGroup}>
               <input
-                name="address"
+                name="addressLine"
                 value={formData.addressLine}
                 onChange={handleChange}
                 className={`${styles.formControl} ${
