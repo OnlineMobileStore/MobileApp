@@ -23,7 +23,7 @@ public interface ProductReviewDao extends JpaRepository<ProductReview, Long> {
     	        COUNT(CASE WHEN r.rating = 5 THEN 1 END) AS fiveStars,
     	        COUNT(r.rating) AS totalReviews,
     	        COALESCE(AVG(r.rating), 0) AS averageRating
-    	    FROM product_reviews r 
+    	    FROM product_review r 
     	    WHERE r.product_id = :productId;
     	""", nativeQuery = true)
     List<Object[]> findRatingDistributionByProductId(@Param("productId") Long productId);

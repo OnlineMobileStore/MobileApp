@@ -1,72 +1,54 @@
-import React, { useEffect, useState } from "react";
-import styles from "../../styles/Reviews.module.css";
-import phone from "../../assets/phone.jpg";
+import { useEffect, useState } from "react";
 import AdminNavbar from "../../components/AdminNavbar";
-import TopBar from "../../components/TopBar"; // Import TopBar
+import TopBar from "../../components/TopBar";
+import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { getProductWithRating } from "../../services/review";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa"; // Importing Star Icons
 
-function ReviewsAdmin() {
-  const [product, setProduct] = useState({
-    id: 1,
-    name: "iPhone 16",
-    description:
-      "A18 Bionic chip, ProMotion display, and advanced AI-powered camera system",
-    cost: "₹45000.00",
-    image: "/path/to/product-image-1.jpg",
-  });
-
-  const allReviews = [
-    {
-      id: 1,
-      productId: 1,
-      name: "Towhidur Rahman",
-      rating: 5,
-      date: "24-10-2022",
-      reviewText:
-        "A good upgrade for those with older models, with new features like a powerful A18 chip, close-up photography, and Camera Control and Action Buttons",
-    },
-    {
-      id: 2,
-      productId: 1,
-      name: "John Doe",
-      rating: 4,
-      date: "15-09-2022",
-      reviewText:
-        "Excellent product and amazing quality! I am very happy with my purchase. Will recommend it to friends and family.",
-    },
-    {
-      id: 3,
-      productId: 1,
-      name: "Jane Smith",
-      rating: 5,
-      date: "10-08-2022",
-      reviewText:
-        "Absolutely loved it! Outstanding product, and the service was great. Highly recommend!",
-    },
-  ];
-  const [reviews, setReviews] = useState([]);
+const ReviewsAdmin = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const productReviews = allReviews.filter(
-      (review) => review.productId === product.id
-    );
-    setReviews(productReviews);
-  }, [product.id]);
+    const fetchProducts = async () => {
+      try {
+        const response = await getProductWithRating();
+        setProducts(response.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Failed to load products. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (!product) {
-    return <p>Loading product details...</p>;
-  }
+    fetchProducts();
+  }, []);
 
-  const totalReviews = reviews.length;
-  const averageRating =
-    reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews || 0;
+  const handleProduct = (id) => {
+    navigate("/product-details", { state: { id } });
+  };
 
-  const getInitials = (name) => {
-    const [firstName, lastName] = name.split(" ");
-    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+  // Function to generate star ratings
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      if (rating >= i) {
+        stars.push(<FaStar key={i} color="#FFD700" />); // Full star
+      } else if (rating >= i - 0.5) {
+        stars.push(<FaStarHalfAlt key={i} color="#FFD700" />); // Half star
+      } else {
+        stars.push(<FaRegStar key={i} color="#FFD700" />); // Empty star
+      }
+    }
+    return stars;
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+    <div className="d-flex" style={{ height: "100vh", overflowY: "auto" }}>
       {/* Sidebar */}
       <div
         style={{
@@ -107,67 +89,70 @@ function ReviewsAdmin() {
             padding: "0 20px",
           }}
         >
-          <TopBar />
+          <h2 style={{ margin: "0", fontSize: "18px" }}>
+            <TopBar />
+          </h2>
         </div>
 
         {/* Scrollable Content */}
         <div
           style={{
-            marginTop: "50px", // Space for the fixed top bar
+            marginTop: "50px",
             flex: 1,
             overflowY: "auto",
             padding: "20px",
             backgroundColor: "#f5f5f5",
           }}
         >
-          <div className={styles.reviewsContainer}>
-            <div className={styles.productSection}>
-              <img
-                src={phone}
-                alt={product.name}
-                className={styles.productImage}
-              />
-              <div className={styles.productDetails}>
-                <h3>{product.name}</h3>
-                <p>{product.description}</p>
-                <p>
-                  <strong>{product.cost}</strong>
-                </p>
+          <h1 className="fw-bold mb-4">Products with Reviews</h1>
+
+          {/* Loading & Error Handling */}
+          {loading && <p className="text-center">Loading products...</p>}
+          {error && <p className="text-danger text-center">{error}</p>}
+
+          {/* Products Grid */}
+          {!loading && !error && (
+            <div className="container">
+              <div className="row">
+                {products.map((product) => (
+                  <div key={product.id} className="col-md-3 mb-4">
+                    <div className="card h-100 shadow-sm border-0">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="card-img-top"
+                        style={{
+                          height: "150px",
+                          objectFit: "cover",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => handleProduct(product.id)}
+                      />
+                      <div className="card-body text-center">
+                        <h6 className="card-title fw-bold">
+                          {product.productName}
+                        </h6>
+                        <div className="mb-1">{renderStars(product.averageRating)}</div>
+                        <p className="text-muted">
+                          ({product.averageRating.toFixed(1)} / {product.totalReviews} reviews)
+                        </p>
+                        <button
+                          className="btn btn-primary btn-sm"
+                          onClick={() => handleProduct(product.id)}
+                        >
+                          View Details
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-            <h2>Reviews</h2>
-            <div className={styles.reviewsSummary}>
-              <p>Total Reviews: {totalReviews}</p>
-              <p>
-                Average Rating: {averageRating.toFixed(1)}{" "}
-                <span className={styles.stars}>
-                  {"★".repeat(Math.round(averageRating))}
-                </span>
-              </p>
-            </div>
-            <div className={styles.reviewsList}>
-              {reviews.map((review) => (
-                <div key={review.id} className={styles.reviewItem}>
-                  <div className={styles.userLogo}>
-                    {getInitials(review.name)}
-                  </div>
-                  <h4>{review.name}</h4>
-                  <p>
-                    Rating:
-                    <span className={styles.stars}>
-                      {"★".repeat(review.rating)}
-                    </span>
-                  </p>
-                  <p>Date: {review.date}</p>
-                  <p>{review.reviewText}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default ReviewsAdmin;

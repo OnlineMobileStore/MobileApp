@@ -13,11 +13,11 @@ const CustomersDetails = () => {
     const fetchCustomers = async () => {
       try {
         const response = await getAllCustomers();
-        if (!response.ok) {
+        if (response.status != 200) {
           throw new Error("Failed to fetch customers");
         }
-        const data = await response.json();
-        setCustomers(data);
+        // const data = await response.json();
+        setCustomers(response.data);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -32,18 +32,18 @@ const CustomersDetails = () => {
     try {
       const customer = customers.find((c) => c.id === id);
       if (!customer) return;
-  
-      const updatedStatus = !customer.isActive; 
-      setCustomers(customers.map((c) => 
-        c.id === id ? { ...c, isActive: updatedStatus } : c
-      ));
-  
-      await toggleCustomer(id,updatedStatus);
+
+      const updatedStatus = !customer.isActive;
+      setCustomers(customers.map((c) =>
+          c.id === id ? { ...c, isActive: updatedStatus } : c
+        ));
+
+      await toggleCustomer(id, updatedStatus);
     } catch (error) {
       console.error("Failed to update block status:", error);
     }
   };
-  
+
   return (
     <div style={{ display: "flex", height: "100vh", overflowY: "auto" }}>
       {/* Sidebar */}
@@ -99,7 +99,7 @@ const CustomersDetails = () => {
             backgroundColor: "#f5f5f5",
           }}
         >
-          <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "20px" }}>
+          <h1 style={{fontSize: "24px",fontWeight: "bold",marginBottom: "20px",}}>
             Customer List
           </h1>
 
@@ -135,7 +135,7 @@ const CustomersDetails = () => {
                         onClick={() => handleBlockUnblock(customer.id)}
                         style={{
                           padding: "5px 10px",
-                          backgroundColor: customer.isActive ? "#dc3545" : "#28a745",
+                          backgroundColor: customer.isActive? "#dc3545": "#28a745",
                           color: "#fff",
                           border: "none",
                           borderRadius: "5px",

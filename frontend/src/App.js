@@ -17,7 +17,7 @@ import LoginAdmin from "./pages/admin/LoginAdmin";
 import { ToastContainer } from "react-toastify";
 import ChangeProfile from "./pages/customer/ChangeProfile";
 import ChangeAdminProfile from "./pages/admin/ChangeAdminProfile";
-import ProductAverage from "./components/ProductAverage";
+import AverageReview from "./components/AverageReview";
 import AddProduct from "./pages/admin/AddProduct";
 import EditProduct from "./pages/admin/EditProduct";
 import DeleteProduct from "./pages/admin/DeleteProduct";
@@ -45,7 +45,7 @@ const App = () => {
             <Route path='/mycart' element={<MyCart />} />
             <Route path='/productreviews' element={<ProductReview />} />
             <Route path='/productpage' element={<ProductPage />} />
-            <Route path='/productAverage' element={<ProductAverage />} />
+            <Route path='/productAverage' element={<AverageReview />} />
             <Route path='/add-brand' element={<AddBrand />} />
             <Route path='/add-product' element={<AddProduct />} />
             <Route path='/edit-product' element={<EditProduct />} />
