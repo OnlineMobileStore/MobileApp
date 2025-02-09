@@ -6,6 +6,7 @@ import com.store.dto.OrderRequestDTO;
 import com.store.dto.OrderResponseCustDTO;
 import com.store.dto.OrderStatusUpdateDTO;
 import com.store.exception.ResourceNotFoundException;
+import com.store.pojo.Cart;
 import com.store.pojo.Customer;
 import com.store.pojo.CustomerOrder;
 import com.store.pojo.OrderDetails;
@@ -13,6 +14,7 @@ import com.store.pojo.Product;
 
 import jakarta.transaction.Transactional;
 
+import com.store.dao.CartDao;
 import com.store.dao.CustomerDao;
 import com.store.dao.CustomerOrderDao;
 import com.store.dao.ProductDao;
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +32,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private CustomerDao customerDao;
+
+    @Autowired
+    private CartDao cartDao;
 
     @Autowired
     private ProductDao productDao;
@@ -65,12 +71,12 @@ public class OrderServiceImpl implements OrderService {
 
             OrderDetails details = new OrderDetails();
             details.setProduct(product);
-            details.setPrice(product.getPrice());
+            details.setPrice(item.getPrice());
             details.setQuantity(item.getQuantity());
             details.setOrder(order);
             orderDetailsList.add(details);
 
-            totalAmount += product.getPrice() * item.getQuantity();
+            totalAmount += item.getPrice() * item.getQuantity();
         }
 
         order.setTotalAmount(totalAmount);
@@ -78,6 +84,17 @@ public class OrderServiceImpl implements OrderService {
         customerOrderDao.save(order);
 
         return new ApiResponse("success","Order placed successfully with total amount: " + totalAmount);
+    }
+       
+    public ApiResponse removeFromCart(Long customerId, Long productId) {
+        Optional<Cart> cart = cartDao.findByCustomerIdAndProductId(customerId, productId);
+
+        if (cart.isEmpty()) {
+            return new ApiResponse("error", "Product not found in cart");
+        }
+
+        cartDao.delete(cart.get());
+        return new ApiResponse("success", "Item removed from cart");
     }
     
     @Override
@@ -134,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
                              .map(order -> {
                                  OrderResponseCustDTO response = modelMapper.map(order, OrderResponseCustDTO.class);
                                  response.setItems(order.getOrderDetails().stream()
-                                         .map(item -> new OrderItemDTO(item.getProduct().getId(), item.getQuantity()))
+                                         .map(item -> new OrderItemDTO(item.getProduct().getId(),item.getQuantity(),item.getPrice()))
                                          .collect(Collectors.toList()));
                                  return response;
                              })
