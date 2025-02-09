@@ -33,6 +33,9 @@ public class CartDTO extends BaseDTO{
 	 @JsonProperty(access=Access.READ_ONLY)
 	 private String productImage;
 	 
+	 @JsonProperty(access=Access.READ_ONLY)
+	 private Integer productQuantity;
+	 
 	 private Integer quantity;
 	 
 	 private Double price;

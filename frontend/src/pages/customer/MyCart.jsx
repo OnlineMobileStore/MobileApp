@@ -5,6 +5,7 @@ import Navbar from "../../components/Navbar";
 import "../../components/Footer.css";
 import "../../components/Navbar.css";
 import { FaTrashAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
 import {
   getCartItems,
   updateCartQuantity,
@@ -71,6 +72,7 @@ const MyCart = () => {
         setCartItems((prevCartItems) =>
           prevCartItems.filter((item) => item.productId !== productId)
         );
+        toast.success("mobile successfully removed from cart")
       }
     } catch (error) {
       console.error("Error removing item from cart:", error);
@@ -115,6 +117,7 @@ const MyCart = () => {
                   <th>Quantity</th>
                   <th>Price</th>
                   <th>Total Price</th>
+                  <th>Available</th>
                   <th>Remove</th>
                 </tr>
               </thead>
@@ -158,18 +161,25 @@ const MyCart = () => {
                       {(item.oprice - (item.discount / 100) * item.oprice) *
                         item.quantity}
                     </td>
+                    <td
+                      style={{
+                        color:
+                          item.productQuantity - item.quantity > 0
+                            ? "green"
+                            : "red",
+                      }}
+                    >
+                      {item.productQuantity - item.quantity > 0
+                        ? "In stock"
+                        : "Out of stock"}
+                    </td>
                     <td>
-                      {/* <button
-                        className={styles.deleteBtn}
-                        onClick={() => handleRemove(item.productId)}
-                      > */}
                       <FaTrashAlt
                         className={styles.deleteBtn}
                         size={18}
                         color="red"
                         onClick={() => handleRemove(item.productId)}
                       />
-                      {/* </button> */}
                     </td>
                   </tr>
                 ))}
@@ -216,7 +226,18 @@ const MyCart = () => {
           </table>
           <button
             className={styles.checkoutButton}
-            onClick={() => navigate("/checkout",{state:{orderPrice:calculateSubtotal()}})}
+            onClick={() =>
+              navigate("/checkout", {
+                state: {
+                  orderPrice: calculateSubtotal(),
+                  cartItems: cartItems.map((item) => ({
+                    productId: item.productId,
+                    price: item.oprice - (item.discount / 100) * item.oprice, // Calculate the discounted price
+                    quantity: item.quantity,
+                  })),
+                },
+              })
+            }
           >
             Checkout
           </button>

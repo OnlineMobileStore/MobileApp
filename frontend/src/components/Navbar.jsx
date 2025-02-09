@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import {
   Navbar,
   Nav,
@@ -13,10 +13,12 @@ import { Link } from "react-router-dom";
 import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
 import { getCartItems } from "../services/cart";
+// import { useCart } from "../context/CartContext";
 
 const NavbarComponent = () => {
   const navigate = useNavigate();
   const customerId = localStorage.getItem("customerId");
+  // const { cartItems, fetchCartItems} = useCart();
   const [cartItems, setCartItems] = useState(new Set());
 
   const handleLogout = () => {
@@ -66,14 +68,15 @@ const NavbarComponent = () => {
 
           {/* Right section: Navigation Links */}
           <Nav className="ms-auto">
-            <Nav.Link as={Link} to="/">Home</Nav.Link>
-            <Nav.Link as={Link} to="/shop">Shop</Nav.Link>
-            <Nav.Link as={Link} to="/about">About</Nav.Link>
-            <Nav.Link as={Link} to="/contact">Contact Us</Nav.Link>
+            <Nav.Link as={Link} to="/customer/home">Home</Nav.Link>
+            <Nav.Link as={Link} to="/myorders">My Orders</Nav.Link>
+            <Nav.Link as={Link} to="/wishlist">WishList</Nav.Link>
+            <Nav.Link as={Link} to="/about">About Us</Nav.Link>
 
             {/* Cart */}
             <Nav.Link as={Link} to="/myCart" aria-label="Cart">
-              <BiCart /> Cart <span style={{padding:"4px",color:"white",backgroundColor:"green",borderRadius:"100%"}}>{cartItems.size}</span>
+              <BiCart /> Cart 
+              {/* <span style={{padding:"4px",color:"white",backgroundColor:"green",borderRadius:"100%"}}>{cartItems.size}</span> */}
             </Nav.Link>
 
             {/* Profile Dropdown */}

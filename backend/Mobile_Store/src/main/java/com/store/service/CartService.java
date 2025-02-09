@@ -11,5 +11,6 @@ public interface CartService {
     ApiResponse updateCartQuantity(Long customerId, Long productId, int quantity);
     ApiResponse removeFromCart(Long customerId, Long productId);
     List<CartDTO> getCartProductsByCustomerId(Long customerId);
+	ApiResponse emptyCart(Long customerId);
 
 }

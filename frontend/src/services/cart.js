@@ -41,7 +41,18 @@ export const getCartItems = async (customerId) => {
       const response = await axios.delete(url);
       return response;
     } catch (error) {
-      console.error("Error updating cart quantity:", error);
+      console.error("Error removing cart quantity:", error);
+      throw error;
+    }
+  };
+
+  export const emptyCart = async (customerId) => {
+    try {
+        const url = createUrl(`customer/cart/removeAll/${customerId}`)
+      const response = await axios.delete(url);
+      return response;
+    } catch (error) {
+      console.error("Error deleting cart quantity:", error);
       throw error;
     }
   };

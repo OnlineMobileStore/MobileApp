@@ -98,9 +98,24 @@ public class CartServiceImpl implements CartService {
                     dto.setProductImage(cart.getProduct().getPrimaryImage());
                     dto.setDiscount(cart.getProduct().getDiscount());
                     dto.setOprice(cart.getProduct().getPrice());
+                    dto.setProductQuantity(cart.getProduct().getQuantity());
                     
         			return dto;
         		}).collect(Collectors.toList());
+    }
+    
+    @Override
+    public ApiResponse emptyCart(Long customerId) {
+        Optional<Customer> customer = customerDao.findById(customerId);
+        
+        if (!customer.isPresent()) {
+            return new ApiResponse("error", "Customer not found");
+        }
+        
+        // Delete the cart items associated with the customer
+        cartDao.deleteByCustomer(customer.get());
+
+        return new ApiResponse("success", "Cart has been emptied successfully.");
     }
     
 }

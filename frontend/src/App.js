@@ -28,7 +28,7 @@ import CheckOut from "./pages/customer/CheckOut";
 
 const App = () => {
   return (
-    <>
+    <CartProvider>
       <Router>
         <div className="content">
           <Routes>
@@ -59,7 +59,7 @@ const App = () => {
 
       </Router>
       <ToastContainer />
-     </>
+     </CartProvider>
   );
 };
 

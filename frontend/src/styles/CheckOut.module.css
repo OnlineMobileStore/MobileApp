@@ -1,142 +1,154 @@
-/* CheckOut.module.css */
+/* Modal Styles */
+.modal {
+  width: 40%;
+  max-width: 600px;
+  margin: 30px auto 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  /* text-align: center; */
+}
 
-/* Container */
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f5f5f5;
-  }
-  
-  /* Modal */
-  .modal {
-    background: #fff;
-    /* padding: 20px; */
-    border-radius: 10px;
-    width: 500px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Heading */
-  h2 {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  h3 {
-    font-size: 18px;
-    margin-top: 20px;
-  }
-  
-  /* Progress Bar */
-  .progress {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  
-  .progress span {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: #ddd;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-  }
-  
-  .progress .active {
-    background-color:#135474;
-    color: white;
-  }
-  
-  /* Step */
-  .step {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .inputGroup {
-    margin-bottom: 15px;
-  }
-  
-  .inputGroup input,
-  .textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-  
-  .textarea {
-    height: 100px;
-    resize: none;
-  }
-  
-  /* Error Messages */
-  .error {
-    color: red;
-    font-size: 12px;
-    margin-top: 5px;
-  }
-  
-  /* Payment Methods */
-  .paymentMethods {
-    margin-top: 20px;
-  }
-  
-  .paymentMethods label {
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
-    cursor: pointer;
-  }
-  
-  .paymentMethods input[type="radio"] {
-    margin-right: 10px;
-  }
-  
-  .selected {
-    font-weight: bold;
-    color: #4caf50;
-  }
-  
-  /* Buttons */
-  .button {
-    padding: 10px 20px;
-    background-color: #135474;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 20px;
-  }
-  
-  .button:hover {
-    background-color: #135474;
-  }
-  
-  /* Success Section */
-  .success {
-    text-align: center;
-  }
-  
-  .checkmark {
-    font-size: 60px;
-    color: #4caf50;
-    margin-bottom: 20px;
-  }
-  
-  .success h3 {
-    font-size: 24px;
-    color: #4caf50;
-    margin-bottom: 20px;
-  }
-  
+/* Headings */
+h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Progress Indicator */
+.progress {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+
+.progress span {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #ccc;
+  margin: 0 10px;
+  font-weight: bold;
+  color: #fff;
+  transition: 0.3s;
+}
+
+.progress .active {
+  background: #28a745;
+}
+
+/* Step Container */
+.step {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  /* width: 100%; */
+}
+
+/* Input Groups */
+.inputGroup {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 15px;
+}
+
+.inputContainer label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.inputContainer input,
+.inputContainer textarea {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: 0.3s ease-in-out;
+}
+
+.inputContainer input:focus,
+.inputContainer textarea:focus {
+  border-color: #28a745;
+  outline: none;
+  box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+}
+
+.inputContainer textarea {
+  height: 60px;
+  resize: none;
+}
+
+/* Error Messages */
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+/* Payment Methods */
+.paymentMethods {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.paymentMethods label {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.paymentMethods label.selected {
+  border-color: #28a745;
+  background: #f0fff0;
+}
+
+/* Buttons */
+.button {
+  width: 100px;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  background: #28a745;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.button:hover {
+  background: #218838;
+}
+
+/* Success Message */
+.success {
+  text-align: center;
+}
+
+.success p {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+

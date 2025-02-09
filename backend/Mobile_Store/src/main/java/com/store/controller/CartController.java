@@ -39,6 +39,12 @@ public class CartController {
         return cartService.removeFromCart(customerId, productId);
     }
     
+    @DeleteMapping("/removeAll/{customerId}")
+    public ApiResponse removeAllFromCart(
+    		@PathVariable Long customerId) {
+        return cartService.emptyCart(customerId);
+    }
+    
     @GetMapping("/{customerId}")
     public ResponseEntity<?> getCartItems(@PathVariable Long customerId){
 		List<CartDTO> cartItems=cartService.getCartProductsByCustomerId(customerId);
