@@ -1,108 +1,229 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from '../../styles/MyCart.module.css'; 
-import phone from "../../assets/phone.jpg";
-import Navbar from '../../components/Navbar';
-import '../../components/Footer.css';
-import '../../components/Navbar.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "../../styles/MyCart.module.css";
+import Navbar from "../../components/Navbar";
+import "../../components/Footer.css";
+import "../../components/Navbar.css";
+import { FaTrashAlt } from "react-icons/fa";
+import {
+  getCartItems,
+  updateCartQuantity,
+  removeFromCart,
+} from "../../services/cart";
 
-const CartPage = () => {
+const MyCart = () => {
   const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState([]);
+  const customerId = localStorage.getItem("customerId");
 
-  const [wishlist, setWishlist] = useState([
-    { id: 1, name: 'Product 1', image: 'phone.jpg', unitPrice: 50, quantity: 1 },
-    { id: 2, name: 'Product 2', image: 'image2.jpg', unitPrice: 30, quantity: 2 },
-    { id: 3, name: 'Product 3', image: 'image3.jpg', unitPrice: 20, quantity: 1 },
-  ]);
+  const fetchCartItems = async () => {
+    if (!customerId) return;
+    try {
+      const response = await getCartItems(customerId);
+      setCartItems(response.data);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
 
   const shippingCharges = 10;
 
-  const handleQuantityChange = (id, delta) => {
-    setWishlist((prevWishlist) =>
-      prevWishlist.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
+  const handleQuantityChange = async (productId, delta) => {
+    const updatedItem = cartItems.find((item) => item.productId === productId);
+    if (!updatedItem) return;
+
+    const newQuantity = Math.max(1, updatedItem.quantity + delta);
+
+    try {
+      const response = await updateCartQuantity(
+        customerId,
+        productId,
+        newQuantity
+      );
+      if (response.status === "success") {
+        setCartItems((prevCartItems) =>
+          prevCartItems.map((item) =>
+            item.productId === productId
+              ? {
+                  ...item,
+                  quantity: newQuantity,
+                  price: item.oprice * newQuantity,
+                }
+              : item
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating cart quantity:", error);
+    }
+  };
+
+  const handleRemove = async (productId) => {
+    if (!customerId) return;
+
+    try {
+      const response = await removeFromCart(customerId, productId);
+      if (response.data.status === "success") {
+        setCartItems((prevCartItems) =>
+          prevCartItems.filter((item) => item.productId !== productId)
+        );
+      }
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
+    }
+  };
+
+  const calculateFinal = () => {
+    return cartItems.reduce(
+      (total, item) =>
+        total +
+        (item.oprice - (item.discount / 100) * item.oprice) * item.quantity,
+      0
     );
   };
 
-  const calculateTotal = () => {
-    return wishlist.reduce((total, item) => total + item.unitPrice * item.quantity, 0);
+  const calculateOriginal = () => {
+    return cartItems.reduce(
+      (total, item) => total + item.oprice * item.quantity,
+      0
+    );
   };
 
   const calculateSubtotal = () => {
-    return calculateTotal() + shippingCharges;
+    return calculateFinal() + shippingCharges;
   };
 
   return (
-    <div className={styles.cartContainer}>
-      <Navbar/>
+    <div>
+      <Navbar />
       <div className={styles.cartContent}>
-        <h2 className={styles.cartTitle}>MyCart</h2>
-        <div className={styles.scrollableContent}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Image</th>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Unit Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              {wishlist.map((item) => (
-                <tr key={item.id}>
-                  <td>
-                    <img src={phone} alt={item.name} className={styles.image} />
-                  </td>
-                  <td>{item.name}</td>
-                  <td>
-                    <button onClick={() => handleQuantityChange(item.id, -1)}>-</button>
-                    <span>{item.quantity}</span>
-                    <button onClick={() => handleQuantityChange(item.id, 1)}>+</button>
-                  </td>
-                  <td>₹{item.unitPrice}</td>
-                  <td>₹{item.unitPrice * item.quantity}</td>
+        <h2 className={styles.cartTitle}>My Cart</h2>
+
+        {cartItems.length === 0 ? (
+          <p className={styles.emptyCartMessage}>Your cart is empty!</p>
+        ) : (
+          <div className={styles.scrollableContent}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Product Name</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Total Price</th>
+                  <th>Remove</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {cartItems.map((item) => (
+                  <tr key={item.productId}>
+                    <td>
+                      <img
+                        src={item.productImage}
+                        alt={item.productName}
+                        className={styles.image}
+                      />
+                    </td>
+                    <td>{item.productName}</td>
+                    <td>
+                      <button
+                        className={styles.quantityBtn}
+                        onClick={() => handleQuantityChange(item.productId, -1)}
+                      >
+                        -
+                      </button>
+                      <span className={styles.quantity}>{item.quantity}</span>
+                      <button
+                        className={styles.quantityBtn}
+                        onClick={() => handleQuantityChange(item.productId, 1)}
+                      >
+                        +
+                      </button>
+                    </td>
+                    <td>
+                      <span className="text-muted text-decoration-line-through">
+                        ₹{item.oprice}
+                      </span>{" "}
+                      <span className="text-danger">{item.discount}%</span>{" "}
+                      <h6 className="text-success">
+                        {item.oprice - (item.discount / 100) * item.oprice}
+                      </h6>
+                    </td>
+                    <td>
+                      ₹
+                      {(item.oprice - (item.discount / 100) * item.oprice) *
+                        item.quantity}
+                    </td>
+                    <td>
+                      {/* <button
+                        className={styles.deleteBtn}
+                        onClick={() => handleRemove(item.productId)}
+                      > */}
+                      <FaTrashAlt
+                        className={styles.deleteBtn}
+                        size={18}
+                        color="red"
+                        onClick={() => handleRemove(item.productId)}
+                      />
+                      {/* </button> */}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
-      <div className={styles.summaryContainer} style={{ position: 'relative', marginTop: '20px' }}>
-        <h3>Price Summary</h3>
-        <table className={styles.summaryTable}>
-          <tbody>
-            <tr>
-              <td>Number of Items:</td>
-              <td>{wishlist.reduce((total, item) => total + item.quantity, 0)}</td>
-            </tr>
-            <tr>
-              <td>Price:</td>
-              <td>₹{calculateTotal()}</td>
-            </tr>
-            <tr>
-              <td>Shipping Charges:</td>
-              <td>₹{shippingCharges}</td>
-            </tr>
-            <tr>
-              <td className={styles.subtotalLabel}>Subtotal:</td>
-              <td className={styles.subtotal}>₹{calculateSubtotal()}</td>
-            </tr>
-          </tbody>
-        </table>
-        <button 
-          className={styles.checkoutButton} 
-          onClick={() => navigate('/checkout')}
-        >
-          Checkout
-        </button>
-      </div>
+      {cartItems.length > 0 && (
+        <div className={styles.summaryContainer}>
+          <h3>Price Summary</h3>
+          <table className={styles.summaryTable}>
+            <tbody>
+              <tr>
+                <td>Number of Items:</td>
+                <td>
+                  {cartItems.reduce((total, item) => total + item.quantity, 0)}
+                </td>
+              </tr>
+              <tr>
+                <td>Original Price:</td>
+                <td>₹{calculateOriginal()}</td>
+              </tr>
+              <tr>
+                <td>Final Price:</td>
+                <td>₹{calculateFinal()}</td>
+              </tr>
+              <tr>
+                <td>You saved</td>
+                <td style={{ color: "red" }}>
+                  - ₹{calculateOriginal() - calculateFinal()}
+                </td>
+              </tr>
+              <tr>
+                <td>Shipping Charges:</td>
+                <td style={{ color: "green" }}>+ ₹{shippingCharges}</td>
+              </tr>
+              <tr>
+                <td className={styles.subtotalLabel}>Subtotal:</td>
+                <td className={styles.subtotal}>₹{calculateSubtotal()}</td>
+              </tr>
+            </tbody>
+          </table>
+          <button
+            className={styles.checkoutButton}
+            onClick={() => navigate("/checkout",{state:{orderPrice:calculateSubtotal()}})}
+          >
+            Checkout
+          </button>
+        </div>
+      )}
     </div>
   );
 };
 
-export default CartPage;
+export default MyCart;

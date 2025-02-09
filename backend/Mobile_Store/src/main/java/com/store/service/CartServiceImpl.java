@@ -1,111 +1,106 @@
 package com.store.service;
 
-import java.util.Optional;
+import com.store.dao.CartDao;
+import com.store.dao.CustomerDao;
+import com.store.dao.ProductDao;
+import com.store.dto.CartDTO;
+import com.store.dto.ApiResponse;
+import com.store.pojo.Cart;
+import com.store.pojo.Customer;
+import com.store.pojo.Product;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.store.dao.CartDao;
-import com.store.dao.CartItemDao;
-import com.store.dao.CustomerDao;
-import com.store.dao.ProductDao;
-import com.store.dto.ApiResponse;
-import com.store.dto.CartDto;
-import com.store.pojo.Cart;
-import com.store.pojo.CartItem;
-import com.store.pojo.Customer;
-import com.store.pojo.Product;
-
-
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class CartServiceImpl implements CartService {
 
-	@Autowired
-	private  CartDao cartDao;
-	
-	@Autowired
-	private CartItemDao cartItemDao;
-	
-	@Autowired
-	private  CustomerDao customerDao;
-	
-	@Autowired
-	private ProductDao productDao;
-	@Autowired
-	private  ModelMapper modelMapper;
-	
-	
-	@Override
-	public ApiResponse addToCart(CartDto cartDto) {
-	    // Validate Customer
-	    Customer customer = customerDao.findById(cartDto.getCustomerId())
-	            .orElseThrow(() -> new RuntimeException("Customer not found"));
-	    Product product = productDao.findById(cartDto.getProductId())
-	            .orElseThrow(() -> new RuntimeException("Product not found"));
-	    System.out.println(product);
+    @Autowired
+    private CartDao cartDao;
 
-	    // Fetch existing cart or create a new one
-	    Optional<Cart> existingCart = cartDao.findByCustomer(customer);
-	    Cart cart = existingCart.orElseGet(() -> {
-	        Cart newCart = new Cart();
-	        newCart.setCustomer(customer);
-	        newCart.setProduct(product);
-	        newCart.setQuantity(cartDto.getQuantity());
-	        //newCart.se(cartDto.getPrice());
-	        
-	        System.out.println(newCart);
-	        
-	        return cartDao.save(newCart); // Save the new cart if none exists
-	    });
+    @Autowired
+    private CustomerDao customerDao;
 
-	    // Log the CartDto content for debugging
-	    System.out.println("CartDto: " + cartDto);
+    @Autowired
+    private ProductDao productDao;
 
-	    // Ensure productId is present in CartDto and add the product to the cart
-	    if (cartDto.getProductId() == null) {
-	        throw new RuntimeException("Product ID cannot be null");
-	    }
+    @Autowired
+    private ModelMapper modelMapper;
 
-	    // Fetch the product by its ID
-	  
+    @Override
+    public ApiResponse addToCart(CartDTO cartDto) {
+        Optional<Customer> customer = customerDao.findById(cartDto.getCustomerId());
+        Optional<Product> product = productDao.findById(cartDto.getProductId());
 
-	    System.out.println("Fetched Product: " + product);
+        if (customer.isEmpty() || product.isEmpty()) {
+            return new ApiResponse("error", "Invalid customer or product ID");
+        }
 
-	    // Use ModelMapper to map CartDto to CartItem
-	    CartItem cartItem = modelMapper.map(cartDto, CartItem.class);
+        Optional<Cart> existingCart = cartDao.findByCustomerIdAndProductId(cartDto.getCustomerId(), cartDto.getProductId());
 
-	    // Set the cart and product manually (since ModelMapper does not know about these relationships)
-	    cartItem.setCart(cart);
-	    cartItem.setProduct(product);
-	    cartItem.setPrice(product.getPrice());
-	 //   cartItem.setQuantity(cartDto.getQuantity());
-	    
-	    // Log the CartItem being saved for debugging
-	    System.out.println("Saving CartItem: " + cartItem);
+        if (existingCart.isPresent()) {
+            return new ApiResponse("error", "Product already in cart");
+        }
 
-	    // Save the CartItem
-	    cartItemDao.save(cartItem);
+        Cart cart = new Cart();
+        cart.setCustomer(customer.get());
+        cart.setProduct(product.get());
+        cart.setQuantity(cartDto.getQuantity());
+        cart.setPrice(cartDto.getPrice() * cartDto.getQuantity());
 
-	    // Return the updated cart (with added product)
-	    return new ApiResponse("successs","iteam saved in cart");
-	}
+        cartDao.save(cart);
+        return new ApiResponse("success", "Item added to cart", cart);
+    }
 
+    @Override
+    public ApiResponse updateCartQuantity(Long customerId, Long productId, int quantity) {
+        Optional<Cart> cart = cartDao.findByCustomerIdAndProductId(customerId, productId);
 
+        if (cart.isEmpty()) {
+            return new ApiResponse("error", "Product not found in cart");
+        }
 
+        Cart cartItem = cart.get();
+        cartItem.setQuantity(quantity);
+        cartItem.setPrice(cart.get().getPrice() * quantity);
+        
+        
 
+        cartDao.save(cartItem);
+        return new ApiResponse("success", "Cart updated");
+    }
 
+    @Override
+    public ApiResponse removeFromCart(Long customerId, Long productId) {
+        Optional<Cart> cart = cartDao.findByCustomerIdAndProductId(customerId, productId);
 
-	@Override
-	public boolean removeIteamFromCart(Long cartId, Long itemId) {
-		CartItem cartItem = cartItemDao.findByIdAndCartId(itemId, cartId);
-		if(cartItem != null) {
-			cartItemDao.delete(cartItem);
-			return true;
-		}
-		return false;
-	}
+        if (cart.isEmpty()) {
+            return new ApiResponse("error", "Product not found in cart");
+        }
 
+        cartDao.delete(cart.get());
+        return new ApiResponse("success", "Item removed from cart");
+    }
+
+    @Override
+    public List<CartDTO> getCartProductsByCustomerId(Long customerId) {
+        return cartDao.findByCustomerId(customerId)
+        		.stream()
+        		.map(cart->{
+        			CartDTO dto=modelMapper.map(cart, CartDTO.class);
+        			dto.setCustomerId(cart.getCustomer().getId());
+                    dto.setProductId(cart.getProduct().getId()); 
+                    dto.setProductName(cart.getProduct().getTitle());
+                    dto.setProductImage(cart.getProduct().getPrimaryImage());
+                    dto.setDiscount(cart.getProduct().getDiscount());
+                    dto.setOprice(cart.getProduct().getPrice());
+                    
+        			return dto;
+        		}).collect(Collectors.toList());
+    }
+    
 }

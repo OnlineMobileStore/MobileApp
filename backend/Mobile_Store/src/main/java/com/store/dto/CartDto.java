@@ -1,5 +1,8 @@
 package com.store.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,19 +14,27 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 
-public class CartDto {
+public class CartDTO extends BaseDTO{
 	
 	 @NotNull(message = "Customer ID is required")
 	 private Long customerId;
-	 
-//	 private List<CartItemDto> items;
-//	 
+	  
 	 private Long productId;
 	 
-	 private int quantity;
+	 @JsonProperty(access=Access.READ_ONLY)
+	 private String productName;
 	 
-//	 private double price;
+	 @JsonProperty(access=Access.READ_ONLY)
+	 private Double oprice;
 	 
+	 @JsonProperty(access=Access.READ_ONLY)
+	 private Double discount;
 	 
-
+	 @JsonProperty(access=Access.READ_ONLY)
+	 private String productImage;
+	 
+	 private Integer quantity;
+	 
+	 private Double price;
+	 
 }

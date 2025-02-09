@@ -1,12 +1,15 @@
 package com.store.service;
 
+import java.util.List;
+
 import com.store.dto.ApiResponse;
-import com.store.dto.CartDto;
+import com.store.dto.CartDTO;
 
 public interface CartService {
 	
-	ApiResponse addToCart(CartDto cartDto);
-	
-	boolean removeIteamFromCart(Long cartId, Long itemId);
+	ApiResponse addToCart(CartDTO cartDto);
+    ApiResponse updateCartQuantity(Long customerId, Long productId, int quantity);
+    ApiResponse removeFromCart(Long customerId, Long productId);
+    List<CartDTO> getCartProductsByCustomerId(Long customerId);
 
 }

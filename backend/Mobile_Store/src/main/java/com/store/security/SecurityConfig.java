@@ -20,7 +20,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/auth/register-customer", "/auth/login-customer", "/auth/register-admin", "/auth/login-admin", "/product*/**","/Brand*/**","orders*/**", "/admin*/**", "/customer*/**","/reviews*/**","/faqs*/**","/v*/api-doc*/**", "/swagger-ui/**").permitAll() // Allow public access
+                                .requestMatchers("/auth/register-customer", "/auth/login-customer", "/auth/register-admin", "/auth/login-admin", "/product*/**","/brand*/**","orders*/**", "/admin*/**", "/customer*/**","/reviews*/**","/faqs*/**","/v*/api-doc*/**", "/swagger-ui/**").permitAll() // Allow public access
                                 .anyRequest().authenticated()
                 );
 

@@ -27,18 +27,6 @@ public class Cart extends BaseEntity {
     @Column(nullable = false)
     private Integer quantity;
     
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartItem> cartItems;
-    
-    public void addCartItem(CartItem cart) {
-		this.cartItems.add(cart);
-		cart.setCart(this);
-	}
-
-//	public void removeBlogPost(BlogPost post) {
-//		this.blogPosts.remove(post);
-//		post.setBlogCategory(null);
-//	}
-//    
+    private double price;
     
 }

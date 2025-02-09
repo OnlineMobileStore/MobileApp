@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthContext";
+import { CartProvider } from "./context/CartContext";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import SalesDetailsAdmin from "./pages/admin/SalesDetailsAdmin";
 import ReviewsAdmin from "./pages/admin/ReviewsAdmin";
@@ -23,10 +24,11 @@ import EditProduct from "./pages/admin/EditProduct";
 import DeleteProduct from "./pages/admin/DeleteProduct";
 import ProductDetails from "./pages/admin/ProductDetails";
 import AddBrand from "./pages/admin/AddBrand";
+import CheckOut from "./pages/customer/CheckOut";
 
 const App = () => {
   return (
-    <AuthProvider>
+    <>
       <Router>
         <div className="content">
           <Routes>
@@ -51,12 +53,13 @@ const App = () => {
             <Route path='/edit-product' element={<EditProduct />} />
             <Route path='/delete-product' element={<DeleteProduct />} />
             <Route path='/product-details' element={<ProductDetails />} />
+            <Route path='/checkout' element={<CheckOut />} />
           </Routes>
         </div>
 
       </Router>
       <ToastContainer />
-    </AuthProvider>
+     </>
   );
 };
 
