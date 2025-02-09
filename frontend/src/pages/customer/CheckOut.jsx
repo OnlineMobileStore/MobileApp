@@ -1,10 +1,15 @@
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "../../styles/CheckOut.module.css";
 import Navbar from '../../components/Navbar';
 import '../../components/Footer.css';
 import '../../components/Navbar.css';
 
 const CheckOut = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const orderPrice = location.state?.orderPrice || 0; // Get order price from navigation state
+
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -37,13 +42,15 @@ const CheckOut = () => {
 
   const validateStep2 = () => {
     let tempErrors = {};
-    if (!formData.cardNumber || !/^\d{16}$/.test(formData.cardNumber))
-      tempErrors.cardNumber = "Valid 16-digit card number required";
-    if (!formData.expiry || !/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiry))
-      tempErrors.expiry = "Valid expiry date (MM/YY) required";
-    if (!formData.cvv || !/^\d{3}$/.test(formData.cvv))
-      tempErrors.cvv = "Valid 3-digit CVV required";
-    if (!formData.holderName) tempErrors.holderName = "Card holder name required";
+    if (formData.paymentMethod === "credit") {
+      if (!formData.cardNumber || !/^\d{16}$/.test(formData.cardNumber))
+        tempErrors.cardNumber = "Valid 16-digit card number required";
+      if (!formData.expiry || !/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiry))
+        tempErrors.expiry = "Valid expiry date (MM/YY) required";
+      if (!formData.cvv || !/^\d{3}$/.test(formData.cvv))
+        tempErrors.cvv = "Valid 3-digit CVV required";
+      if (!formData.holderName) tempErrors.holderName = "Card holder name required";
+    }
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
@@ -57,10 +64,20 @@ const CheckOut = () => {
     }
   };
 
+  const handleBack = () => {
+    if (step > 1) setStep(step - 1);
+  };
+
+  const handleConfirm = () => {
+    alert("Order placed successfully!");
+    navigate("/");
+  };
+
   return (
     <div className={styles.container}>
-      <Navbar/>
-      <div className={styles.modal} >
+      <Navbar />
+      {orderPrice}
+      <div className={styles.modal}>
         <h2>Make Payment</h2>
         <div className={styles.progress}>
           <span className={step >= 1 ? styles.active : ""}>1</span>
@@ -70,6 +87,7 @@ const CheckOut = () => {
 
         {step === 1 && (
           <div className={styles.step}>
+            <h3>Personal Details</h3>
             <div className={styles.inputGroup}>
               <input
                 type="text"
@@ -109,11 +127,9 @@ const CheckOut = () => {
             />
             {errors.address && <span className={styles.error}>{errors.address}</span>}
 
-            <h3>Select Method Of Payment</h3>
+            <h3>Select Payment Method</h3>
             <div className={styles.paymentMethods}>
-              <label
-                className={formData.paymentMethod === "credit" ? styles.selected : ""}
-              >
+              <label className={formData.paymentMethod === "credit" ? styles.selected : ""}>
                 <input
                   type="radio"
                   name="paymentMethod"
@@ -121,93 +137,63 @@ const CheckOut = () => {
                   checked={formData.paymentMethod === "credit"}
                   onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
                 />
-                <span>💳 Credit Card Or Debit</span>
+                💳 Credit/Debit Card
               </label>
-              <label
-                className={formData.paymentMethod === "paypal" ? styles.selected : ""}
-              >
+              <label className={formData.paymentMethod === "paypal" ? styles.selected : ""}>
                 <input
                   type="radio"
                   name="paymentMethod"
                   value="paypal"
                   onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
                 />
-                <span>💲 Paypal</span>
+                💲 PayPal
               </label>
-              <label
-                className={formData.paymentMethod === "bank" ? styles.selected : ""}
-              >
+              <label className={formData.paymentMethod === "bank" ? styles.selected : ""}>
                 <input
                   type="radio"
                   name="paymentMethod"
                   value="bank"
                   onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
                 />
-                <span>🏦 Bank Transfer</span>
+                🏦 Bank Transfer
               </label>
             </div>
 
-            <button className={styles.button} onClick={handleNext}>
-              Go to Payment
-            </button>
+            <button className={styles.button} onClick={handleNext}>Next</button>
           </div>
         )}
 
         {step === 2 && (
           <div className={styles.step}>
-            
-            <div className={styles.inputGroup}>
-              <label>Card Number</label>
-              <input
-                type="text"
-                placeholder="Card Number"
-                value={formData.cardNumber}
-                onChange={(e) => setFormData({ ...formData, cardNumber: e.target.value })}
-              />
-              {errors.cardNumber && <span className={styles.error}>{errors.cardNumber}</span>}
-            </div>
-            <div className={styles.inputGroup}>
-              <label>Expiry (MM/YY)</label>
-              <input
-                type="text"
-                placeholder="Expiry (MM/YY)"
-                value={formData.expiry}
-                onChange={(e) => setFormData({ ...formData, expiry: e.target.value })}
-              />
-              {errors.expiry && <span className={styles.error}>{errors.expiry}</span>}
-            </div>
-            <div className={styles.inputGroup}>
-              <label>CVV</label>
-              <input
-                type="text"
-                placeholder="CVV"
-                value={formData.cvv}
-                onChange={(e) => setFormData({ ...formData, cvv: e.target.value })}
-              />
-              {errors.cvv && <span className={styles.error}>{errors.cvv}</span>}
-            </div>
-            <div className={styles.inputGroup}>
-              <label>Card Holder Name</label>
-              <input
-                type="text"
-                placeholder="Holder Name"
-                value={formData.holderName}
-                onChange={(e) => setFormData({ ...formData, holderName: e.target.value })}
-              />
-              {errors.holderName && <span className={styles.error}>{errors.holderName}</span>}
-            </div>
-
-            <button className={styles.button} onClick={handleNext}>
-              Confirm
-            </button>
+            <h3>Payment Details</h3>
+            {formData.paymentMethod === "credit" && (
+              <>
+                <input
+                  type="text"
+                  placeholder="Card Number"
+                  value={formData.cardNumber}
+                  onChange={(e) => setFormData({ ...formData, cardNumber: e.target.value })}
+                />
+                {errors.cardNumber && <span className={styles.error}>{errors.cardNumber}</span>}
+                <input
+                  type="text"
+                  placeholder="Expiry (MM/YY)"
+                  value={formData.expiry}
+                  onChange={(e) => setFormData({ ...formData, expiry: e.target.value })}
+                />
+                {errors.expiry && <span className={styles.error}>{errors.expiry}</span>}
+              </>
+            )}
+            <button className={styles.button} onClick={handleBack}>Back</button>
+            <button className={styles.button} onClick={handleNext}>Confirm</button>
           </div>
         )}
 
         {step === 3 && (
           <div className={styles.success}>
-            <div className={styles.checkmark}>✔</div>
-            <h3>Success</h3>
-            <button className={styles.button}>Complete</button>
+            <h3>Order Summary</h3>
+            <p>Order Price: ₹{orderPrice}</p>
+            <button className={styles.button} onClick={handleConfirm}>Complete Order</button>
           </div>
         )}
       </div>

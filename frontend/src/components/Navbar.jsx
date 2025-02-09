@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Navbar,
   Nav,
@@ -8,24 +8,42 @@ import {
   Button,
   Dropdown,
 } from "react-bootstrap";
-import { BiCart, BiUser } from "react-icons/bi"; // Icons for cart and user
+import { BiCart, BiUser } from "react-icons/bi"; 
 import { Link } from "react-router-dom";
 import "./Navbar.css";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { getCartItems } from "../services/cart";
 
 const NavbarComponent = () => {
   const navigate = useNavigate();
+  const customerId = localStorage.getItem("customerId");
+  const [cartItems, setCartItems] = useState(new Set());
 
   const handleLogout = () => {
-    sessionStorage.clear(); 
-    navigate('/'); 
+    sessionStorage.clear();
+    navigate("/");
   };
+
+  const fetchCartItems = async () => {
+    if (!customerId) return;
+    try {
+      const response = await getCartItems(customerId);
+      const cartProductIds = new Set(response.data.map((item) => item.productId));
+      setCartItems(cartProductIds);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartItems();
+  }, []); 
 
   return (
     <Navbar expand="lg" className="mobile-store-navbar" sticky="top" collapseOnSelect>
       <Container>
         {/* Logo */}
-        <Navbar.Brand href="/" className="navbar-brand">
+        <Navbar.Brand as={Link} to="/" className="navbar-brand">
           Mobile Store
         </Navbar.Brand>
 
@@ -33,9 +51,8 @@ const NavbarComponent = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
         <Navbar.Collapse id="basic-navbar-nav">
-          {/* Center section: Search bar and filter */}
+          {/* Center section: Search bar */}
           <Nav className="mx-auto">
-            {/* Search Bar */}
             <Form className="d-flex search-form">
               <FormControl
                 type="text"
@@ -46,27 +63,30 @@ const NavbarComponent = () => {
               <Button variant="outline-primary">Search</Button>
             </Form>
           </Nav>
+
           {/* Right section: Navigation Links */}
           <Nav className="ms-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#shop">Shop</Nav.Link>
-            <Nav.Link href="#about">About</Nav.Link>
-            <Nav.Link href="#contact">Contact Us</Nav.Link>
-            <Nav.Link href="#cart" aria-label="Cart">
-              <BiCart /> Cart
+            <Nav.Link as={Link} to="/">Home</Nav.Link>
+            <Nav.Link as={Link} to="/shop">Shop</Nav.Link>
+            <Nav.Link as={Link} to="/about">About</Nav.Link>
+            <Nav.Link as={Link} to="/contact">Contact Us</Nav.Link>
+
+            {/* Cart */}
+            <Nav.Link as={Link} to="/myCart" aria-label="Cart">
+              <BiCart /> Cart <span style={{padding:"4px",color:"white",backgroundColor:"green",borderRadius:"100%"}}>{cartItems.size}</span>
             </Nav.Link>
+
+            {/* Profile Dropdown */}
             <Dropdown align="end">
-              <Dropdown.Toggle as={Nav.Link} aria-label="Profile">
+              <Dropdown.Toggle variant="link" id="profile-dropdown">
                 <BiUser /> Profile
-                <Dropdown.Menu>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
                 <Dropdown.Item as={Link} to="/customer/change-profile">
                   Change Profile
                 </Dropdown.Item>
-                <Dropdown.Item onClick={handleLogout}>
-                  Logout
-                </Dropdown.Item>
+                <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
               </Dropdown.Menu>
-              </Dropdown.Toggle>             
             </Dropdown>
           </Nav>
         </Navbar.Collapse>

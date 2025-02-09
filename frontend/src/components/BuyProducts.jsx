@@ -3,7 +3,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./BuyProducts.module.css";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { giveAvgRating } from "../services/product";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { addToCart, getCartItems } from "../services/cart";
+
 const BuyProducts = ({ products = [] }) => {
+  const navigate = useNavigate();
   const filters = {
     brands: ["Samsung", "Apple", "OnePlus"],
     camera: ["12 MP", "48 MP", "64 MP"],
@@ -14,6 +19,12 @@ const BuyProducts = ({ products = [] }) => {
   const maxStars = 5;
 
   const [avgRating, setAvgRating] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
+  const [sortBy, setSortBy] = useState("default");
+  const [cartItems, setCartItems] = useState(new Set());
+  const customerId = localStorage.getItem("customerId");
 
   useEffect(() => {
     const fetchRatings = async () => {
@@ -34,11 +45,6 @@ const BuyProducts = ({ products = [] }) => {
     }
   }, [products]);
 
-  const [selectedFilters, setSelectedFilters] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(8);
-  const [sortBy, setSortBy] = useState("default");
-
   const handleFilterChange = (filterKey, value) => {
     setSelectedFilters((prev) => {
       const updatedFilters = { ...prev };
@@ -53,10 +59,7 @@ const BuyProducts = ({ products = [] }) => {
     });
   };
 
-  const applyFilters = () => {
-    setCurrentPage(1);
-  };
-
+  const applyFilters = () => setCurrentPage(1);
   const clearFilters = () => {
     setSelectedFilters({});
     setCurrentPage(1);
@@ -95,6 +98,66 @@ const BuyProducts = ({ products = [] }) => {
   const filteredProducts = filterProducts();
   const paginatedProducts = paginateProducts(filteredProducts);
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+  useEffect(() => {
+    const fetchRatings = async () => {
+      try {
+        const ratingsMap = {};
+        for (const product of products) {
+          const ratingData = await giveAvgRating(product.id);
+          ratingsMap[product.id] = ratingData.averageRating;
+        }
+        setAvgRating(ratingsMap);
+      } catch (err) {
+        console.error("Failed to fetch rating stats", err);
+      }
+    };
+
+    if (products.length > 0) {
+      fetchRatings();
+    }
+  }, [products]);
+
+  // Fetch cart items from backend
+  const fetchCartItems = async () => {
+    if (!customerId) return;
+    try {
+      const response= await getCartItems(customerId);
+      const cartProductIds = new Set(response.data.map((item) => item.productId));
+      setCartItems((prevCartItems) => new Set([...prevCartItems, ...cartProductIds]));
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartItems();
+  }, [customerId]); 
+  
+
+  const handleAddToCart = async (productId, price) => {  
+    if (!customerId) {
+      toast.error("Please log in to add items to the cart.");
+      return;
+    }
+  
+    try {
+      const response = await addToCart(customerId,productId,price) 
+      if (response.status === 200) {
+        toast.success("Item added to cart!");
+        fetchCartItems(); 
+      } else {
+        toast.error("Failed to add to cart");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+  
+  const handleGoToCart = () => {
+    navigate("/myCart");
+  };
 
   return (
     <div className="container my-4">
@@ -198,9 +261,29 @@ const BuyProducts = ({ products = [] }) => {
                         ))}
                       </div>
 
-                      <button className="btn btn-sm btn-outline-success mt-2">
-                        Add to Cart
-                      </button>
+                      {cartItems.has(product.id) ? (
+                        <button
+                          className="btn btn-sm btn-outline-primary mt-2"
+                          onClick={handleGoToCart}
+                        >
+                          Go to Cart
+                        </button>
+                      ) : (
+                        <button
+                          className="btn btn-sm btn-outline-success mt-2"
+                          onClick={() =>
+                            handleAddToCart(
+                              product.id,
+                              Math.round(
+                                product.price -
+                                  (product.price * product.discount) / 100
+                              )
+                            )
+                          }
+                        >
+                          Add to Cart
+                        </button>
+                      )}
                     </div>
                     <div className={styles.productInfo}></div>
                   </div>
