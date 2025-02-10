@@ -14,7 +14,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/reviews")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins ="*")
 public class ProductReviewController {
     private final ProductReviewService productReviewService;
 
