@@ -20,8 +20,25 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/auth/register-customer", "/auth/login-customer", "/auth/register-admin", "/auth/login-admin", "/product*/**","/brand*/**","orders*/**", "/admin*/**", "/customer*/**","/reviews*/**","/faqs*/**","/sales*/**","/otp*/**","/v*/api-doc*/**", "/swagger-ui/**").permitAll() // Allow public access
-                                .anyRequest().authenticated()
+                        .requestMatchers(
+                                "/auth/register-customer",
+                                "/auth/login-customer",
+                                "/auth/register-admin",
+                                "/auth/login-admin",
+                                "/product*/**",
+                                "/brand*/**",
+                                "orders*/**",
+                                "/admin*/**",
+                                "/customer*/**",
+                                "/reviews*/**",
+                                "/faqs*/**",
+                                "/sales*/**",
+                                "/otp*/**",  // From otp-verification branch
+                                "/customer/wishlist*/**",  // From main branch
+                                "/v*/api-doc*/**",
+                                "/swagger-ui/**"
+                        ).permitAll() // Allow public access
+                        .anyRequest().authenticated()
                 );
 
         return http.build();
