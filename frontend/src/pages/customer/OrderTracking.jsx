@@ -1,82 +1,175 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../styles/OrderTracking.module.css";
-import Navbar from '../../components/Navbar';
-import '../../components/Footer.css';
-import '../../components/Navbar.css';
+import Navbar from "../../components/Navbar";
+import { getProductById } from "../../services/product";
+import { getOrderDetails } from "../../services/order";
 
 const OrderTracking = () => {
-  const orderData = {
-    deliveryAddress: {
-      name: "Rahul Sharma",
-      street: "22B, MG Road, Sector 15",
-      district: "Gurgaon, Haryana - 122001",
-      phone: "9876543210",
-    },
-    orderDetails: {
-      productName: "Samsung Galaxy S23 Ultra",
-      seller: "Mobile World",
-      price: "₹124,999",
-      offers: "1 Offer & 1 Coupon Applied",
-      imageUrl:
-        "https://image-us.samsung.com/us/smartphones/galaxy-s23/images/gallery/lavender/dm2/01-DM2-Lavender-PDP-1600x1200.jpg?$default-400-jpg$",
-    },
-    progress: [
-      { label: "Order Confirmed", date: "Thu, 20th Apr", active: true },
-      { label: "Shipped", date: "Sat, 22nd Apr", active: true },
-      { label: "Out for Delivery", date: "Tue, 25th Apr", active: true },
-      { label: "Delivered", date: "Tue, 25th Apr", active: true },
-    ],
+  const [orders, setOrders] = useState([]);
+  const [products, setProducts] = useState({});
+  const customerId = localStorage.getItem("customerId");
+
+  const orderStages = [
+    "Placed",
+    "Shipped",
+    "Out for Delivery",
+    "Delivered",
+    "Cancelled",
+  ];
+
+  useEffect(() => {
+    if (!customerId) return;
+
+    const fetchOrders = async () => {
+      try {
+        const response = await getOrderDetails(customerId);
+        if (response.data.status === "success") {
+          setOrders(response.data.data);
+          fetchProductDetails(response.data.data);
+        } else {
+          console.error("No orders found:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+
+    fetchOrders();
+  }, [customerId]);
+
+  const fetchProductDetails = async (orders) => {
+    const productIds = [
+      ...new Set(
+        orders.flatMap((order) => order.items.map((item) => item.productId))
+      ),
+    ];
+
+    try {
+      const responses = await Promise.all(
+        productIds.map((id) =>
+          getProductById(id)
+        )
+      );
+
+      const productData = {};
+      responses.forEach((res) => {
+        productData[res.data.id] = {
+          title: res.data.title,
+          primaryImage: res.data.primaryImage,
+        };
+      });
+
+      setProducts(productData);
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+    }
   };
 
-  const { deliveryAddress, orderDetails, progress } = orderData;
+  const handleGiveRating = () => {
+    alert(`Redirect to rating page for Order ID: `);
+  };
 
   return (
-    <div className={styles.container}>
+    <div>
       <Navbar />
+      <div className={styles.container}>
+        <h2 className={styles.pageTitle}>My Orders</h2>
 
-      {/* Delivery Address */}
-      <div className={styles.addressContainer}>
-        <h3 className={styles.sectionTitle}>Delivery Address</h3>
-        <div className={styles.address}>
-          <p className={styles.bold}>{deliveryAddress.name}</p>
-          <p>{deliveryAddress.street}</p>
-          <p>{deliveryAddress.district}</p>
-          <p><span className={styles.bold}>Phone number:</span> {deliveryAddress.phone}</p>
-        </div>
-      </div>
+        {orders.length === 0 ? (
+          <p className={styles.noOrders}>No orders found.</p>
+        ) : (
+          orders.map((order) => {
+            const activeIndex = orderStages.indexOf(order.status);
 
-      {/* Order Details */}
-      <div className={styles.orderContainer}>
-        <div className={styles.productInfo}>
-          <img src={orderDetails.imageUrl} alt={orderDetails.productName} className={styles.productImage} />
-          <div>
-            <h4 className={styles.bold}>{orderDetails.productName}</h4>
-            <p>Seller: {orderDetails.seller}</p>
-            <p className={styles.price}>{orderDetails.price}</p>
-            <p className={styles.offers}>{orderDetails.offers} <span className={styles.tooltip}>?</span></p>
-          </div>
-        </div>
+            return (
+              <div key={order.orderId} className={styles.orderCard}>
+                <div className={styles.orderHeader}>
+                  <h4 className={styles.orderId}>Order ID: {order.orderId}</h4>
+                  <div className={styles.deliveredRow}>
+                    <div>
+                      <strong>Status:</strong>{" "}
+                      <span
+                        className={`${styles.status} ${
+                          styles[order.status.toLowerCase()]
+                        }`}
+                      >
+                        {order.status}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        display:
+                          order.status === "Delivered" ? "block" : "none",
+                      }}
+                    >
+                      <button className={styles.ratingBut} onClick={() => handleGiveRating()}>Give Rating</button>
+                    </div>
+                  </div>
+                  <div>
+                    <strong>Payment:</strong> {order.paymentMethod}
+                  </div>
+                  <div>
+                    <strong>Total Amount:</strong> ₹{order.totalAmount}
+                  </div>
+                  <p>
+                    <strong>Updated On:</strong>{" "}
+                    {new Date(order.updatedOn).toLocaleString()}
+                  </p>
+                </div>
 
-        {/* Updated Progress Bar */}
-        <div className={styles.progressContainer}>
-          <div className={styles.progressBar}>
-            {progress.map((step, index) => (
-              <div key={index} className={styles.stepWrapper}>
-                {/* Connector Line */}
-                {index > 0 && (
-                  <div className={`${styles.line} ${progress[index - 1].active ? styles.lineActive : ""}`}></div>
-                )}
-                {/* Step Indicator */}
-                <div className={`${styles.circle} ${step.active ? styles.circleActive : ""}`}></div>
-                <p className={styles.stepLabel}>{step.label}</p>
-                <span className={styles.stepDate}>{step.date}</span>
+                <div className={styles.progressContainer}>
+                  {orderStages.map((stage, index) => (
+                    <div key={index} className={styles.stepWrapper}>
+                      {index > 0 && (
+                        <div
+                          className={`${styles.line} ${
+                            index <= activeIndex ? styles.lineActive : ""
+                          }`}
+                        ></div>
+                      )}
+                      <div
+                        className={`${styles.circle} ${
+                          index <= activeIndex ? styles.circleActive : ""
+                        }`}
+                      >
+                        {index + 1}
+                      </div>
+                      <p className={styles.stepLabel}>{stage}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className={styles.itemsContainer}>
+                  {order.items.map((item, index) => (
+                    <div key={index} className={styles.itemCard}>
+                      <div>
+                        <img
+                          src={products[item.productId]?.primaryImage}
+                          alt={products[item.productId]?.title}
+                          className={styles.productImage}
+                          width={50}
+                          height={50}
+                        />
+                      </div>
+                      <div>
+                        {products[item.productId]?.title || "Loading..."}
+                      </div>
+                      <div>
+                        ProductId:<strong> {item.productId}</strong>
+                      </div>
+                      <div>
+                        Quantity:<strong> {item.quantity}</strong>
+                      </div>
+                      <div>
+                        Price:<strong> ₹{item.price}</strong>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Status Message */}
-        <p className={styles.statusMessage}>Your item has been delivered</p>
+            );
+          })
+        )}
       </div>
     </div>
   );

@@ -225,7 +225,7 @@ const CheckOut = () => {
               <input
                 type="radio"
                 name="paymentMethod"
-                value="paypal"
+                value="phonePay"
                 onChange={(e) =>
                   setFormData({ ...formData, paymentMethod: e.target.value })
                 }
@@ -236,7 +236,7 @@ const CheckOut = () => {
               <input
                 type="radio"
                 name="paymentMethod"
-                value="bank"
+                value="cash"
                 onChange={(e) =>
                   setFormData({ ...formData, paymentMethod: e.target.value })
                 }
@@ -261,8 +261,8 @@ const CheckOut = () => {
           <div className={styles.success}>
             <h3>Order Successful!</h3>
             <p>Thank you for your order.</p>
-            <button className={styles.button} onClick={() => navigate("/customer/home")}>
-              Go to Home
+            <button className={styles.button} onClick={() => navigate("/order-tracking")}>
+              Track Your Order
             </button>
           </div>
         )}
