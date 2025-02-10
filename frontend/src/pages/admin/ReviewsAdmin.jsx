@@ -16,7 +16,16 @@ const ReviewsAdmin = () => {
     const fetchProducts = async () => {
       try {
         const response = await getProductWithRating();
-        setProducts(response.data);
+        console.log("API Response:", response); // Log the whole response to inspect its structure
+
+        // Check if response has 'data' or 'results' or other properties to extract products
+        if (response && response.data) {
+          setProducts(response.data);
+        } else if (response && response.results) {
+          setProducts(response.results); // Adjust according to your actual response format
+        } else {
+          setError("Unexpected response format.");
+        }
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Failed to load products. Please try again later.");
@@ -107,11 +116,14 @@ const ReviewsAdmin = () => {
           <h1 className="fw-bold mb-4">Products with Reviews</h1>
 
           {/* Loading & Error Handling */}
-          {loading && <p className="text-center">Loading products...</p>}
-          {error && <p className="text-danger text-center">{error}</p>}
+          {loading && !error && <p className="text-center">Loading products...</p>}
+          {error && !loading && <p className="text-center text-danger">{error}</p>}
+          {!loading && !error && products.length === 0 && (
+            <p className="text-center">No products available at the moment.</p>
+          )}
 
           {/* Products Grid */}
-          {!loading && !error && (
+          {!loading && !error && products?.length > 0 && (
             <div className="container">
               <div className="row">
                 {products.map((product) => (
@@ -129,9 +141,7 @@ const ReviewsAdmin = () => {
                         onClick={() => handleProduct(product.id)}
                       />
                       <div className="card-body text-center">
-                        <h6 className="card-title fw-bold">
-                          {product.productName}
-                        </h6>
+                        <h6 className="card-title fw-bold">{product.productName}</h6>
                         <div className="mb-1">{renderStars(product.averageRating)}</div>
                         <p className="text-muted">
                           ({product.averageRating.toFixed(1)} / {product.totalReviews} reviews)

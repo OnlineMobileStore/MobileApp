@@ -25,7 +25,7 @@ export const getAvgRating = async (productId) => {
 
 export const getProductWithRating = async () => {
     try {
-      const url = createUrl(`product/with-ratings`)
+      const url = createUrl(`reviews/with-ratings`)
       const response = await axios.get(url)
       return response
     } catch (ex) {

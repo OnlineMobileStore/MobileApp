@@ -27,4 +27,7 @@ public interface ProductReviewDao extends JpaRepository<ProductReview, Long> {
     	    WHERE r.product_id = :productId;
     	""", nativeQuery = true)
     List<Object[]> findRatingDistributionByProductId(@Param("productId") Long productId);
+    
+    @Query("SELECT AVG(r.rating) FROM ProductReview r WHERE r.product.id = :productId")
+    Double getAverageRatingForProduct(@Param("productId") Long productId);
 }

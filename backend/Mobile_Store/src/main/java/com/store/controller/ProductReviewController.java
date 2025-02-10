@@ -2,6 +2,7 @@ package com.store.controller;
 
 import com.store.dto.ProductRatingStatsDTO;
 import com.store.dto.ProductReviewDTO;
+import com.store.dto.ProductWithRatingDTO;
 import com.store.service.ProductReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/reviews")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProductReviewController {
     private final ProductReviewService productReviewService;
 
@@ -38,5 +39,11 @@ public class ProductReviewController {
     @GetMapping("/rating-stats/{productId}")
     public ResponseEntity<ProductRatingStatsDTO> getRatingStats(@PathVariable Long productId) {
         return ResponseEntity.ok(productReviewService.getRatingStats(productId));
+    }
+    
+    @GetMapping("/with-ratings")
+    public ResponseEntity<List<ProductWithRatingDTO>> getProductsWithRatings() {
+        List<ProductWithRatingDTO> productsWithRatings = productReviewService.getProductsWithRatings();
+        return ResponseEntity.ok(productsWithRatings);
     }
 }
