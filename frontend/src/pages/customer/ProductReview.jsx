@@ -1,19 +1,21 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import styles from "../../styles/ProductReview.module.css"; // Import CSS module
+import styles from "../../styles/ProductReview.module.css";
 import Navbar from '../../components/Navbar';
 import '../../components/Footer.css';
 import '../../components/Navbar.css';
 
-const ProductReview = ({ productId }) => {
+const ProductReview = () => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewTitle, setReviewTitle] = useState("");
   const [reviewContent, setReviewContent] = useState("");
   const [customerName, setCustomerName] = useState("");
-  const [error, setError] = useState(null); // For handling errors
+  const [productId, setProductId] = useState("");  // State for Product ID
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -21,31 +23,42 @@ const ProductReview = ({ productId }) => {
     setRating(value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validation
-    if (!rating || !reviewTitle || !customerName || !reviewContent) {
+    if (!rating || !reviewTitle || !customerName || !reviewContent || !productId) {
       setError("All fields are required, and a rating must be selected!");
       return;
     }
 
-    // Simulate API submission
-    const isSuccessful = Math.random() > 0.2; // Simulate success/failure (80% success rate)
+    try {
+      // API Request to Submit Review
+      const response = await fetch("http://localhost:8080/reviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productId,
+          customerName,
+          reviewTitle,
+          reviewContent,
+          rating,
+        }),
+      });
 
-    if (isSuccessful) {
-      // Reset form fields
-      setRating(0);
-      setReviewTitle("");
-      setReviewContent("");
-      setCustomerName("");
-      setError(null);
-      toast.success("Review submitted successfully!");
+      if (response.ok) {
+        const data = await response.json();
+        toast.success("Review submitted successfully!");
 
-      // Navigate to product review page
-      navigate(`/ProductPage/${productId}`);
-    } else {
-      setError("Sorry, something went wrong. Please try again.");
+        // Navigate to the next page with the product ID
+        navigate(`/ProductPage/${data.productId}`);
+      } else {
+        throw new Error("Failed to submit review");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
       toast.error("Submission failed. Please try again.");
     }
   };
@@ -54,16 +67,27 @@ const ProductReview = ({ productId }) => {
 
   return (
     <div className={styles.reviewContainer}>
-      <Navbar/>
+      <Navbar />
       <ToastContainer />
       <div className={styles.titleSection}>
-          <h2 style={{marginTop:"50px"}}>How was the Mobile? {productId}</h2>
+        <h2 style={{ marginTop: "50px" }}>How was the Mobile?</h2>
       </div>
 
-      {/* Add Review Form */}
       <div className={styles.addReviewSection}>
-        {error && <p className={styles.errorMessage}>{error}</p>} {/* Error message */}
+        {error && <p className={styles.errorMessage}>{error}</p>}
         <form onSubmit={handleSubmit} className={styles.reviewForm}>
+          <div className={styles.formGroup}>
+            <label htmlFor="product-id">Product ID:</label>
+            <input
+              type="text"
+              id="product-id"
+              className={styles.input}
+              value={productId}
+              onChange={(e) => setProductId(e.target.value)}
+              required
+            />
+          </div>
+
           <div className={styles.ratingSection}>
             <label>Your Rating:</label>
             <div>
@@ -76,7 +100,7 @@ const ProductReview = ({ productId }) => {
                   onClick={() => handleRatingChange(star)}
                   onMouseEnter={() => setHoverRating(star)}
                   onMouseLeave={() => setHoverRating(0)}
-                  title={ratingTooltips[star - 1]} // Tooltip text
+                  title={ratingTooltips[star - 1]}
                 >
                   ★
                 </span>
@@ -118,14 +142,13 @@ const ProductReview = ({ productId }) => {
               required
             />
           </div>
-          <div style={{textAlign:"center"}}>
-          <button type="submit" className={styles.submitButton}>
-            Submit
-          </button>
-          </div>
-         
-        </form>
 
+          <div style={{ textAlign: "center" }}>
+            <button type="submit" className={styles.submitButton}>
+              Submit
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
