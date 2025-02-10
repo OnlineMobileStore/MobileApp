@@ -26,6 +26,8 @@ import ProductDetails from "./pages/admin/ProductDetails";
 import AddBrand from "./pages/admin/AddBrand";
 import CheckOut from "./pages/customer/CheckOut";
 import OrderTracking from "./pages/customer/OrderTracking";
+import FAQ from "./pages/customer/FAQ";
+import FAQAdmin from "./pages/admin/FAQAdmin";
 
 const App = () => {
   return (
@@ -56,6 +58,8 @@ const App = () => {
             <Route path='/product-details' element={<ProductDetails />} />
             <Route path='/checkout' element={<CheckOut />} />
             <Route path='/order-tracking' element={<OrderTracking />} />
+            <Route path='/customer/faq' element={<FAQ />} />
+            <Route path='/admin/faq' element={<FAQAdmin />} />
           </Routes>
         </div>
 

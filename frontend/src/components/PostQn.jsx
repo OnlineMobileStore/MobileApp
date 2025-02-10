@@ -1,29 +1,45 @@
 import React, { useState } from "react";
+import { postQuestion } from "../services/faq";
+import { toast } from "react-toastify";
 
 const PostQn = () => {
   const [question, setQuestion] = useState("");
   const [error, setError] = useState("");
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handlePostQn = async (e) => {
     e.preventDefault();
 
     if (!question) {
       setError("Question is required.");
       return;
     }
-
-    // You can handle form data submission here, e.g., call an API or update state.
-    console.log("Form submitted:", {question });
-    setQuestion("");
-    setError("");
+    try {
+      const result = await postQuestion(question);
+      if(result.data!=null || result.data!=undefined){
+      toast.success("Question posted!");
+      console.log(result.data);
+      setQuestion("");
+      setError("");
+    }
+    } catch (error) {
+      toast.error("Error posting question");
+    }
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "400px", margin: "0 auto",textAlign:"center" }}>
-      <h4 style={{marginBottom: "10px" }}>Post your Question</h4>
-      {error && <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>}
-      <form onSubmit={handleSubmit}>
+    <div
+      style={{
+        padding: "20px",
+        maxWidth: "400px",
+        margin: "0 auto",
+        textAlign: "center",
+      }}
+    >
+      <h4 style={{ marginBottom: "10px" }}>Post your Question</h4>
+      {error && (
+        <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>
+      )}
+      <form onSubmit={handlePostQn}>
         <div style={{ marginBottom: "10px" }}>
           <textarea
             id="qn"

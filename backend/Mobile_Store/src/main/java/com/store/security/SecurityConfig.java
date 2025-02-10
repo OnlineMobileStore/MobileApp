@@ -27,7 +27,7 @@ public class SecurityConfig {
                                 "/auth/login-admin",
                                 "/product*/**",
                                 "/brand*/**",
-                                "orders*/**",
+                                "/orders*/**",
                                 "/admin*/**",
                                 "/customer*/**",
                                 "/reviews*/**",
