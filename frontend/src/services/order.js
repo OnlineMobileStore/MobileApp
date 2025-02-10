@@ -47,9 +47,5 @@ export const getOrderDetails = async (customerId) => {
 };
 
 
-// const response = await axios.get(
-        //   `http://localhost:8080/orders/customer/${customerId}`
-        // );
-
 
 

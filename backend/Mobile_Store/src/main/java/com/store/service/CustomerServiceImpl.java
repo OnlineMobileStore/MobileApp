@@ -40,10 +40,12 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public ApiResponse registerCustomer(CustomerDTO dto) {
         if (customerDao.existsByEmail(dto.getEmail())) {
-            throw new IllegalArgumentException("Email already in use.");
+        	return new ApiResponse("error","Email already in use");
+//            throw new IllegalArgumentException("Email already in use.");
         }
         if (customerDao.existsByPhone(dto.getPhone())) {
-            throw new IllegalArgumentException("Phone number already in use.");
+        	return new ApiResponse("error","Phone number already in use");
+//            throw new IllegalArgumentException("Phone number already in use.");
         }
 
         // Convert DTO to Entity
