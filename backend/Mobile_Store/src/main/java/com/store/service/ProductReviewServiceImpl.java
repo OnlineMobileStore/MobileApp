@@ -1,6 +1,7 @@
 package com.store.service;
 import com.store.dto.ProductRatingStatsDTO;
 import com.store.dto.ProductReviewDTO;
+import com.store.dto.ProductWithRatingDTO;
 import com.store.exception.ResourceNotFoundException;
 import com.store.pojo.Product;
 import com.store.pojo.Customer;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +103,25 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 ((Number) (result[6] != null ? result[6] : 0.0)).doubleValue()
         );
     }
+
+	@Override
+	public List<ProductWithRatingDTO> getProductsWithRatings() {
+		 List<Product> products = productDao.findAll(); // Get all products
+	        List<ProductWithRatingDTO> productDtos = new ArrayList<>();
+
+	        for (Product product : products) {
+	            // Fetch the average rating for each product
+	            Double averageRating = productReviewDao.getAverageRatingForProduct(product.getId());
+	            
+	            // If no reviews exist, set rating to 0
+	            if (averageRating == null) {
+	                averageRating = 0.0;
+	            }
+	            
+	            productDtos.add(new ProductWithRatingDTO(product, averageRating));
+	        }
+		return productDtos;
+	}
 
 
 
