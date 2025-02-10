@@ -23,7 +23,7 @@ public class CartController {
     public ApiResponse addToCart(@RequestBody CartDTO cartDto) {
         return cartService.addToCart(cartDto);
     }
-
+    
     @PatchMapping("/updateQnt/{customerId}")
     public ApiResponse updateCartQuantity(
             @PathVariable Long customerId, 
@@ -36,8 +36,8 @@ public class CartController {
     public ApiResponse removeFromCart(
     		@PathVariable Long customerId,
             @RequestParam Long productId) {
-        return cartService.removeFromCart(customerId, productId);
-    }
+    	return cartService.removeFromCart(customerId, productId);
+    	}
     
     @GetMapping("/{customerId}")
     public ResponseEntity<?> getCartItems(@PathVariable Long customerId){
