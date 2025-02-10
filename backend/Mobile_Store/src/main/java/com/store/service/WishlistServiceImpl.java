@@ -1,5 +1,8 @@
 package com.store.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,7 +64,15 @@ public class WishlistServiceImpl implements WishlistService {
 			
 			return new ApiResponse("successs","removed from Wishlist");
 		}
+   
 
+	    @Override
+	    public List<WishlistDto> getWishlistByCustomer(Long customerId) {
+	        Customer customer = customerDao.findById(customerId).orElseThrow();
+	        return wishlistDao.findByCustomer(customer).stream()
+	                .map(wishlist -> modelMapper.map(wishlist, WishlistDto.class))
+	                .collect(Collectors.toList());
+	    }
  }
 
 	
