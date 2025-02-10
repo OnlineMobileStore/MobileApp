@@ -6,14 +6,13 @@ import { getCustomerDetails } from "../../services/customer";
 import { toast } from "react-toastify";
 import { placeOrder } from "../../services/order";
 import { emptyCart } from "../../services/cart";
+import OTPVerification from "../../components/OTPVerification";
 
 const CheckOut = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const orderPrice = location.state?.orderPrice || 0;
-  const cartItems = location.state?.cartItems ;
-
-  // console.log(cartItems1);
+  const cartItems = location.state?.cartItems;
 
   const [step, setStep] = useState(1);
 
@@ -69,32 +68,30 @@ const CheckOut = () => {
   const handleNext = () => {
     if (step === 1 && validateStep1()) setStep(2);
     else if (step === 2) setStep(3);
+    else if (step === 3) setStep(4);
   };
 
   const handleBack = () => {
     if (step > 1) setStep(step - 1);
   };
 
-  const handlePlaceOrder = async() => {
+  const handlePlaceOrder = async () => {
     const orderData = {
-      customerId: customerId, // from localStorage or context
+      customerId: customerId,
       paymentMethod: formData.paymentMethod,
-      orderItems: cartItems, // from state passed from MyCart
+      orderItems: cartItems,
     };
-    try{
-      const response =await placeOrder(orderData)
-      console.log(response);
+    try {
+      const response = await placeOrder(orderData);
       if (response.data.status === "success") {
-        toast.success("order placed successfully!")
-        const res= await emptyCart(customerId);
-        console.log(res)
+        toast.success("order placed successfully!");
+        await emptyCart(customerId);
         handleNext();
       }
-    }
-    catch (error) {
+    } catch (error) {
       toast.error("Failed to place order");
     }
-  };  
+  };
 
   return (
     <div>
@@ -198,70 +195,106 @@ const CheckOut = () => {
               )}
             </div>
 
-            <button className={styles.button} onClick={handleNext}>
-              Next
-            </button>
+            <div style={{ display: "flex", gap: "100px", marginTop: "10px" }}>
+              <button
+                className={styles.nextbutton}
+                onClick={() => navigate(-1)}
+              >
+                Back
+              </button>
+              <button className={styles.nextbutton} onClick={handleNext}>
+                Next
+              </button>
+            </div>
           </div>
         )}
 
         {step === 2 && (
-          <div style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}>
-          <div className={styles.step}>
-            <h6>Select Payment Method</h6>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div className={styles.step}>
+              
+              <h6>Select Payment Method</h6>
+              <div style={{width:"40%"}}>
+              <label style={{ marginTop: "20px" }}>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="credit"
+                  checked={formData.paymentMethod === "credit"}
+                  onChange={(e) =>
+                    setFormData({ ...formData, paymentMethod: e.target.value })
+                  }
+                />{" "}
+                💳 Credit/Debit Card
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="phonePay"
+                  onChange={(e) =>
+                    setFormData({ ...formData, paymentMethod: e.target.value })
+                  }
+                />{" "}
+                💲 PhonePay
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="cash"
+                  onChange={(e) =>
+                    setFormData({ ...formData, paymentMethod: e.target.value })
+                  }
+                />{" "}
+                🏦 Cash On Delivery
+              </label>
             
-            <label style={{marginTop:"20px"}}>
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="credit"
-                checked={formData.paymentMethod === "credit"}
-                onChange={(e) =>
-                  setFormData({ ...formData, paymentMethod: e.target.value })
-                }
-              />{" "}
-              💳 Credit/Debit Card
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="phonePay"
-                onChange={(e) =>
-                  setFormData({ ...formData, paymentMethod: e.target.value })
-                }
-              />{" "}
-              💲 PhonePay
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="cash"
-                onChange={(e) =>
-                  setFormData({ ...formData, paymentMethod: e.target.value })
-                }
-              />{" "}
-              🏦 Cash On Delivery
-            </label>
-            
-            <h3 style={{marginTop:"25px"}}>Total: ₹{orderPrice}</h3>
-            <div style={{display:"flex", gap:"40px",marginTop:"10px"}}>
-            <button className={styles.button} onClick={handleBack}>
-              Back
-            </button>
-            <button className={styles.button} onClick={handlePlaceOrder}>
-              Place Order
-            </button>
+              <h3 style={{ marginTop: "25px" }}>Total: ₹{orderPrice}</h3>
+              </div>
+              <div style={{ display: "flex", gap: "100px", marginTop: "10px" }}>
+                <button className={styles.nextbutton} onClick={handleBack}>
+                  Back
+                </button>
+                <button className={styles.nextbutton} onClick={handleNext}>
+                  Next
+                </button>
+              </div>
             </div>
-          </div>
           </div>
         )}
 
         {step === 3 && (
           <div className={styles.success}>
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <div><OTPVerification email={formData.email} /></div>
+            <div style={{ display: "flex", gap: "100px", marginTop: "15px" }}>
+              <button className={styles.nextbutton} onClick={handleBack}>
+                Back
+              </button>
+              <button className={styles.nextbutton} onClick={handlePlaceOrder}>
+                Place Order
+              </button>
+            </div>
+            </div>
+          </div>
+        )}
+
+        {step === 4 && (
+          <div className={styles.success}>
             <h3>Order Successful!</h3>
             <p>Thank you for your order.</p>
-            <button className={styles.button} onClick={() => navigate("/order-tracking")}>
+            <button
+              className={styles.button}
+              onClick={() => navigate("/order-tracking")}
+            >
               Track Your Order
             </button>
           </div>
