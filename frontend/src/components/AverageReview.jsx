@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { getAvgRating } from "../services/review";
-import axios from 'axios'
 
 const AverageReview = ({id}) => {
     const [ratingStats, setRatingStats] = useState(null);

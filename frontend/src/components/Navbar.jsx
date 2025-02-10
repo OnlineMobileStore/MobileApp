@@ -69,7 +69,7 @@ const NavbarComponent = () => {
           {/* Right section: Navigation Links */}
           <Nav className="ms-auto">
             <Nav.Link as={Link} to="/customer/home">Home</Nav.Link>
-            <Nav.Link as={Link} to="/myorders">My Orders</Nav.Link>
+            <Nav.Link as={Link} to="/order-tracking">My Orders</Nav.Link>
             <Nav.Link as={Link} to="/wishlist">WishList</Nav.Link>
             <Nav.Link as={Link} to="/about">About Us</Nav.Link>
 

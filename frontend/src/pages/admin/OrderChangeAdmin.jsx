@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import AdminNavbar from "../../components/AdminNavbar";
 import TopBar from "../../components/TopBar";
-import axios from "axios";
 import styles from "../../styles/ViewOrders.module.css";
+import { toast } from "react-toastify";
+import { changeOrderStatus, getAllCustomersOrders } from "../../services/order";
 
 const OrderChangeAdmin = () => {
   const [orders, setOrders] = useState([]);
@@ -12,12 +13,9 @@ const OrderChangeAdmin = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Fetch orders from backend
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/orders/all-customer-orders"
-        );
+        const response =await getAllCustomersOrders();
         if (response.data.status === "success") {
           const formattedOrders = response.data.data.flatMap((customer) =>
             customer.orders.map((order) => ({
@@ -46,19 +44,16 @@ const OrderChangeAdmin = () => {
   const handleStatusChange = async (orderId, newStatus) => {
     setUpdatingStatus(true);
     try {
-      const response = await axios.put(
-        `http://localhost:8080/orders/update-status/${orderId}`,
-        { status: newStatus },
-        { headers: { "Content-Type": "application/json" } }
-      );
-
+      const response = await changeOrderStatus(orderId,newStatus);
       if (response.status === 200) {
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
             order.id === orderId ? { ...order, status: newStatus } : order
           )
         );
+        toast.success("order status updated! ")
       } else {
+        toast.error("failed to update!")
         setError("Failed to update status.");
       }
     } catch (error) {
@@ -113,6 +108,8 @@ const OrderChangeAdmin = () => {
                               ? "#28a745"
                               : order.status === "Shipped"
                               ? "#ffc107"
+                              : order.status === "Out for Delivery"
+                              ? "#ff8c00"
                               : order.status === "Cancelled"
                               ? "#dc3545"
                               : "#007bff",
@@ -122,8 +119,12 @@ const OrderChangeAdmin = () => {
                           borderRadius: "4px",
                         }}
                       >
-                        <option value="Delivered">Delivered</option>
+                        <option value="Placed">Placed</option>
                         <option value="Shipped">Shipped</option>
+                        <option value="Out for Delivery">Out for Delivery</option>
+                        <option value="Delivered">Delivered</option>
+                        
+                        
                         <option value="Cancelled">Cancelled</option>
                       </select>
                     </td>

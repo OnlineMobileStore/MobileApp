@@ -25,6 +25,7 @@ import DeleteProduct from "./pages/admin/DeleteProduct";
 import ProductDetails from "./pages/admin/ProductDetails";
 import AddBrand from "./pages/admin/AddBrand";
 import CheckOut from "./pages/customer/CheckOut";
+import OrderTracking from "./pages/customer/OrderTracking";
 
 const App = () => {
   return (
@@ -54,6 +55,7 @@ const App = () => {
             <Route path='/delete-product' element={<DeleteProduct />} />
             <Route path='/product-details' element={<ProductDetails />} />
             <Route path='/checkout' element={<CheckOut />} />
+            <Route path='/order-tracking' element={<OrderTracking />} />
           </Routes>
         </div>
 

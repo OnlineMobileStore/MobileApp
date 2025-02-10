@@ -85,17 +85,6 @@ public class OrderServiceImpl implements OrderService {
 
         return new ApiResponse("success","Order placed successfully with total amount: " + totalAmount);
     }
-       
-    public ApiResponse removeFromCart(Long customerId, Long productId) {
-        Optional<Cart> cart = cartDao.findByCustomerIdAndProductId(customerId, productId);
-
-        if (cart.isEmpty()) {
-            return new ApiResponse("error", "Product not found in cart");
-        }
-
-        cartDao.delete(cart.get());
-        return new ApiResponse("success", "Item removed from cart");
-    }
     
     @Override
     public ApiResponse getCustomerOrderDetails(Long customerId) {
@@ -123,6 +112,7 @@ public class OrderServiceImpl implements OrderService {
                                 OrderItemDTO itemDto = new OrderItemDTO();
                                 itemDto.setProductId(item.getProduct().getId());
                                 itemDto.setQuantity(item.getQuantity());
+                                itemDto.setPrice(item.getPrice());
                                 return itemDto;
                             })
                             .collect(Collectors.toList());
