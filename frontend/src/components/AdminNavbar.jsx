@@ -15,6 +15,7 @@ const AdminNavbar = () => {
     { name: "Orders", path: "/admin/orders" },
     { name: "Reviews", path: "/admin/reviews" },
     { name: "Customers", path: "/admin/customers" },
+    { name: "FAQs", path: "/admin/faq" },
   ];
 
   return (
@@ -33,7 +34,7 @@ const AdminNavbar = () => {
           overflowY: "auto",
         }}
       >
-        <h2 style={{ fontWeight: "bold", marginBottom: "20px" }}>Admin Panel</h2>
+        <h2 style={{ marginBottom: "20px",color:"white" }}>Admin Panel</h2>
         <nav>
           <ul style={{ listStyle: "none", padding: "0" }}>
             {navItems.map((item, index) => (

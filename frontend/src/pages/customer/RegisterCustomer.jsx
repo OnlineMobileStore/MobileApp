@@ -58,15 +58,12 @@ const RegisterCustomer = () => {
       toast.warn("Please fill all fields");
       setError(true);
     } else {
-      // toast.success("Registration Successful! Welcome to Mobile Store");
-      // navigate("/CustomerHome");
-
       const result = await signup(formData);
       if (result["status"] === "success") {
         toast.success("Successfully registered a new admin");
         navigate('/');
       } else {
-        toast.error(result["error"]);
+        toast.error(result.message);
       }
     }
   };

@@ -18,7 +18,7 @@ import java.util.Map;
 public class ProductReviewController {
     private final ProductReviewService productReviewService;
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<ProductReviewDTO> addReview(@Valid @RequestBody ProductReviewDTO dto) {
         return ResponseEntity.ok(productReviewService.addReview(dto));
     }

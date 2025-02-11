@@ -121,7 +121,7 @@ const OrderChangeAdmin = () => {
                       >
                         <option value="Placed">Placed</option>
                         <option value="Shipped">Shipped</option>
-                        <option value="Out for Delivery">Out for Delivery</option>
+                        <option value="Out for Delivery">Out</option>
                         <option value="Delivered">Delivered</option>
                         
                         

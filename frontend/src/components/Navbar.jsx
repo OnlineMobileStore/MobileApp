@@ -6,8 +6,9 @@ import {
   Form,
   FormControl,
   Button,
-  Dropdown,
+  Dropdown
 } from "react-bootstrap";
+import { FaHeart} from "react-icons/fa";
 import { BiCart, BiUser } from "react-icons/bi"; 
 import { Link } from "react-router-dom";
 import "./Navbar.css";
@@ -22,7 +23,7 @@ const NavbarComponent = () => {
   const [cartItems, setCartItems] = useState(new Set());
 
   const handleLogout = () => {
-    sessionStorage.clear();
+    localStorage.clear();
     navigate("/");
   };
 
@@ -70,15 +71,15 @@ const NavbarComponent = () => {
           <Nav className="ms-auto">
             <Nav.Link as={Link} to="/customer/home">Home</Nav.Link>
             <Nav.Link as={Link} to="/order-tracking">My Orders</Nav.Link>
-            <Nav.Link as={Link} to="/wishlist">WishList</Nav.Link>
-            <Nav.Link as={Link} to="/about">About Us</Nav.Link>
-
+            <Nav.Link as={Link} to="/wishlist">Wishlist<FaHeart className="text-danger"/></Nav.Link>
             {/* Cart */}
             <Nav.Link as={Link} to="/myCart" aria-label="Cart">
               <BiCart /> Cart 
               {/* <span style={{padding:"4px",color:"white",backgroundColor:"green",borderRadius:"100%"}}>{cartItems.size}</span> */}
             </Nav.Link>
 
+            <Nav.Link as={Link} to="/about">About Us</Nav.Link>
+            <Nav.Link as={Link} to="/customer/faq">FAQs</Nav.Link>
             {/* Profile Dropdown */}
             <Dropdown align="end">
               <Dropdown.Toggle variant="link" id="profile-dropdown">

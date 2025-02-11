@@ -38,15 +38,15 @@ const FeatureCard = () => {
       {/* Dynamically load image and text horizontally */}
       <DynamicComponent
         imageSrc={shipping}
-        text="This is a dynamic component with an image 🎉"
+        text="Get your orders delivered quickly, right at your doorstep! 🎉"
       />
       <DynamicComponent
         imageSrc={refund}
-        text="Here comes another one 🎊"
+        text="Enjoy hassle-free returns with our easy refund policy. 🎊"
       />
       <DynamicComponent
         imageSrc={support}
-        text="Another dynamic component 🚀"
+        text="Reach out anytime for assistance—our team is always ready! 🚀"
       />
     </div>
   );

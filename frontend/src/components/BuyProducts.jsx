@@ -162,6 +162,10 @@ const BuyProducts = ({ products = [] }) => {
     navigate("/myCart");
   };
 
+  const handleProduct=(productId)=>{
+    navigate("/customer/productPage", { state: { id: productId } });
+  }
+
   return (
     <div className="container my-4">
       <div className="row">
@@ -218,6 +222,7 @@ const BuyProducts = ({ products = [] }) => {
                         src={product.primaryImage}
                         className={`card-img-top img-fluid ${styles.customImage}`}
                         alt={product.title}
+                        onClick={()=>handleProduct(product.id)}
                       />
                     </div>
                     <div className="card-body">

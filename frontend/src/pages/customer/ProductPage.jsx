@@ -1,92 +1,234 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import styles from '../../styles/ProductPage.module.css';
-import phone from "../../assets/phone.jpg";
-import Navbar from '../../components/Navbar';
-import '../../components/Footer.css';
-import '../../components/Navbar.css';
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getProductById, getProductImages } from "../../services/product";
+import { addToCart, getCartItems } from "../../services/cart";
+import {
+  addToWishlist,
+  getWishlist,
+} from "../../services/wishlist";
+import { toast } from "react-toastify";
+import { FaHeart, FaShoppingCart } from "react-icons/fa";
+import styles from "../../pages/admin/ProductDetails.module.css";
+import AverageReview from "../../components/AverageReview";
+import ReviewByCustomers from "../../components/ReviewByCustomers";
+import NavbarComponent from "../../components/Navbar";
 
 const ProductPage = () => {
-  const { productId } = useParams();
+  const location = useLocation();
+  const { id } = location.state || {};
+  const [product, setProduct] = useState(null);
+  const [productImages, setProductImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const navigate = useNavigate();
+  const customerId = localStorage.getItem("customerId");
 
-  // Example product data (could be fetched from an API)
-  const product = {
-    id: productId,
-    name: "Example Product",
-    description: "This is a detailed description of the product.",
-    price: "$100",
-    size: "Medium",
-    brand: "Brand Name",
-    operatingSystem: "Android",
-    ram: "4 GB",
-    storage: "64 GB",
-    screenSize: "6.5 inches",
-    imageUrl: "https://via.placeholder.com/300", // Sample image
-    reviews: [
-      { 
-        customerName: "John Doe", 
-        reviewTitle: "Great Product", 
-        reviewContent: "I loved it! Highly recommend.", 
-        rating: 5, 
-        date: "2025-01-01" 
-      },
-      { 
-        customerName: "Jane Doe", 
-        reviewTitle: "Decent", 
-        reviewContent: "Good value for money.", 
-        rating: 3, 
-        date: "2025-01-10" 
-      },
-    ],
+  const [cart, setCart] = useState([]); // Initialize as an empty array
+  const [wishlist, setWishlist] = useState([]); // Initialize as an empty array
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await getProductById(id);
+        const imageResult = await getProductImages(id);
+        if (response.status === 200) {
+          setProduct(response.data);
+          setProductImages(imageResult);
+          setSelectedImage(response.data.primaryImage || imageResult[0]);
+        } else {
+          toast.error("Failed to load product details");
+        }
+      } catch (error) {
+        toast.error("Error fetching product details");
+      }
+      setLoading(false);
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  const fetchWishlistItems = async () => {
+    if (!customerId) return;
+    try {
+      const response = await getWishlist(customerId);
+      console.log(response);
+      setWishlist(response);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
   };
 
+  useEffect(() => {
+    fetchWishlistItems();
+  }, []);
+
+  const fetchCartItems = async () => {
+    if (!customerId) return;
+    try {
+      const response = await getCartItems(customerId);
+      console.log(response.data);
+      setCart(response.data);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
+
+  const handleAddToCart = async (productId, price) => {
+    if (!customerId) return;
+    try {
+      await addToCart(customerId, productId, price); // Replace with your actual service function
+      toast.success("Added to cart");
+      fetchCartItems(); // Refresh cart
+    } catch (error) {
+      toast.error("Error adding to cart");
+    }
+  };
+
+  const handleAddToWishlist = async (productId) => {
+    if (!customerId) return;
+    try {
+      await addToWishlist(customerId, productId); // Replace with your actual service function
+      toast.success("Added to wishlist");
+      fetchWishlistItems(); // Refresh wishlist
+    } catch (error) {
+      toast.error("Error adding to wishlist");
+    }
+  };
+  useEffect(() => {
+    fetchCartItems(); // Fetch cart items
+  }, []);
+
+  useEffect(() => {
+    fetchWishlistItems(); // Fetch wishlist items
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (!product) return <div>Product not found</div>;
+
   return (
-    <div className={styles.productPageContainer}>
-      <Navbar/>
-      <div className={styles.productDetailsContainer}>
-        {/* Product Image */}
-        <div className={styles.imageContainer}>
-          <img src={phone} alt={product.name} className={styles.productImage} />
+    <>
+      <NavbarComponent />
+      <div className={styles.container}>
+        <button className={styles.backButton} onClick={() => navigate(-1)}>
+          Back
+        </button>
+
+        {/* Image Gallery */}
+        <div className={styles.imageGallery}>
+          <img
+            className={styles.mainImage}
+            src={selectedImage}
+            alt={product.title}
+          />
+          <div className={styles.thumbnailContainer}>
+            {productImages.length > 0 ? (
+              productImages.map((img, index) => (
+                <img
+                  key={index}
+                  className={`${styles.thumbnail} ${
+                    selectedImage === img ? styles.activeThumbnail : ""
+                  }`}
+                  src={img}
+                  alt={`Thumbnail ${index}`}
+                  onClick={() => setSelectedImage(img)}
+                />
+              ))
+            ) : (
+              <p>No additional images</p>
+            )}
+          </div>
         </div>
 
-        {/* Product Information */}
-        <div className={styles.productInfoContainer}>
-          <h1>{product.name}</h1>
-          <p>{product.description}</p>
-          <p><strong>Price:</strong> {product.price}</p>
-          <p><strong>Size:</strong> {product.size}</p>
-          <p><strong>Brand:</strong> {product.brand}</p>
-          <p><strong>Operating System:</strong> {product.operatingSystem}</p>
-          <p><strong>RAM:</strong> {product.ram}</p>
-          <p><strong>Storage:</strong> {product.storage}</p>
-          <p><strong>Screen Size:</strong> {product.screenSize}</p>
+        {/* Icons */}
+
+        {/* Cart Button */}
+        {cart &&
+        cart.length > 0 &&
+        cart.some((item) => item.productId === product.id) ? (
+          <button className="btn btn-success" disabled>
+            <FaShoppingCart />
+          </button>
+        ) : (
+          <button
+            className="btn btn-outline-success"
+            onClick={() =>
+              handleAddToCart(
+                product.id,
+                product.price - (product.price * product.discount) / 100
+              )
+            }
+          >
+            <FaShoppingCart />
+          </button>
+        )}
+
+        {/* Wishlist Button */}
+        {wishlist &&
+        wishlist.length > 0 &&
+        wishlist.some((item) => item.productId === product.id) ? (
+          <button className="btn btn-danger me-2" disabled>
+            <FaHeart />
+          </button>
+        ) : (
+          <button
+            className="btn btn-outline-danger me-2"
+            onClick={() => handleAddToWishlist(product.id)}
+          >
+            <FaHeart />
+          </button>
+        )}
+
+        {/* <div className={styles.productActions}>
+          <button className="btn btn-outline-danger me-2">
+            <FaHeart />
+          </button>
+          <button className="btn btn-outline-success">
+            <FaShoppingCart />
+          </button>
+        </div> */}
+
+        {/* Product Info */}
+        <div className={styles.productInfo}>
+          <h2 className={styles.title}>{product.title}</h2>
+          <p className={styles.brand}>Brand: {product.brand_name || "N/A"}</p>
+
+          <div className={styles.specs}>
+            <p>
+              <span className="text-success">
+                <b>
+                  ₹
+                  {Math.round(
+                    product.price - (product.price * product.discount) / 100
+                  )}
+                </b>
+              </span>{" "}
+              <span className="text-muted text-decoration-line-through">
+                <sub>₹{product.price}</sub>
+              </span>{" "}
+              <span className="text-danger">{product.discount}% Off</span>
+            </p>
+            <p>Color: {product.color}</p>
+            <p>RAM: {product.ram} GB</p>
+            <p>Storage: {product.storage} GB</p>
+            <p>Camera: {product.camera} MP</p>
+            <p>Screen Size: {product.screenSize} inch</p>
+            <p>OS: {product.os}</p>
+            <p>Battery: {product.battery} mAh</p>
+            <p>Quantity: {product.quantity}</p>
+          </div>
+
+          <p className={styles.description}>{product.description}</p>
         </div>
       </div>
 
       {/* Reviews Section */}
-      <h3>Reviews ({product.reviews.length})</h3>
-      <div className={styles.reviewGridContainer}>
-      
-        {product.reviews.length > 0 ? (
-          product.reviews.map((review, index) => (
-            <div key={index} className={styles.reviewCard}>
-              <h4>{review.reviewTitle}</h4>
-              <p>
-                <strong>By:</strong> {review.customerName} on {review.date}
-              </p>
-              <div className={styles.reviewRating}>
-                {Array.from({ length: review.rating }).map((_, index) => (
-                  <span key={index} className={styles.starFilled}>★</span>
-                ))}
-              </div>
-              <p>{review.reviewContent}</p>
-            </div>
-          ))
-        ) : (
-          <p>No reviews yet for this product.</p>
-        )}
-      </div>
-    </div>
+      <AverageReview id={id} />
+      <ReviewByCustomers productId={id} />
+    </>
   );
 };
 

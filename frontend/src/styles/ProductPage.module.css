@@ -1,44 +1,74 @@
-.productPageContainer {
+.container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: center;
   padding: 20px;
 }
 
-.productDetailsContainer {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
+.backButton {
+  background-color: #f8f9fa;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
 }
 
-.imageContainer {
-  flex-shrink: 0;
-}
-
-.productImage {
-  max-width: 300px;
-  border-radius: 8px;
-}
-
-.productInfoContainer {
+.imageGallery {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.mainImage {
+  max-width: 100%;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.thumbnailContainer {
+  display: flex;
+  margin-top: 10px;
   gap: 10px;
 }
 
-.reviewGridContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+.thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.activeThumbnail {
+  border: 2px solid #007bff;
+}
+
+.productActions {
+  display: flex;
+  justify-content: center;
   gap: 20px;
+  margin-bottom: 20px;
 }
 
-.reviewCard {
-  background: #f9f9f9;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+.productInfo {
+  text-align: left;
+  max-width: 800px;
+  width: 100%;
 }
 
-.starFilled {
-  color: gold;
+.title {
+  font-size: 2rem;
+  font-weight: bold;
 }
+
+.specs p {
+  margin: 5px 0;
+}
+
+.description {
+  margin-top: 20px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+

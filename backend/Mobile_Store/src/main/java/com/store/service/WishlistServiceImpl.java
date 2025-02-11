@@ -1,6 +1,7 @@
 package com.store.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -12,8 +13,9 @@ import com.store.dao.CustomerDao;
 import com.store.dao.ProductDao;
 import com.store.dao.WishlistDao;
 import com.store.dto.ApiResponse;
+import com.store.dto.CartDTO;
 import com.store.dto.WishlistDto;
-
+import com.store.pojo.Cart;
 import com.store.pojo.Customer;
 import com.store.pojo.Product;
 import com.store.pojo.Wishlist;
@@ -39,20 +41,28 @@ public class WishlistServiceImpl implements WishlistService {
 	    private ModelMapper modelMapper;
 
 	    @Override
-	    public String addToWishlist(WishlistDto wishlistDto) {
+	    public ApiResponse addToWishlist(WishlistDto wishlistDto) {
 	    	
-	    	Customer customer = customerDao.findById(wishlistDto.getCustomerId()).orElseThrow();
+	    	Optional<Customer> customer = customerDao.findById(wishlistDto.getCustomerId());
+	        Optional<Product> product = productDao.findById(wishlistDto.getProductId());
 	    	
-	    	Product product = productDao.findById(wishlistDto.getProductId()).orElseThrow();
+	    	if (customer.isEmpty() || product.isEmpty()) {
+	            return new ApiResponse("error", "Invalid customer or product ID");
+	        }
+
+	        Optional<Wishlist> existingWishList = wishlistDao.findByCustomerIdAndProductId(wishlistDto.getCustomerId(), wishlistDto.getProductId());
+
+	        if (existingWishList.isPresent()) {
+	            return new ApiResponse("error", "Product already in wishlist");
+	        }
 	    	
 	    	Wishlist wishlist= modelMapper.map(wishlistDto, Wishlist.class);
-	    	wishlist.setCustomer(customer);
-	    	wishlist.setProduct(product);
+	    	wishlist.setCustomer(customer.get());
+	    	wishlist.setProduct(product.get());
 	    	
 	    	wishlistDao.save(wishlist);
-	    	
-	    	
-	    	return "Saved in wishlist!!!";
+	  
+	    	return new ApiResponse("success", "added to wishlist");
 	    }
 
 		@Override
@@ -68,11 +78,22 @@ public class WishlistServiceImpl implements WishlistService {
 
 	    @Override
 	    public List<WishlistDto> getWishlistByCustomer(Long customerId) {
-	        Customer customer = customerDao.findById(customerId).orElseThrow();
-	        return wishlistDao.findByCustomer(customer).stream()
-	                .map(wishlist -> modelMapper.map(wishlist, WishlistDto.class))
-	                .collect(Collectors.toList());
+	    	return wishlistDao.findByCustomerId(customerId)
+	        		.stream()
+	        		.map(wishlist->{
+	        			WishlistDto dto=modelMapper.map(wishlist, WishlistDto.class);
+	        			dto.setCustomerId(wishlist.getCustomer().getId());
+	                    dto.setProductId(wishlist.getProduct().getId()); 
+	                    dto.setProductName(wishlist.getProduct().getTitle());
+	                    dto.setProductImage(wishlist.getProduct().getPrimaryImage());
+	                    dto.setDiscount(wishlist.getProduct().getDiscount());
+	                    dto.setPrice(wishlist.getProduct().getPrice());
+	                    dto.setQuantity(wishlist.getProduct().getQuantity());
+	                    
+	        			return dto;
+	        		}).collect(Collectors.toList());
 	    }
+	    
  }
 
 	

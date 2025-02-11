@@ -1,70 +1,79 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import styles from "../../styles/ProductReview.module.css"; // Import CSS module
-import Navbar from '../../components/Navbar';
-import '../../components/Footer.css';
-import '../../components/Navbar.css';
+import styles from "../../styles/AddReview.module.css";
+import Navbar from "../../components/Navbar";
+import { addReview } from "../../services/review";
 
-const ProductReview = ({ productId }) => {
+const AddReview = () => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewTitle, setReviewTitle] = useState("");
   const [reviewContent, setReviewContent] = useState("");
-  const [customerName, setCustomerName] = useState("");
-  const [error, setError] = useState(null); // For handling errors
+  const [productId, setProductId] = useState("");
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+
+  const customerId = localStorage.getItem("customerId");
 
   const handleRatingChange = (value) => {
     setRating(value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validation
-    if (!rating || !reviewTitle || !customerName || !reviewContent) {
+    if (!customerId) {
+      setError("Customer ID is missing. Please log in again.");
+      return;
+    }
+    if (!rating || !reviewTitle || !reviewContent || !productId) {
       setError("All fields are required, and a rating must be selected!");
       return;
     }
 
-    // Simulate API submission
-    const isSuccessful = Math.random() > 0.2; // Simulate success/failure (80% success rate)
+    try {
 
-    if (isSuccessful) {
-      // Reset form fields
-      setRating(0);
-      setReviewTitle("");
-      setReviewContent("");
-      setCustomerName("");
-      setError(null);
-      toast.success("Review submitted successfully!");
-
-      // Navigate to product review page
-      navigate(`/ProductPage/${productId}`);
-    } else {
-      setError("Sorry, something went wrong. Please try again.");
-      toast.error("Submission failed. Please try again.");
+      const response = await addReview(productId,customerId,reviewTitle,reviewContent,rating);
+      console.log(response)
+      if(response.status===200){
+        toast.success("Review submitted successfully!");
+        navigate("/customer/productPage", { state: { id: response.data.productId } });
+      }
+      
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Submission failed. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     }
   };
-
   const ratingTooltips = ["Worst", "Bad", "Average", "Good", "Best"];
 
   return (
     <div className={styles.reviewContainer}>
-      <Navbar/>
-      <ToastContainer />
+      <Navbar />
       <div className={styles.titleSection}>
-          <h2 style={{marginTop:"50px"}}>How was the Mobile? {productId}</h2>
+        <h3 style={{ marginTop: "10px" }}>How was the Mobile?</h3>
       </div>
 
-      {/* Add Review Form */}
       <div className={styles.addReviewSection}>
-        {error && <p className={styles.errorMessage}>{error}</p>} {/* Error message */}
+        {error && <p className={styles.errorMessage}>{error}</p>}
         <form onSubmit={handleSubmit} className={styles.reviewForm}>
-          <div className={styles.ratingSection}>
+          <div className={styles.formGroup}>
+            <label htmlFor="product-id">Product ID:</label>
+            <input
+              type="text"
+              id="product-id"
+              className={styles.input}
+              value={productId}
+              onChange={(e) => setProductId(e.target.value)}
+              required
+            />
+          </div>
+
+          <div style={{ marginTop: "15px" }}>
             <label>Your Rating:</label>
             <div>
               {[1, 2, 3, 4, 5].map((star) => (
@@ -76,7 +85,7 @@ const ProductReview = ({ productId }) => {
                   onClick={() => handleRatingChange(star)}
                   onMouseEnter={() => setHoverRating(star)}
                   onMouseLeave={() => setHoverRating(0)}
-                  title={ratingTooltips[star - 1]} // Tooltip text
+                  title={ratingTooltips[star - 1]}
                 >
                   ★
                 </span>
@@ -107,28 +116,15 @@ const ProductReview = ({ productId }) => {
             ></textarea>
           </div>
 
-          <div className={styles.formGroup}>
-            <label htmlFor="customer-name">Your Name:</label>
-            <input
-              type="text"
-              id="customer-name"
-              className={styles.input}
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
-              required
-            />
+          <div style={{ textAlign: "center" }}>
+            <button type="submit" className={styles.submitButton}>
+              Submit
+            </button>
           </div>
-          <div style={{textAlign:"center"}}>
-          <button type="submit" className={styles.submitButton}>
-            Submit
-          </button>
-          </div>
-         
         </form>
-
       </div>
     </div>
   );
 };
 
-export default ProductReview;
+export default AddReview;
