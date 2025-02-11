@@ -16,6 +16,7 @@ const HomeCustomer = () => {
   const [products, setProducts] = useState([]);
   const [newProducts, setNewProducts] = useState([]);
   const navigate = useNavigate();
+  const customerId = localStorage.getItem("customerId");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -55,9 +56,9 @@ const HomeCustomer = () => {
   //   }));
   // };
 
-  const handleProduct=(productId)=>{
+  const handleProduct = (productId) => {
     navigate("/customer/productPage", { state: { id: productId } });
-  }
+  };
 
   return (
     <div className={styles.homepage}>
@@ -71,22 +72,33 @@ const HomeCustomer = () => {
               alt="First slide"
             />
             <Carousel.Caption className={styles.leftCaption}>
-              <h3>Super Flash Sale</h3>
-              <p>50% Off</p>
+            <h3>Exclusive Collection</h3>
+            <p>Grab the Best Deals!</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item>
             <img
               className={`d-block w-100 ${styles.carouselImage}`}
-              src="https://images-eu.ssl-images-amazon.com/images/G/31/INSLGW/pc_unrec_refresh._CB555261616_.jpg"
+              src="https://m.media-amazon.com/images/S/aplus-media-library-service-media/91e82ef4-82b1-40f1-b2a0-3820aa86399e.__CR186,0,2928,1200_PT0_SX1464_V1___.jpg"
               alt="Second slide"
             />
-            <Carousel.Caption className={styles.leftCaption}>
-              <h3>Exclusive Collection</h3>
-              <p>Grab the Best Deals!</p>
-            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className={`d-block w-100 ${styles.carouselImage}`}
+              src="https://m.media-amazon.com/images/S/aplus-media-library-service-media/39ad5b3f-323a-4273-b660-ea5afb484719.__CR201,0,2928,1200_PT0_SX1464_V1___.jpg"
+              alt="Second slide"
+            />
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className={`d-block w-100 ${styles.carouselImage}`}
+              src="https://m.media-amazon.com/images/S/aplus-media-library-service-media/39ad5b3f-323a-4273-b660-ea5afb484719.__CR201,0,2928,1200_PT0_SX1464_V1___.jpg"
+              alt="Second slide"
+            />
           </Carousel.Item>
         </Carousel>
+        
         <div className={styles.newProductSection}>
           {/* <div className={styles.latestHead}><h2>Latest Lonch</h2></div> */}
           <div className="container">
@@ -97,24 +109,27 @@ const HomeCustomer = () => {
               {newProducts && newProducts.length > 0 ? (
                 newProducts.map((newproduct) => (
                   <div className="col-md-4" key={newproduct.id}>
-                    <div className={styles.productCard} onClick={()=>handleProduct(newproduct.id)}>
+                    <div
+                      className={styles.productCard}
+                      onClick={() => handleProduct(newproduct.id)}
+                    >
                       <div style={{ display: "flex" }}>
                         <img
                           src={newproduct.primaryImage}
                           alt={newproduct.title}
                           className={`img-fluid ${styles.productImage}`}
-                          
                         />
                         {/* Icons */}
-                        <div className={styles.productActions}>
-                          <button className="btn btn-outline-danger me-2"
-                          >
-                            <FaHeart/>
-                          </button>
-                          <button className="btn btn-outline-success">
-                            <FaShoppingCart />
-                          </button>
-                        </div>
+                        {customerId && (
+                          <div className={styles.productActions}>
+                            <button className="btn btn-outline-danger me-2">
+                              <FaHeart />
+                            </button>
+                            <button className="btn btn-outline-success">
+                              <FaShoppingCart />
+                            </button>
+                          </div>
+                        )}
                       </div>
                       <div className={styles.productInfo}>
                         <h5>

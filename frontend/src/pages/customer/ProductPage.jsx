@@ -2,13 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getProductById, getProductImages } from "../../services/product";
 import { addToCart, getCartItems } from "../../services/cart";
-import {
-  addToWishlist,
-  getWishlist,
-} from "../../services/wishlist";
+import { addToWishlist, getWishlist } from "../../services/wishlist";
 import { toast } from "react-toastify";
 import { FaHeart, FaShoppingCart } from "react-icons/fa";
-import styles from "../../pages/admin/ProductDetails.module.css";
+import styles from "../../styles/ProductPage.module.css";
 import AverageReview from "../../components/AverageReview";
 import ReviewByCustomers from "../../components/ReviewByCustomers";
 import NavbarComponent from "../../components/Navbar";
@@ -23,8 +20,8 @@ const ProductPage = () => {
   const navigate = useNavigate();
   const customerId = localStorage.getItem("customerId");
 
-  const [cart, setCart] = useState([]); // Initialize as an empty array
-  const [wishlist, setWishlist] = useState([]); // Initialize as an empty array
+  const [cart, setCart] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -119,11 +116,13 @@ const ProductPage = () => {
 
         {/* Image Gallery */}
         <div className={styles.imageGallery}>
-          <img
-            className={styles.mainImage}
-            src={selectedImage}
-            alt={product.title}
-          />
+          <div>
+            <img
+              className={styles.mainImage}
+              src={selectedImage}
+              alt={product.title}
+            />
+          </div>
           <div className={styles.thumbnailContainer}>
             {productImages.length > 0 ? (
               productImages.map((img, index) => (
@@ -145,51 +144,49 @@ const ProductPage = () => {
 
         {/* Icons */}
 
-        {/* Cart Button */}
-        {cart &&
-        cart.length > 0 &&
-        cart.some((item) => item.productId === product.id) ? (
-          <button className="btn btn-success" disabled>
-            <FaShoppingCart />
-          </button>
-        ) : (
-          <button
-            className="btn btn-outline-success"
-            onClick={() =>
-              handleAddToCart(
-                product.id,
-                product.price - (product.price * product.discount) / 100
-              )
-            }
-          >
-            <FaShoppingCart />
-          </button>
+        {customerId && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 30 }}>
+            {/* Cart Button */}
+            <div>
+              {cart &&
+              cart.length > 0 &&
+              cart.some((item) => item.productId === product.id) ? (
+                <button className="btn btn-success" disabled>
+                  <FaShoppingCart />
+                </button>
+              ) : (
+                <button
+                  className="btn btn-outline-success"
+                  onClick={() =>
+                    handleAddToCart(
+                      product.id,
+                      product.price - (product.price * product.discount) / 100
+                    )
+                  }
+                >
+                  <FaShoppingCart />
+                </button>
+              )}
+            </div>
+            <div>
+              {/* Wishlist Button */}
+              {wishlist &&
+              wishlist.length > 0 &&
+              wishlist.some((item) => item.productId === product.id) ? (
+                <button className="btn btn-danger me-2" disabled>
+                  <FaHeart />
+                </button>
+              ) : (
+                <button
+                  className="btn btn-outline-danger me-2"
+                  onClick={() => handleAddToWishlist(product.id)}
+                >
+                  <FaHeart />
+                </button>
+              )}
+            </div>
+          </div>
         )}
-
-        {/* Wishlist Button */}
-        {wishlist &&
-        wishlist.length > 0 &&
-        wishlist.some((item) => item.productId === product.id) ? (
-          <button className="btn btn-danger me-2" disabled>
-            <FaHeart />
-          </button>
-        ) : (
-          <button
-            className="btn btn-outline-danger me-2"
-            onClick={() => handleAddToWishlist(product.id)}
-          >
-            <FaHeart />
-          </button>
-        )}
-
-        {/* <div className={styles.productActions}>
-          <button className="btn btn-outline-danger me-2">
-            <FaHeart />
-          </button>
-          <button className="btn btn-outline-success">
-            <FaShoppingCart />
-          </button>
-        </div> */}
 
         {/* Product Info */}
         <div className={styles.productInfo}>
@@ -218,7 +215,16 @@ const ProductPage = () => {
             <p>Screen Size: {product.screenSize} inch</p>
             <p>OS: {product.os}</p>
             <p>Battery: {product.battery} mAh</p>
-            <p>Quantity: {product.quantity}</p>
+
+            <div
+              className={
+                product.quantity > 0
+                  ? "text-success fw-bold"
+                  : "text-danger fw-bold"
+              }
+            >
+              {product.quantity > 0 ? "In stock" : "Out of stock"}
+            </div>
           </div>
 
           <p className={styles.description}>{product.description}</p>
@@ -226,8 +232,14 @@ const ProductPage = () => {
       </div>
 
       {/* Reviews Section */}
-      <AverageReview id={id} />
-      <ReviewByCustomers productId={id} />
+      <div style={{ display: "flex", marginLeft: "30px" }}>
+        <div>
+          <AverageReview id={id} />
+        </div>
+        <div style={{ width: "60%" }}>
+          <ReviewByCustomers productId={id} />
+        </div>
+      </div>
     </>
   );
 };

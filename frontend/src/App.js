@@ -1,7 +1,5 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { animate } from "framer-motion";
-import { AuthProvider } from "./auth/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import SalesDetailsAdmin from "./pages/admin/SalesDetailsAdmin";
@@ -38,7 +36,7 @@ const App = () => {
       <Router>
         <div className="content">
           <Routes>
-            <Route path="/" element={<LoginCustomer />} />
+            <Route path="/login-customer" element={<LoginCustomer />} />
             <Route path="/login-admin" element={<LoginAdmin />} />
             <Route path="/register-customer" element={<RegisterCustomer />} />
             <Route path="/admin/dashboard" element={<DashboardAdmin />} />
@@ -46,7 +44,7 @@ const App = () => {
             <Route path="/admin/orders" element={<OrderChangeAdmin />} />
             <Route path="/admin/reviews" element={<ReviewsAdmin />}/>
             <Route path="/admin/customers" element={< CustomersDetails />}/>
-            <Route path='/customer/home' element={<HomeCustomer />} />
+            <Route path='/' element={<HomeCustomer />} />
             <Route path='/customer/change-profile' element={<ChangeProfile />} />
             <Route path='/admin/change-profile' element={<ChangeAdminProfile />} />
             <Route path='/wishlist' element={<Wishlist />} />

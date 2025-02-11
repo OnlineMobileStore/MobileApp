@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useLocation,useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getProductById, getProductImages } from "../../services/product";
+import { addToCart, getCartItems } from "../../services/cart";
+import { addToWishlist, getWishlist } from "../../services/wishlist";
 import { toast } from "react-toastify";
-import styles from "./ProductDetails.module.css";
+import styles from "../../styles/ProductPage.module.css";
 import AverageReview from "../../components/AverageReview";
 import ReviewByCustomers from "../../components/ReviewByCustomers";
+import NavbarComponent from "../../components/Navbar";
 
 const ProductDetails = () => {
   const location = useLocation();
@@ -13,14 +16,17 @@ const ProductDetails = () => {
   const [productImages, setProductImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+  const customerId = localStorage.getItem("customerId");
+
+  const [cart, setCart] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await getProductById(id);
         const imageResult = await getProductImages(id);
-
         if (response.status === 200) {
           setProduct(response.data);
           setProductImages(imageResult);
@@ -37,29 +43,93 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id]);
 
+  const fetchWishlistItems = async () => {
+    if (!customerId) return;
+    try {
+      const response = await getWishlist(customerId);
+      console.log(response);
+      setWishlist(response);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchWishlistItems();
+  }, []);
+
+  const fetchCartItems = async () => {
+    if (!customerId) return;
+    try {
+      const response = await getCartItems(customerId);
+      console.log(response.data);
+      setCart(response.data);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
+
+  const handleAddToCart = async (productId, price) => {
+    if (!customerId) return;
+    try {
+      await addToCart(customerId, productId, price); // Replace with your actual service function
+      toast.success("Added to cart");
+      fetchCartItems(); // Refresh cart
+    } catch (error) {
+      toast.error("Error adding to cart");
+    }
+  };
+
+  const handleAddToWishlist = async (productId) => {
+    if (!customerId) return;
+    try {
+      await addToWishlist(customerId, productId); // Replace with your actual service function
+      toast.success("Added to wishlist");
+      fetchWishlistItems(); // Refresh wishlist
+    } catch (error) {
+      toast.error("Error adding to wishlist");
+    }
+  };
+  useEffect(() => {
+    fetchCartItems(); // Fetch cart items
+  }, []);
+
+  useEffect(() => {
+    fetchWishlistItems(); // Fetch wishlist items
+  }, []);
+
   if (loading) return <div>Loading...</div>;
   if (!product) return <div>Product not found</div>;
 
   return (
     <>
       <div className={styles.container}>
-        <button onClick={()=>navigate(-1)}>Back</button>
-        {/* Image Gallery Section */}
+        <button className={styles.backButton} onClick={() => navigate(-1)}>
+          Back
+        </button>
+
+        {/* Image Gallery */}
         <div className={styles.imageGallery}>
-          <img 
-            className={styles.mainImage} 
-            // src={selectedImage} 
-            src="https://m.media-amazon.com/images/I/61p1GDl3JPL._SX679_.jpg"
-            alt={product.title} 
-          />
+          <div>
+            <img
+              className={styles.mainImage}
+              src={selectedImage}
+              alt={product.title}
+            />
+          </div>
           <div className={styles.thumbnailContainer}>
             {productImages.length > 0 ? (
               productImages.map((img, index) => (
                 <img
                   key={index}
-                  className={`${styles.thumbnail} ${selectedImage === img ? styles.activeThumbnail : ""}`}
-                  // src={img}
-                  src="https://m.media-amazon.com/images/I/61p1GDl3JPL._SX679_.jpg"
+                  className={`${styles.thumbnail} ${
+                    selectedImage === img ? styles.activeThumbnail : ""
+                  }`}
+                  src={img}
                   alt={`Thumbnail ${index}`}
                   onClick={() => setSelectedImage(img)}
                 />
@@ -68,17 +138,26 @@ const ProductDetails = () => {
               <p>No additional images</p>
             )}
           </div>
-        </div>
-
-        {/* Product Information Section */}
+        </div>        
+        {/* Product Info */}
         <div className={styles.productInfo}>
           <h2 className={styles.title}>{product.title}</h2>
           <p className={styles.brand}>Brand: {product.brand_name || "N/A"}</p>
 
-          {/* Product Specifications */}
           <div className={styles.specs}>
-            <p className={styles.price}>
-              ₹{product.price} <span className={styles.discount}>({product.discount}% Off)</span>
+            <p>
+              <span className="text-success">
+                <b>
+                  ₹
+                  {Math.round(
+                    product.price - (product.price * product.discount) / 100
+                  )}
+                </b>
+              </span>{" "}
+              <span className="text-muted text-decoration-line-through">
+                <sub>₹{product.price}</sub>
+              </span>{" "}
+              <span className="text-danger">{product.discount}% Off</span>
             </p>
             <p>Color: {product.color}</p>
             <p>RAM: {product.ram} GB</p>
@@ -93,8 +172,13 @@ const ProductDetails = () => {
           <p className={styles.description}>{product.description}</p>
         </div>
       </div>
-      <AverageReview id={id} />
-      <ReviewByCustomers productId={id} />
+
+      {/* Reviews Section */}
+      <div style={{display:"flex",marginLeft:"30px"}}>
+      <div><AverageReview id={id} /></div>
+      <div style={{width:"60%"}}><ReviewByCustomers productId={id} /></div>
+      </div>
+      
     </>
   );
 };

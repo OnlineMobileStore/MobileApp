@@ -124,9 +124,13 @@ const BuyProducts = ({ products = [] }) => {
   const fetchCartItems = async () => {
     if (!customerId) return;
     try {
-      const response= await getCartItems(customerId);
-      const cartProductIds = new Set(response.data.map((item) => item.productId));
-      setCartItems((prevCartItems) => new Set([...prevCartItems, ...cartProductIds]));
+      const response = await getCartItems(customerId);
+      const cartProductIds = new Set(
+        response.data.map((item) => item.productId)
+      );
+      setCartItems(
+        (prevCartItems) => new Set([...prevCartItems, ...cartProductIds])
+      );
     } catch (error) {
       console.error("Error fetching cart data:", error);
     }
@@ -134,21 +138,19 @@ const BuyProducts = ({ products = [] }) => {
 
   useEffect(() => {
     fetchCartItems();
-    
-  }, [customerId]); 
-  
+  }, [customerId]);
 
-  const handleAddToCart = async (productId, price) => {  
+  const handleAddToCart = async (productId, price) => {
     if (!customerId) {
       toast.error("Please log in to add items to the cart.");
       return;
     }
-  
+
     try {
-      const response = await addToCart(customerId,productId,price) 
+      const response = await addToCart(customerId, productId, price);
       if (response.status === 200) {
         toast.success("Item added to cart!");
-        fetchCartItems(); 
+        fetchCartItems();
       } else {
         toast.error("Failed to add to cart");
       }
@@ -157,14 +159,14 @@ const BuyProducts = ({ products = [] }) => {
       toast.error("Something went wrong. Please try again.");
     }
   };
-  
+
   const handleGoToCart = () => {
     navigate("/myCart");
   };
 
-  const handleProduct=(productId)=>{
+  const handleProduct = (productId) => {
     navigate("/customer/productPage", { state: { id: productId } });
-  }
+  };
 
   return (
     <div className="container my-4">
@@ -222,7 +224,7 @@ const BuyProducts = ({ products = [] }) => {
                         src={product.primaryImage}
                         className={`card-img-top img-fluid ${styles.customImage}`}
                         alt={product.title}
-                        onClick={()=>handleProduct(product.id)}
+                        onClick={() => handleProduct(product.id)}
                       />
                     </div>
                     <div className="card-body">
@@ -269,29 +271,30 @@ const BuyProducts = ({ products = [] }) => {
                         ))}
                       </div>
 
-                      {cartItems.has(product.id) ? (
-                        <button
-                          className="btn btn-sm btn-outline-primary mt-2"
-                          onClick={handleGoToCart}
-                        >
-                          Go to Cart
-                        </button>
-                      ) : (
-                        <button
-                          className="btn btn-sm btn-outline-success mt-2"
-                          onClick={() =>
-                            handleAddToCart(
-                              product.id,
-                              Math.round(
-                                product.price -
-                                  (product.price * product.discount) / 100
+                      {customerId &&
+                        (cartItems.has(product.id) ? (
+                          <button
+                            className="btn btn-sm btn-outline-primary mt-2"
+                            onClick={handleGoToCart}
+                          >
+                            Go to Cart
+                          </button>
+                        ) : (
+                          <button
+                            className="btn btn-sm btn-outline-success mt-2"
+                            onClick={() =>
+                              handleAddToCart(
+                                product.id,
+                                Math.round(
+                                  product.price -
+                                    (product.price * product.discount) / 100
+                                )
                               )
-                            )
-                          }
-                        >
-                          Add to Cart
-                        </button>
-                      )}
+                            }
+                          >
+                            Add to Cart
+                          </button>
+                        ))}
                     </div>
                     <div className={styles.productInfo}></div>
                   </div>
