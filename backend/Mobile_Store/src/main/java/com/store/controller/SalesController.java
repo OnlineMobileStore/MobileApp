@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.store.dto.SalesDetailsDTO;
+import com.store.dto.SalesSummaryDTO;
 import com.store.service.SalesService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,4 +29,11 @@ public class SalesController {
         List<SalesDetailsDTO> salesDetails = salesService.getSalesDetails();
         return ResponseEntity.ok(salesDetails);
     }
+    
+    @GetMapping("/summary")
+    public ResponseEntity<SalesSummaryDTO> getSalesSummary() {
+        SalesSummaryDTO summary = salesService.getSalesSummary();
+        return ResponseEntity.ok(summary);
+    }
+
 }

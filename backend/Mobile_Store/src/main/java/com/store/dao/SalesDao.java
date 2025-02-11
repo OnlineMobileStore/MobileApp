@@ -15,4 +15,14 @@ public interface SalesDao extends JpaRepository<Sales, Long> {
             "JOIN s.product p " +
             "WHERE s.isActive = true") // Adjust the query based on your schema
     List<Object[]> findSalesDetails();
+    
+    @Query("SELECT SUM(s.totalPrice) FROM Sales s WHERE s.isActive = true")
+    Double getTotalSales();
+
+    @Query("SELECT COUNT(DISTINCT s.product.id) FROM Sales s WHERE s.isActive = true")
+    Long getTotalProducts();
+
+
+
 }
+

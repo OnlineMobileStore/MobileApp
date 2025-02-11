@@ -1,0 +1,91 @@
+/* About.css */
+.about-page {
+    font-family: 'Arial', sans-serif;
+    background: url('/bg1.png') no-repeat center center fixed; /* Background image from public folder */
+    background-size: cover;
+    color: #fff;
+  }
+  
+  .about-header {
+    text-align: center;
+    padding: 80px 20px;
+    background-color: rgba(0, 0, 0, 0.6); /* Dark overlay for readability */
+    border-radius: 8px;
+  }
+  
+  .about-header h1 {
+    font-size: 3rem;
+    color: #333; /* Dark font color */
+  }
+  
+  .about-header p {
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .about-story, .about-team, .about-mission, .about-cta {
+    margin: 40px 0;
+  }
+  
+  .about-story h2, .about-mission h2, .about-cta h2 {
+    font-size: 2rem;
+    color: #FFD700; /* Gold color */
+  }
+  
+  .card-img-top {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+  }
+  
+  .card-body {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .card-title {
+    font-size: 1.25rem;
+    color: #FFD700;
+  }
+  
+  .card-text {
+    color: #fff;
+  }
+  
+  .social-icons a {
+    margin: 0 15px;
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: #FFD700;
+  }
+  
+  .social-icons a:hover {
+    color: #fff;
+  }
+  
+  /* Animations for the sections */
+  .animate__animated {
+    animation-duration: 1s;
+    animation-delay: 0.3s;
+  }
+  
+  .animate__fadeInUp {
+    animation-name: fadeInUp;
+  }
+  
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .social-icons a {
+      font-size: 1.25rem;
+    }
+  }
+  
