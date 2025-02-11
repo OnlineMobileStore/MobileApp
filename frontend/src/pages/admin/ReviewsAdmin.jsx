@@ -16,9 +16,6 @@ const ReviewsAdmin = () => {
     const fetchProducts = async () => {
       try {
         const response = await getProductWithRating();
-        console.log("API Response:", response); // Log the whole response to inspect its structure
-
-        // Check if response has 'data' or 'results' or other properties to extract products
         if (response && response.data) {
           setProducts(response.data);
         } else if (response && response.results) {
@@ -113,11 +110,15 @@ const ReviewsAdmin = () => {
             backgroundColor: "#f5f5f5",
           }}
         >
-          <h1 className="fw-bold mb-4">Products with Reviews</h1>
+          <h4 className="fw-bold mb-4">Products with Reviews</h4>
 
           {/* Loading & Error Handling */}
-          {loading && !error && <p className="text-center">Loading products...</p>}
-          {error && !loading && <p className="text-center text-danger">{error}</p>}
+          {loading && !error && (
+            <p className="text-center">Loading products...</p>
+          )}
+          {error && !loading && (
+            <p className="text-center text-danger">{error}</p>
+          )}
           {!loading && !error && products.length === 0 && (
             <p className="text-center">No products available at the moment.</p>
           )}
@@ -128,23 +129,31 @@ const ReviewsAdmin = () => {
               <div className="row">
                 {products.map((product) => (
                   <div key={product.id} className="col-md-3 mb-4">
-                    <div className="card h-100 shadow-sm border-0">
+                    <div className="card h-100 shadow-sm border-0 text-center">
+                      <div>
                       <img
-                        src={product.image}
-                        alt={product.name}
-                        className="card-img-top"
+                        src={product.productImage}
+                        alt={product.productName}
+                        className="card-img-top img-fluid"
                         style={{
-                          height: "150px",
+                          height: "100px",
+                          width: "90px",
                           objectFit: "cover",
                           cursor: "pointer",
                         }}
                         onClick={() => handleProduct(product.id)}
                       />
+                      </div>
                       <div className="card-body text-center">
-                        <h6 className="card-title fw-bold">{product.productName}</h6>
-                        <div className="mb-1">{renderStars(product.averageRating)}</div>
+                        <h6 className="card-title fw-bold">
+                          {product.productName}
+                        </h6>
+                        <div className="mb-1">
+                          {renderStars(product.averageRating)}
+                        </div>
                         <p className="text-muted">
-                          ({product.averageRating.toFixed(1)} / {product.totalReviews} reviews)
+                          ({product.averageRating.toFixed(1)} /{" "}
+                          {product.totalReviews} reviews)
                         </p>
                         <button
                           className="btn btn-primary btn-sm"
