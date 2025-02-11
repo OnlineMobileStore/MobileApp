@@ -103,7 +103,7 @@ const HomeCustomer = () => {
           {/* <div className={styles.latestHead}><h2>Latest Lonch</h2></div> */}
           <div className="container">
             <div className={styles.latestHead}>
-              <h2>Latest Lonch</h2>
+              <h2>Latest Launch</h2>
             </div>
             <div className="row">
               {newProducts && newProducts.length > 0 ? (
