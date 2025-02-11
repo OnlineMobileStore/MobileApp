@@ -64,7 +64,7 @@ const SalesDetailsAdmin = () => {
             <div style={{ flex: "1", padding: "20px", borderRadius: "10px", backgroundColor: "#FF6D28", color: "#fff", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}>
               <div style={{ fontSize: "24px", marginBottom: "10px" }}><FaUndo /></div>
               <h2 style={{ fontSize: "18px", margin: "0" }}>Profit</h2>
-              <p style={{ fontSize: "32px", fontWeight: "bold", margin: "10px 0" }}>{summaryData.profit}</p>
+              <p style={{ fontSize: "32px", fontWeight: "bold", margin: "10px 0" }}>{Math.round(summaryData.profit)}</p>
             </div>
 
             <div style={{ flex: "1", padding: "20px", borderRadius: "10px", backgroundColor: "#2196F3", color: "#fff", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}>
