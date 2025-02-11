@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { animate } from "framer-motion";
 import { AuthProvider } from "./auth/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
@@ -26,6 +27,7 @@ import ProductDetails from "./pages/admin/ProductDetails";
 import AddBrand from "./pages/admin/AddBrand";
 import CheckOut from "./pages/customer/CheckOut";
 import OrderTracking from "./pages/customer/OrderTracking";
+import About from "./components/About";
 
 const App = () => {
   return (
@@ -56,6 +58,7 @@ const App = () => {
             <Route path='/product-details' element={<ProductDetails />} />
             <Route path='/checkout' element={<CheckOut />} />
             <Route path='/order-tracking' element={<OrderTracking />} />
+            <Route path='/about' element={<About/>}/>
           </Routes>
         </div>
 

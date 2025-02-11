@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.store.dao.SalesDao;
 import com.store.dto.SalesDetailsDTO;
+import com.store.dto.SalesSummaryDTO;
 
 @Service
 @Transactional
@@ -32,5 +33,14 @@ public class SalesServiceImpl implements SalesService {
 	                ))
 	                .collect(Collectors.toList());
 	    }
+	    
+	    public SalesSummaryDTO getSalesSummary() {
+	        Double totalSales = salesDao.getTotalSales();
+	        Long totalProducts = salesDao.getTotalProducts();
+	        Double profit = totalSales * 0.40; // Profit is 40% of total sales
+
+	        return new SalesSummaryDTO(totalSales, profit, totalProducts);
+	    }
+
 
 }
