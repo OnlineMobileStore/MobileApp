@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./HomeCustomer.module.css"; // Modular CSS import
 import { Carousel } from "react-bootstrap";
@@ -14,6 +15,7 @@ import { getLatestProducts } from "../../services/product";
 const HomeCustomer = () => {
   const [products, setProducts] = useState([]);
   const [newProducts, setNewProducts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -40,18 +42,22 @@ const HomeCustomer = () => {
     fetchLatest();
   }, []);
 
-  const [favorites, setFavorites] =
-    useState();
-    newProducts.reduce((acc, product) => {
-      acc[product.id] = false;
-      return acc;
-    }, {})
-  const toggleFavorite = (id) => {
-    setFavorites((prevFavorites) => ({
-      ...prevFavorites,
-      [id]: !prevFavorites[id],
-    }));
-  };
+  // const [favorites, setFavorites] =
+  //   useState();
+  //   newProducts.reduce((acc, product) => {
+  //     acc[product.id] = false;
+  //     return acc;
+  //   }, {})
+  // const toggleFavorite = (id) => {
+  //   setFavorites((prevFavorites) => ({
+  //     ...prevFavorites,
+  //     [id]: !prevFavorites[id],
+  //   }));
+  // };
+
+  const handleProduct=(productId)=>{
+    navigate("/customer/productPage", { state: { id: productId } });
+  }
 
   return (
     <div className={styles.homepage}>
@@ -91,23 +97,19 @@ const HomeCustomer = () => {
               {newProducts && newProducts.length > 0 ? (
                 newProducts.map((newproduct) => (
                   <div className="col-md-4" key={newproduct.id}>
-                    <div className={styles.productCard}>
+                    <div className={styles.productCard} onClick={()=>handleProduct(newproduct.id)}>
                       <div style={{ display: "flex" }}>
                         <img
                           src={newproduct.primaryImage}
                           alt={newproduct.title}
                           className={`img-fluid ${styles.productImage}`}
+                          
                         />
                         {/* Icons */}
                         <div className={styles.productActions}>
                           <button className="btn btn-outline-danger me-2"
-                           onClick={() => toggleFavorite(newproduct.id)}
                           >
-                            {favorites?.[newproduct.id] ? (
-                              <FaHeart className="text-danger" />
-                            ) : (
-                              <FaHeart style={{ color: "#d1deeb" }} />
-                            )}
+                            <FaHeart/>
                           </button>
                           <button className="btn btn-outline-success">
                             <FaShoppingCart />

@@ -11,7 +11,7 @@ import CustomersDetails from './pages/admin/CustomersDetails';
 import Wishlist from './pages/customer/Wishlist';
 import MyCart from './pages/customer/MyCart';
 import ProductPage from './pages/customer/ProductPage';
-import ProductReview from './pages/customer/ProductReview';
+import AddReview from './pages/customer/AddReview';
 import LoginCustomer from "./pages/customer/LoginCustomer";
 import RegisterCustomer from "./pages/customer/RegisterCustomer";
 import LoginAdmin from "./pages/admin/LoginAdmin";
@@ -48,8 +48,8 @@ const App = () => {
             <Route path='/admin/change-profile' element={<ChangeAdminProfile />} />
             <Route path='/wishlist' element={<Wishlist />} />
             <Route path='/mycart' element={<MyCart />} />
-            <Route path='/productreviews' element={<ProductReview />} />
-            <Route path='/productpage' element={<ProductPage />} />
+            <Route path='/add-review' element={<AddReview />} />
+            <Route path='/customer/productPage' element={<ProductPage />} />
             <Route path='/productAverage' element={<AverageReview />} />
             <Route path='/add-brand' element={<AddBrand />} />
             <Route path='/add-product' element={<AddProduct />} />

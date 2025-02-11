@@ -1,5 +1,7 @@
 .wishlistContainer {
-  padding: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   background-color: #f9f9f9;
   border-radius: 10px;
 }
@@ -11,15 +13,15 @@
 }
 
 .wishlistTable {
-  width: 100%;
+  width: 70%;
   border-collapse: collapse;
   margin-top: 20px;
 }
 
 .wishlistTable th,
 .wishlistTable td {
-  padding: 15px;
-  text-align: left;
+  padding: 7px 15px;
+  text-align: center;
   border-bottom: 1px solid #ddd;
 }
 

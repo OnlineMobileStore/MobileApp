@@ -192,11 +192,13 @@ import styles from "../../styles/OrderTracking.module.css";
 import Navbar from "../../components/Navbar";
 import { getProductById } from "../../services/product";
 import { getOrderDetails } from "../../services/order";
+import { useNavigate } from "react-router-dom";
 
 const OrderTracking = () => {
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState({});
   const customerId = localStorage.getItem("customerId");
+  const navigate = useNavigate();
 
   const orderStages = ["Placed", "Shipped", "Out for Delivery", "Delivered", "Cancelled"];
 
@@ -250,8 +252,8 @@ const OrderTracking = () => {
     }
   };
 
-  const handleGiveRating = (orderId) => {
-    alert(`Redirect to rating page for Order ID: ${orderId}`);
+  const handleGiveRating = () => {
+    navigate('/add-review');
   };
 
   return (

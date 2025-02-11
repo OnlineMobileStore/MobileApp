@@ -8,6 +8,7 @@ import {
   Button,
   Dropdown
 } from "react-bootstrap";
+import { FaHeart} from "react-icons/fa";
 import { BiCart, BiUser } from "react-icons/bi"; 
 import { Link } from "react-router-dom";
 import "./Navbar.css";
@@ -70,7 +71,7 @@ const NavbarComponent = () => {
           <Nav className="ms-auto">
             <Nav.Link as={Link} to="/customer/home">Home</Nav.Link>
             <Nav.Link as={Link} to="/order-tracking">My Orders</Nav.Link>
-            <Nav.Link as={Link} to="/wishlist">WishList</Nav.Link>
+            <Nav.Link as={Link} to="/wishlist">Wishlist<FaHeart className="text-danger"/></Nav.Link>
             {/* Cart */}
             <Nav.Link as={Link} to="/myCart" aria-label="Cart">
               <BiCart /> Cart 
