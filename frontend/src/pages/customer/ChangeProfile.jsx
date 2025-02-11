@@ -40,7 +40,7 @@ const ChangeProfile = () => {
       const result = await editProfile(customerId, customerDetails);
       if (result.status === 200) {
         toast.success("Profile updated successfully!");
-        navigate("/customer/home");
+        navigate("/");
       } else {
         toast.error("Failed to update profile");
       }

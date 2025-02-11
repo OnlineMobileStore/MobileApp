@@ -1,0 +1,21 @@
+.rating-container {
+    max-width: 400px;
+    margin: auto;
+    background: #fff;
+    border-radius: 8px;
+  }
+  
+  .average-rating h2 {
+    font-size: 2rem;
+  }
+  
+  .rating-breakdown span {
+    font-size: 1rem;
+  }
+  
+  @media (max-width: 576px) {
+    .rating-container {
+      padding: 1rem;
+    }
+  }
+  

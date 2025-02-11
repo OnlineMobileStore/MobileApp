@@ -1,0 +1,24 @@
+.review-container {
+    max-width: 600px;
+    background: #fff;
+    border-radius: 8px;
+  }
+  
+  .review-card {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+  }
+  
+  .profile-logo {
+    width: 40px;
+    height: 40px;
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  

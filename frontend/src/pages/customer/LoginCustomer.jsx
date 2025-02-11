@@ -40,7 +40,7 @@ const LoginCustomer = () => {
         localStorage['phone'] = phone
         localStorage.setItem('email', email)
 
-        navigate('/customer/home')
+        navigate('/')
       } else {
         toast.error("Incorrect creadentials")
       }
