@@ -39,7 +39,7 @@ public class Product extends BaseEntity{
     @Column(nullable = false)
     private Integer storage;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 50)
     private String os;
 
     private Integer battery;
