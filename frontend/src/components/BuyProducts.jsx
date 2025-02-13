@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "./BuyProducts.module.css";
+import styles from "../styles/BuyProducts.module.css";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { giveAvgRating } from "../services/product";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { addToCart, getCartItems } from "../services/cart";
-// import { useCart } from "../context/CartContext";
 
 const BuyProducts = ({ products = [] }) => {
   const navigate = useNavigate();
-  // const { cartItems, fetchCartItems, handleAddToCart } = useCart();
   const filters = {
     brands: ["Samsung", "Apple", "OnePlus"],
     camera: ["12 MP", "48 MP", "64 MP"],

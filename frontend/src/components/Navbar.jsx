@@ -11,7 +11,7 @@ import {
 import { FaHeart } from "react-icons/fa";
 import { BiCart, BiUser } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import "./Navbar.css";
+import "../styles/Navbar.css";
 import { useNavigate } from "react-router-dom";
 import { getCartItems } from "../services/cart";
 

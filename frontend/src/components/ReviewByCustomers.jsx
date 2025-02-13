@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getReviewsOfProduct } from "../services/review";
 import { FaStar } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./ReviewByCustomer.css"; // Custom CSS
+import "../styles/ReviewByCustomer.css"; // Custom CSS
 
 const ReviewByCustomers = ({ productId }) => {
   const [reviews, setReviews] = useState([]);

@@ -13,7 +13,7 @@ const CustomersDetails = () => {
     const fetchCustomers = async () => {
       try {
         const response = await getAllCustomers();
-        if (response.status != 200) {
+        if (response.status !== 200) {
           throw new Error("Failed to fetch customers");
         }
         // const data = await response.json();
@@ -33,12 +33,12 @@ const CustomersDetails = () => {
       const customer = customers.find((c) => c.id === id);
       if (!customer) return;
 
-      const updatedStatus = !customer.isActive;
-      setCustomers(customers.map((c) =>
-          c.id === id ? { ...c, isActive: updatedStatus } : c
-        ));
+      // const updatedStatus = !customer.isActive;
+      // setCustomers(customers.map((c) =>
+      //     c.id === id ? { ...c, isActive: updatedStatus } : c
+      //   ));
 
-      await toggleCustomer(id, updatedStatus);
+      await toggleCustomer(id);
     } catch (error) {
       console.error("Failed to update block status:", error);
     }

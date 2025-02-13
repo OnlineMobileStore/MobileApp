@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService{
 	
 	@Autowired
     private ModelMapper modelMapper;
-
+	
     // add the product
 	@Override
 	public ApiResponse addNewProduct(ProductDTO dto) {
@@ -149,7 +149,7 @@ public class ProductServiceImpl implements ProductService{
 	    if (productEntity.getBrand() != null) {
 	        productRespDTO.setBrand_name(productEntity.getBrand().getTitle());
 	    }
-
+	    
 	    return productRespDTO;
 	}
 	

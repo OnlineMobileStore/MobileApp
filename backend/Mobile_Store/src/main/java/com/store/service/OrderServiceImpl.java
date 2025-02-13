@@ -6,7 +6,6 @@ import com.store.dto.OrderRequestDTO;
 import com.store.dto.OrderResponseCustDTO;
 import com.store.dto.OrderStatusUpdateDTO;
 import com.store.exception.ResourceNotFoundException;
-import com.store.pojo.Cart;
 import com.store.pojo.Customer;
 import com.store.pojo.CustomerOrder;
 import com.store.pojo.OrderDetails;
@@ -24,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -82,6 +80,7 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(totalAmount);
         order.setOrderDetails(orderDetailsList);
         customerOrderDao.save(order);
+        
 
         return new ApiResponse("success","Order placed successfully with total amount: " + totalAmount);
     }

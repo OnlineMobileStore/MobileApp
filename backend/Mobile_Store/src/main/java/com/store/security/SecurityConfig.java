@@ -37,6 +37,7 @@ public class SecurityConfig {
                                 "/customer/wishlist*/**",  // From main branch
                                 "/v*/api-doc*/**",
                                 "/swagger-ui/**"
+//                                "/ws/**" 
                         ).permitAll() // Allow public access
                         .anyRequest().authenticated()
                 );

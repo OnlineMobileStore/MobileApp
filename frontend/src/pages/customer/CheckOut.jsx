@@ -7,12 +7,18 @@ import { toast } from "react-toastify";
 import { placeOrder } from "../../services/order";
 import { emptyCart } from "../../services/cart";
 import OTPVerification from "../../components/OTPVerification";
+import { motion } from "framer-motion";
 
 const CheckOut = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const orderPrice = location.state?.orderPrice || 0;
   const cartItems = location.state?.cartItems;
+
+  const successAnimation = {
+    hidden: { opacity: 0, scale: 0.5 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+  };
 
   const [step, setStep] = useState(1);
 
@@ -85,6 +91,13 @@ const CheckOut = () => {
       const response = await placeOrder(orderData);
       if (response.data.status === "success") {
         toast.success("order placed successfully!");
+
+        let notifications =
+          JSON.parse(localStorage.getItem("notifications")) || [];
+        notifications.push("order placed! by customer:" + customerId);
+
+        localStorage.setItem("notifications", JSON.stringify(notifications));
+
         await emptyCart(customerId);
         handleNext();
       }
@@ -103,7 +116,8 @@ const CheckOut = () => {
         <div className={styles.progress}>
           <span className={step >= 1 ? styles.active : ""}>1</span>
           <span className={step >= 2 ? styles.active : ""}>2</span>
-          <span className={step === 3 ? styles.active : ""}>3</span>
+          <span className={step >= 3 ? styles.active : ""}>3</span>
+          <span className={step === 4 ? styles.active : ""}>4</span>
         </div>
 
         {step === 1 && (
@@ -219,45 +233,53 @@ const CheckOut = () => {
             }}
           >
             <div className={styles.step}>
-              
               <h6>Select Payment Method</h6>
-              <div style={{width:"40%"}}>
-              <label style={{ marginTop: "20px" }}>
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="credit"
-                  checked={formData.paymentMethod === "credit"}
-                  onChange={(e) =>
-                    setFormData({ ...formData, paymentMethod: e.target.value })
-                  }
-                />{" "}
-                💳 Credit/Debit Card
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="phonePay"
-                  onChange={(e) =>
-                    setFormData({ ...formData, paymentMethod: e.target.value })
-                  }
-                />{" "}
-                💲 PhonePay
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="cash"
-                  onChange={(e) =>
-                    setFormData({ ...formData, paymentMethod: e.target.value })
-                  }
-                />{" "}
-                🏦 Cash On Delivery
-              </label>
-            
-              <h3 style={{ marginTop: "25px" }}>Total: ₹{orderPrice}</h3>
+              <div style={{ width: "40%" }}>
+                <label style={{ marginTop: "20px" }}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="credit"
+                    checked={formData.paymentMethod === "credit"}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        paymentMethod: e.target.value,
+                      })
+                    }
+                  />{" "}
+                  💳 Credit/Debit Card
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="phonePay"
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        paymentMethod: e.target.value,
+                      })
+                    }
+                  />{" "}
+                  💲 PhonePay
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="cash"
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        paymentMethod: e.target.value,
+                      })
+                    }
+                  />{" "}
+                  🏦 Cash On Delivery
+                </label>
+
+                <h3 style={{ marginTop: "25px" }}>Total: ₹{orderPrice}</h3>
               </div>
               <div style={{ display: "flex", gap: "100px", marginTop: "10px" }}>
                 <button className={styles.nextbutton} onClick={handleBack}>
@@ -273,31 +295,61 @@ const CheckOut = () => {
 
         {step === 3 && (
           <div className={styles.success}>
-            <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-            <div><OTPVerification email={formData.email} /></div>
-            <div style={{ display: "flex", gap: "100px", marginTop: "15px" }}>
-              <button className={styles.nextbutton} onClick={handleBack}>
-                Back
-              </button>
-              <button className={styles.nextbutton} onClick={handlePlaceOrder}>
-                Place Order
-              </button>
-            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <OTPVerification email={formData.email} />
+              </div>
+              <div style={{ display: "flex", gap: "100px", marginTop: "15px" }}>
+                <button className={styles.nextbutton} onClick={handleBack}>
+                  Back
+                </button>
+                <button
+                  className={styles.nextbutton}
+                  onClick={handlePlaceOrder}
+                >
+                  Place Order
+                </button>
+              </div>
             </div>
           </div>
         )}
 
         {step === 4 && (
-          <div className={styles.success}>
-            <h3>Order Successful!</h3>
-            <p>Thank you for your order.</p>
-            <button
-              className={styles.button}
-              onClick={() => navigate("/order-tracking")}
+          <motion.div
+            className={styles.success}
+            initial="hidden"
+            animate="visible"
+            variants={successAnimation}
+          >
+            <motion.h3
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             >
-              Track Your Order
-            </button>
-          </div>
+              🎉 Order Successful! 🎉
+            </motion.h3>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              Thank you for your order.
+            </motion.p>
+            <motion.button
+              className={styles.trackbutton}
+              onClick={() => navigate("/order-tracking")}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              Track Your Order 🚚
+            </motion.button>
+          </motion.div>
         )}
       </div>
     </div>

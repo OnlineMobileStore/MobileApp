@@ -3,7 +3,7 @@ import { useNavigate ,Link} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { toast } from "react-toastify";
 import { signinCustomer } from '../../services/auth'
-import styles from "./LoginCustomer.module.css";
+import styles from "../../styles/LoginCustomer.module.css";
 import wallpaper from "../../assets/wallpaper.png";
 import logo from "../../assets/logo.jpg";
 
@@ -28,7 +28,6 @@ const LoginCustomer = () => {
       setError(true);
     } else {
       const result = await signinCustomer(email, password)
-      console.log("inside ")
       if (result['status'] === 'success') {
         toast.success("Welcome to Mobile Store")
 

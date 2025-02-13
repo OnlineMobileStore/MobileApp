@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getBrandsList, addNewProduct } from "../../services/product";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import styles from "./ProductForm.module.css";
+import styles from "../../styles/ProductForm.module.css";
 
 function AddProduct() {
   const [brands, setBrands] = useState([]);

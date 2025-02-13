@@ -107,11 +107,15 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ApiResponse deActivateCustomer(Long customerId) {
+    public ApiResponse toggleCustomer(Long customerId) {
         Customer customer = customerDao.findById(customerId)
                 .orElseThrow(() -> new AuthenticationException("Customer not found"));
-
-        customer.setIsActive(false);
+        if(customer.getIsActive())
+        {	
+        	customer.setIsActive(false);
+        }else {
+        	customer.setIsActive(true);
+        }
         customerDao.save(customer);
 
         return new ApiResponse("success","Customer soft deleted successfully.");
@@ -119,7 +123,7 @@ public class AdminServiceImpl implements AdminService {
     
     @Override
     public List<CustomerDTO> getAllCustomers() {
-        return customerDao.findByIsActiveTrue().stream().map(customer -> {
+        return customerDao.findAll().stream().map(customer -> {
             CustomerDTO customerDTO = modelMapper.map(customer, CustomerDTO.class);
 
             if (customer.getAddress() != null) {

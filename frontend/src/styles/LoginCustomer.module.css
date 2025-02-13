@@ -96,15 +96,6 @@
   .btn:hover {
     background: #1d52a0;
   }
-  
-  input#email {
-    background-image: url("../../assets/email_icon.png");
-    background-repeat: no-repeat;
-  }
-  input#pass {
-    background-image: url("../../assets/lock.png");
-    background-repeat: no-repeat;
-  }
 
   .customerbtn{
     border-radius: 10px;
