@@ -16,13 +16,12 @@ const AdminDashboard = () => {
   const fetchProducts = async () => {
     try {
       const response = await getAllProducts();
-      console.log(response.data);
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
   };
-  
+
   const handleEdit = (id) => {
     navigate("/edit-product", { state: { id } });
   };
@@ -136,12 +135,12 @@ const AdminDashboard = () => {
               borderRadius: "5px",
               cursor: "pointer",
               marginBottom: "20px",
-              marginLeft:"50px"
+              marginLeft: "50px",
             }}
           >
             Add New Brand
           </button>
-          
+
           <table
             style={{
               width: "100%",

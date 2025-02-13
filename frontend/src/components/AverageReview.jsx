@@ -3,7 +3,7 @@ import { getAvgRating } from "../services/review";
 import { ProgressBar } from "react-bootstrap";
 import { FaStar } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./AverageReview.css"; // Custom CSS for additional styling
+import "../styles/AddReview.module.css"; 
 
 const AverageReview = ({ id }) => {
   const [ratingStats, setRatingStats] = useState(null);

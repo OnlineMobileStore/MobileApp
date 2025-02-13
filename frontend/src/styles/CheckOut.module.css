@@ -142,6 +142,17 @@ h2 {
   background: #218838;
 }
 
+.trackbutton{
+  width: 160px;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  background: #28a745;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
 /* Success Message */
 .success {
   text-align: center;

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import styles from "./LoginAdmin.module.css";
+import styles from "../../styles/LoginAdmin.module.css";
 import wallpaper from "../../assets/wallpaper.png";
 import logo from "../../assets/logo.jpg";
 import { signinAdmin } from "../../services/auth";
@@ -27,7 +27,6 @@ const LoginAdmin = () => {
       setError(true);
     } else {
       const result = await signinAdmin(email, password);
-      console.log(result)
       if (result["status"] === "success") {
         toast.success("Welcome to Mobile Store");
 

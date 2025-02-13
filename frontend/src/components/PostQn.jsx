@@ -15,12 +15,11 @@ const PostQn = () => {
     }
     try {
       const result = await postQuestion(question);
-      if(result.data!=null || result.data!=undefined){
-      toast.success("Question posted!");
-      console.log(result.data);
-      setQuestion("");
-      setError("");
-    }
+      if (result.data !== null || result.data !== undefined) {
+        toast.success("Question posted!");
+        setQuestion("");
+        setError("");
+      }
     } catch (error) {
       toast.error("Error posting question");
     }

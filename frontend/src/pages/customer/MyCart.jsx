@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../styles/MyCart.module.css";
 import Navbar from "../../components/Navbar";
-import "../../components/Footer.css";
-import "../../components/Navbar.css";
 import { FaTrashAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 import {
@@ -72,7 +70,7 @@ const MyCart = () => {
         setCartItems((prevCartItems) =>
           prevCartItems.filter((item) => item.productId !== productId)
         );
-        toast.success("mobile successfully removed from cart")
+        toast.success("mobile successfully removed from cart");
       }
     } catch (error) {
       console.error("Error removing item from cart:", error);
@@ -211,7 +209,7 @@ const MyCart = () => {
               <tr>
                 <td>You saved</td>
                 <td style={{ color: "red" }}>
-                  - ₹{calculateOriginal() - calculateFinal()}
+                  - ₹{Math.round(calculateOriginal() - calculateFinal())}
                 </td>
               </tr>
               <tr>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import styles from "./RegisterCustomer.module.css";
+import styles from "../../styles/RegisterCustomer.module.css";
 import wallpaper from "../../assets/wallpaper.png";
 import logo from "../../assets/logo.jpg";
 import { signup } from "../../services/auth";

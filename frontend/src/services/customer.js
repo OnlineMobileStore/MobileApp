@@ -31,10 +31,10 @@ export async function getAllCustomers() {
   }
 }
 
-export async function toggleCustomer(customerId,updatedStatus) {
+export async function toggleCustomer(customerId) {
   try {
     const url = createUrl(`admin/toggleCustomer/${customerId}`)
-    const response = await axios.put(url, {isActive:updatedStatus})
+    const response = await axios.put(url)
     return response;
   } catch (ex) {
     return { status: 'error', error: ex }

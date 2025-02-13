@@ -36,7 +36,6 @@ const AddReview = () => {
     try {
 
       const response = await addReview(productId,customerId,reviewTitle,reviewContent,rating);
-      console.log(response)
       if(response.status===200){
         toast.success("Review submitted successfully!");
         navigate("/customer/productPage", { state: { id: response.data.productId } });

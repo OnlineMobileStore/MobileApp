@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "./HomeCustomer.module.css"; // Modular CSS import
+import styles from "../../styles/HomeCustomer.module.css"; // Modular CSS import
 import { Carousel } from "react-bootstrap";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -35,7 +35,6 @@ const HomeCustomer = () => {
       try {
         const result = await getLatestProducts();
         setNewProducts(result.data);
-        console.log(result.data);
       } catch (error) {
         console.log("Error fetching products:", error);
       }

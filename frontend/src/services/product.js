@@ -48,7 +48,6 @@ export const getProductImages = async (id) => {
   try {
     const url = createUrl(`product/${id}/images`)
     const response = await axios.get(url)
-    console.log(response.data);
     return response.data
     
   } catch (ex) {
@@ -91,7 +90,6 @@ export async function getLatestProducts() {
   try {
     const url = createUrl(`product/getLatest`)
     const response = await axios.get(url)
-    console.log("result",response);
     return response;
   } catch (ex) {
     return { status: 'error', error: ex }

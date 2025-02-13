@@ -97,20 +97,11 @@
   background: #1d52a0;
 }
 
-input#email {
-  background-image: url("../../assets/email_icon.png");
-  background-repeat: no-repeat;
-}
-input#pass {
-  background-image: url("../../assets/lock.png");
-  background-repeat: no-repeat;
-}
-
-.adminbtn{
+.adminbtn {
   border-radius: 10px;
-  background: #FFF;
+  background: #fff;
   box-shadow: 0px 0px 50px 0px rgba(0, 25, 255, 0.24);
-  border:none; 
+  border: none;
   width: 180px;
   height: 37px;
   cursor: pointer;
@@ -121,9 +112,9 @@ input#pass {
   font-weight: 600;
   line-height: normal;
 }
-.customerbtn{
-  border:none;
-  background-color: #FFF;
+.customerbtn {
+  border: none;
+  background-color: #fff;
   cursor: pointer;
   width: 180px;
   height: 37px;

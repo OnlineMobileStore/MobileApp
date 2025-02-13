@@ -1,7 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router-dom";
-import styles from "./DeleteProduct.module.css";
+import styles from "../../styles/DeleteProduct.module.css";
 import { deleteProduct } from "../../services/product";
 
 const DeleteProduct = () => {
@@ -12,20 +12,19 @@ const DeleteProduct = () => {
   const handleClose = () => {
     navigate(-1);
   };
-  const handleDelete = async() => {
+  const handleDelete = async () => {
     try {
-          const result = await deleteProduct(id);
-          console.log(result);
-          if (result.status === 200) {
-            toast.success("Successfully deleted the product");
-            navigate(-1);
-          } else {
-            toast.error(result.data.message || "Failed to delete product");
-          }
-        } catch (error) {
-          toast.error("Failed to update product");
-          console.error("Error updating product:", error);
-        }
+      const result = await deleteProduct(id);
+      if (result.status === 200) {
+        toast.success("Successfully deleted the product");
+        navigate(-1);
+      } else {
+        toast.error(result.data.message || "Failed to delete product");
+      }
+    } catch (error) {
+      toast.error("Failed to update product");
+      console.error("Error updating product:", error);
+    }
   };
   return (
     <div className={styles.container}>

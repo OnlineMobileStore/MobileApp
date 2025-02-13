@@ -3,7 +3,11 @@ package com.store.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +21,7 @@ import com.store.dto.AdminDTO;
 import com.store.dto.ApiResponse;
 import com.store.dto.CustomerDTO;
 import com.store.service.AdminService;
+
 
 
 @RestController
@@ -37,13 +42,14 @@ public class AdminController {
         return ResponseEntity.ok(adminService.updateAdminDetails(adminId,dto));
     }
 	
-	@DeleteMapping("/deleteCustomer/{customerId}")
-    public ResponseEntity<ApiResponse> softDeleteCustomer( @PathVariable Long customerId) {
-        return ResponseEntity.ok(adminService.deActivateCustomer(customerId));
+	@PutMapping("/toggleCustomer/{customerId}")
+    public ResponseEntity<ApiResponse> softSetCustomer( @PathVariable Long customerId) {
+        return ResponseEntity.ok(adminService.toggleCustomer(customerId));
     }
 	
 	@GetMapping("/getAllcustomers")
     public ResponseEntity<List<CustomerDTO>> getCustomers() {
         return ResponseEntity.ok(adminService.getAllCustomers());
     }
+	
 }

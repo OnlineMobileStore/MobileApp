@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router-dom";
-import styles from "./ProductForm.module.css";
+import styles from "../../styles/ProductForm.module.css";
 import {
   getBrandsList,
   getProductById,
@@ -112,7 +112,6 @@ function EditProduct() {
 
     try {
       const result = await updateProduct(id, productData);
-      console.log(result);
       if (result.data.status === "success") {
         toast.success("Successfully updated the product");
         navigate(-1);

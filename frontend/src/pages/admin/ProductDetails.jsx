@@ -47,7 +47,6 @@ const ProductDetails = () => {
     if (!customerId) return;
     try {
       const response = await getWishlist(customerId);
-      console.log(response);
       setWishlist(response);
     } catch (error) {
       console.error("Error fetching cart data:", error);
@@ -62,7 +61,6 @@ const ProductDetails = () => {
     if (!customerId) return;
     try {
       const response = await getCartItems(customerId);
-      console.log(response.data);
       setCart(response.data);
     } catch (error) {
       console.error("Error fetching cart data:", error);
